@@ -13,7 +13,7 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-
+ 
 package config
 
 import (
@@ -38,4 +38,20 @@ func Test_LoadConfig_AuthBasic(t *testing.T) {
 		Roles:     []string{"developers", "team1"},
 	},
 	}, config.Security.AuthN.Basic, "basic users")
+}
+
+func Test_LoadConfig_AuthOpenId(t *testing.T) {
+	// Given
+	viper.Set("config", "testdata/application.yaml")
+	// When
+	config := GetAppConfig()
+	// Then
+	assert.Equal(t, "confidential-oidc-client", config.Security.AuthN.OpenID.ClientID, "ClientID")
+	assert.Equal(t, "secret1", config.Security.AuthN.OpenID.ClientSecret, "ClientSecret")
+	assert.Equal(t, "http://keycloak:7080/realms/master", config.Security.AuthN.OpenID.IssuerUri, "IssuerUri")
+	assert.Equal(t, "http://localhost:8090/oauth2/callback", config.Security.AuthN.OpenID.RedirectUri, "RedirectUri")
+	assert.Equal(t, "secret1!", config.Security.AuthN.OpenID.CookieSecret, "CookieSecret")
+	assert.Equal(t, "openid+profile+email+roles", config.Security.AuthN.OpenID.Scope, "Scope")
+	assert.Equal(t, "realm_access.roles", config.Security.AuthN.OpenID.RolesAttributePath, "RolesAttributePath")
+	assert.Equal(t, "realm_access.groups", config.Security.AuthN.OpenID.GroupsAttributePath, "GroupsAttributePath")
 }

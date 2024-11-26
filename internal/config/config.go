@@ -34,9 +34,11 @@ type Security struct {
 	AuthN               AuthN              `yaml:"authN"`
 }
 
+
 // Authentication configuration
 type AuthN struct {
 	Provider            []string          `yaml:"provider"`
+	OpenID              OpenIDAuth        `yaml:"openid"`
 	Basic               []BasicAuth       `yaml:"basic"`
 }
 
@@ -48,6 +50,18 @@ type BasicAuth struct {
 	LastName            string   `json:"lastName"`
 	Email               string   `json:"email"`
 	Roles               []string `json:"roles"`
+}
+
+// OpenID based authentication configuration
+type OpenIDAuth struct {
+	ClientID            string `yaml:"clientId"`
+	ClientSecret        string `yaml:"clientSecret"`
+	IssuerUri           string `yaml:"issuerUri"`
+	RedirectUri         string `yaml:"redirectUri"`
+	CookieSecret        string `yaml:"cookieSecret"`
+	Scope               string `yaml:"scope"`
+	RolesAttributePath  string `yaml:"rolesAttributePath"`
+	GroupsAttributePath string `yaml:"groupsAttributePath"`
 }
 
 var (
