@@ -1,0 +1,95 @@
+/*
+ *    Copyright 2024 okdp.io
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+
+package config
+
+import (
+	"fmt"
+	"sync"
+
+	"github.com/fsnotify/fsnotify"
+	"github.com/spf13/viper"
+)
+
+// Application configuration
+type ApplicationConfig struct {
+	Security Security `mapstructure:"security"`
+}
+
+// Security configuration
+type Security struct {
+	AuthN               AuthN              `yaml:"authN"`
+}
+
+// Authentication configuration
+type AuthN struct {
+	Provider            []string          `yaml:"provider"`
+	Basic               []BasicAuth       `yaml:"basic"`
+}
+
+// Basic auth based authentication configuration
+type BasicAuth struct {
+	Login               string   `json:"login"`
+	Password            string   `json:"password"`
+	FirstName           string   `json:"firstName"`
+	LastName            string   `json:"lastName"`
+	Email               string   `json:"email"`
+	Roles               []string `json:"roles"`
+}
+
+var (
+	instance *ApplicationConfig
+	once     sync.Once
+)
+
+// GetAppConfig returns a singleton instance of the application configuration.
+// It reads the yaml file provided in the argument (--config=/path/to/app-config.yaml) at the startup of the application
+// into the ApplicationConfig struct
+func GetAppConfig() *ApplicationConfig {
+	once.Do(func() {
+		instance = &ApplicationConfig{}
+		configFile := viper.GetString("config")
+		viper.SetConfigFile(configFile)
+		fmt.Println("Loading configuration from config file: ", configFile)
+
+		if err := viper.ReadInConfig(); err != nil {
+			fmt.Println("failed to read the configuration file")
+			panic(err)
+		}
+
+		viper.WatchConfig()
+		viper.OnConfigChange(func(e fsnotify.Event) {
+			fmt.Println("Config file changed:", e.Name)
+			if err := viper.Unmarshal(&instance); err != nil {
+				fmt.Println("failed to register config change watcher")
+				panic(err)
+			}
+		})
+
+		if err := viper.Unmarshal(&instance); err != nil {
+			fmt.Println("failed to parse the configuration file")
+			panic(err)
+		}
+	})
+	return instance
+}
+
+// Visible for testing
+func resetAppConfig() {
+	instance = nil
+	once = sync.Once{}
+}
+
