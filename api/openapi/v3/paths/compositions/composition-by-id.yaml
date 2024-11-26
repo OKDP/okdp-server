@@ -1,0 +1,101 @@
+get:
+  summary: Get a Composition by compositionId
+  description: |
+    todo
+  tags:
+    - compositions
+  operationId: getCompositions
+  parameters:
+    - in: path
+      name: spaceId
+      schema:
+        type: string
+      required: true
+      description: todo
+    - in: path
+      name: compositionId
+      schema:
+        type: string
+        #format: uuid
+      required: true
+      description: todo
+  responses:
+    '200':
+      description: todo
+      content:
+        application/json:
+          schema:
+            $ref: '../../definition/Compositions.yaml'
+    default:
+      description: unexpected error
+      content:
+        application/json:
+          schema:
+            $ref: '../../definition/Error.yaml'
+
+delete:
+  summary: Delete a composition
+  description: |
+    todo
+  tags:
+    - compositions
+  operationId: deleteComposition
+  parameters:
+    - in: path
+      name: spaceId
+      schema:
+        type: string
+      required: true
+    - in: path
+      name: compositionId
+      schema:
+        type: string
+        #format: uuid
+      required: true
+      description: todo
+  responses:
+    '204':
+      description: todo
+    default:
+      description: unexpected error
+      content:
+        application/json:
+          schema:
+            $ref: '../../definition/Error.yaml'
+put:
+  summary: Update a composition
+  description: |
+    todo
+  tags:
+    - compositions
+  operationId: updateComposition
+  requestBody:
+    description: todo
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../definition/Composition.yaml'
+  parameters:
+    - in: path
+      name: spaceId
+      schema:
+        type: string
+      required: true
+      description: todo
+    - in: path
+      name: compositionId
+      schema:
+        type: string
+        #format: uuid
+      required: true
+      description: todo
+  responses:
+    '204':
+      description: todo
+    default:
+      description: unexpected error
+      content:
+        application/json:
+          schema:
+            $ref: '../../definition/Error.yaml'

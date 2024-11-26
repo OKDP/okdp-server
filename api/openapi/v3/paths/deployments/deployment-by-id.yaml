@@ -1,0 +1,118 @@
+get:
+  summary: Get a deployment by deploymentId
+  description: |
+    todo
+  tags:
+    - deployments
+  operationId: getDeployments
+  parameters:
+    - in: path
+      name: spaceId
+      schema:
+        type: string
+      required: true
+      description: todo
+    - in: path
+      name: compositionId
+      schema:
+        type: string
+      required: true
+      description: todo
+    - in: path
+      name: deploymentId
+      schema:
+        type: string
+      required: true
+      description: todo
+  responses:
+    '200':
+      description: todo
+      content:
+        application/json:
+          schema:
+            $ref: '../../definition/Deployments.yaml'
+    default:
+      description: unexpected error
+      content:
+        application/json:
+          schema:
+            $ref: '../../definition/Error.yaml'
+
+delete:
+  summary: Delete a deployment
+  description: |
+    todo
+  tags:
+    - deployments
+  operationId: deleteDeployment
+  parameters:
+    - in: path
+      name: spaceId
+      schema:
+        type: string
+      required: true
+      description: todo
+    - in: path
+      name: compositionId
+      schema:
+        type: string
+      required: true
+      description: todo
+    - in: path
+      name: deploymentId
+      schema:
+        type: string
+      required: true
+      description: todo
+  responses:
+    '204':
+      description: todo
+    default:
+      description: unexpected error
+      content:
+        application/json:
+          schema:
+            $ref: '../../definition/Error.yaml'
+put:
+  summary: Update a deployment
+  description: |
+    todo
+  tags:
+    - deployments
+  operationId: updateDeployment
+  requestBody:
+    description: todo
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../definition/Deployment.yaml'
+  parameters:
+    - in: path
+      name: spaceId
+      schema:
+        type: string
+      required: true
+      description: todo
+    - in: path
+      name: compositionId
+      schema:
+        type: string
+      required: true
+      description: todo
+    - in: path
+      name: deploymentId
+      schema:
+        type: string
+        #format: uuid
+      required: true
+      description: todo
+  responses:
+    '204':
+      description: todo
+    default:
+      description: unexpected error
+      content:
+        application/json:
+          schema:
+            $ref: '../../definition/Error.yaml'

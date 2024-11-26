@@ -1,0 +1,7 @@
+type: object
+required: [spaces]
+properties:
+  spaces:
+    type: array
+    items:
+      $ref: './Space.yaml'

@@ -1,0 +1,7 @@
+type: object
+required: [compositions]
+properties:
+  compositions:
+    type: array
+    items:
+      $ref: './Composition.yaml'

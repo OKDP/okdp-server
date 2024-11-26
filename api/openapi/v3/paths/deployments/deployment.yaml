@@ -1,0 +1,70 @@
+get:
+  summary: List all deployments
+  description: |
+    todo
+  tags:
+    - deployments
+  operationId: listDeployments
+  parameters:
+    - in: path
+      name: spaceId
+      schema:
+        type: string
+      required: true
+      description: todo
+    - in: path
+      name: compositionId
+      schema:
+        type: string
+      required: true
+      description: todo
+  responses:
+    '200':
+      description: todo
+      content:
+        application/json:
+          schema:
+            $ref: '../../definition/Deployments.yaml'
+    default:
+      description: unexpected error
+      content:
+        application/json:
+          schema:
+            $ref: '../../definition/Error.yaml'
+
+post:
+  summary: Create a new deployment
+  description: |
+    todo
+  tags:
+    - deployments
+  operationId: createDeployment
+  parameters:
+    - in: path
+      name: spaceId
+      schema:
+        type: string
+      required: true
+      description: todo
+    - in: path
+      name: compositionId
+      schema:
+        type: string
+      required: true
+      description: todo
+  requestBody:
+    description: todo
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../definition/Deployment.yaml'
+  responses:
+    '204':
+      description: todo
+    default:
+      description: unexpected error
+      content:
+        application/json:
+          schema:
+            $ref: '../../definition/Error.yaml'

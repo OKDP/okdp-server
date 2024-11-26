@@ -1,0 +1,58 @@
+get:
+  summary: List all projects
+  description: |
+    todo
+  tags:
+    - projects
+  operationId: listProjects
+  parameters:
+    - in: path
+      name: spaceId
+      schema:
+        type: string
+      required: true
+      description: todo
+  responses:
+    '200':
+      description: todo
+      content:
+        application/json:
+          schema:
+            $ref: '../../definition/Projects.yaml'
+    default:
+      description: unexpected error
+      content:
+        application/json:
+          schema:
+            $ref: '../../definition/Error.yaml'
+
+post:
+  summary: Create a new project
+  description: |
+    todo
+  tags:
+    - projects
+  operationId: createProjects
+  parameters:
+    - in: path
+      name: spaceId
+      schema:
+        type: string
+      required: true
+      description: todo
+  requestBody:
+    description: todo
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../definition/Project.yaml'
+  responses:
+    '204':
+      description: todo
+    default:
+      description: unexpected error
+      content:
+        application/json:
+          schema:
+            $ref: '../../definition/Error.yaml'

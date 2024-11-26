@@ -1,0 +1,98 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: OKDP Server
+  description: OKDP Server
+  contact:
+    name: okdp community
+    email: idir.izitounene@kubotal.io
+    url: https://okdp.io/
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+externalDocs:
+  description: OKDP Server
+  url: https://okdp.io/
+
+servers:
+  - url: /api/v1
+
+tags:
+  - name: spaces
+    description: Access to spaces
+    externalDocs:
+      url: https://github.com/kubotal/kad-controller/tree/main
+  - name: compositions
+    description: Access to compositions
+    externalDocs:
+      url: https://github.com/kubotal/kad-controller/tree/main
+  - name: deployments
+    description: Access to deployments
+    externalDocs:
+      url: https://github.com/kubotal/kad-controller/tree/main
+  - name: projects
+    description: Access to projects
+    externalDocs:
+      url: https://github.com/kubotal/kad-controller/tree/main
+
+paths:
+  ### Spaces API
+  /spaces:
+    $ref: ./paths/spaces/space.yaml
+  /spaces/{spaceId}:
+    $ref: ./paths/spaces/space-by-id.yaml
+  ### Compositions API
+  /spaces/{spaceId}/composition:
+    $ref: ./paths/compositions/composition.yaml
+  /spaces/{spaceId}/composition/{compositionId}:
+    $ref: ./paths/compositions/composition-by-id.yaml
+  ### Deployments API
+  /spaces/{spaceId}/composition/{compositionId}/deployment:
+    $ref: ./paths/deployments/deployment.yaml
+  /spaces/{spaceId}/composition/{compositionId}/deployment/{deploymentId}:
+    $ref: ./paths/deployments/deployment-by-id.yaml
+  ### Projects API
+  /spaces/{spaceId}/projects:
+    $ref: ./paths/projects/project.yaml
+  /spaces/{spaceId}/projects/{projectId}:
+    $ref: ./paths/projects/project-by-id.yaml
+
+components:
+  schemas:
+    Composition:
+      $ref: './definition/Composition.yaml'
+    Compositions:
+      $ref: './definition/Compositions.yaml'
+    Deployment:
+      $ref: './definition/Deployment.yaml'
+    Deployments:
+      $ref: './definition/Deployments.yaml'
+    Error:
+      $ref: './definition/Error.yaml'
+
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+    # openId:
+    #   type: openIdConnect
+    #   openIdConnectUrl: http://keycloak:7080/realms/master/.well-known/openid-configuration
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: http://keycloak:7080/realms/master/protocol/openid-connect/auth
+          tokenUrl: http://keycloak:7080/realms/master/protocol/openid-connect/token
+          scopes: 
+            openid: OpenId Authentication
+            email: User Email
+            profile: User Profile
+            roles: User Roles
+    access_token:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - basicAuth: []
+  - oauth2: [openid, email, profile, roles]
+

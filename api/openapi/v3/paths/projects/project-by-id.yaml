@@ -1,0 +1,103 @@
+get:
+  summary: Get a project by projectId
+  description: |
+    todo
+  tags:
+    - projects
+  operationId: getProjects
+  parameters:
+    - in: path
+      name: spaceId
+      schema:
+        type: string
+        #format: uuid
+      required: true
+      description: todo
+    - in: path
+      name: projectId
+      schema:
+        type: string
+      required: true
+      description: todo
+  responses:
+    '200':
+      description: todo
+      content:
+        application/json:
+          schema:
+            $ref: '../../definition/Projects.yaml'
+    default:
+      description: unexpected error
+      content:
+        application/json:
+          schema:
+            $ref: '../../definition/Error.yaml'
+
+delete:
+  summary: Delete a project
+  description: |
+    todo
+  tags:
+    - projects
+  operationId: deletProject
+  parameters:
+    - in: path
+      name: spaceId
+      schema:
+        type: string
+        #format: uuid
+      required: true
+      description: todo
+    - in: path
+      name: projectId
+      schema:
+        type: string
+      required: true
+      description: todo
+  responses:
+    '204':
+      description: todo
+    default:
+      description: unexpected error
+      content:
+        application/json:
+          schema:
+            $ref: '../../definition/Error.yaml'
+put:
+  summary: Update a project
+  description: |
+    todo
+  tags:
+    - projects
+  operationId: updateProject
+  requestBody:
+    description: todo
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../definition/Project.yaml'
+  parameters:
+    - in: path
+      name: spaceId
+      schema:
+        type: string
+        #format: uuid
+      required: true
+      description: todo
+    - in: path
+      name: projectId
+      schema:
+        type: string
+        #format: uuid
+      required: true
+      description: todo
+  responses:
+    '204':
+      description: todo
+    default:
+      description: unexpected error
+      content:
+        application/json:
+          schema:
+            $ref: '../../definition/Error.yaml'

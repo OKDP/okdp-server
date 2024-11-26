@@ -1,0 +1,15 @@
+# description: List of deployments
+# content:
+#   application/json:
+#     schema:
+#       type: array
+#       items:
+#         $ref: './Deployment.yaml'
+
+type: object
+required: [deployments]
+properties:
+  deployments:
+    type: array
+    items:
+      $ref: './Deployment.yaml'
