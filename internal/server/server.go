@@ -54,7 +54,7 @@ func NewOKDPServer() *http.Server {
 
 	// Register Controllers
 	apiV1.RegisterControllers()
-	
+	r.RegisterSwaggerApiDoc()
 
 	server := &http.Server{
 		Handler: r,
