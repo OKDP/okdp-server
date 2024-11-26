@@ -23,7 +23,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-
 func Test_LoadConfig_AuthBasic(t *testing.T) {
 	// Given
 	viper.Set("config", "testdata/application.yaml")
@@ -54,4 +53,18 @@ func Test_LoadConfig_AuthOpenId(t *testing.T) {
 	assert.Equal(t, "openid+profile+email+roles", config.Security.AuthN.OpenID.Scope, "Scope")
 	assert.Equal(t, "realm_access.roles", config.Security.AuthN.OpenID.RolesAttributePath, "RolesAttributePath")
 	assert.Equal(t, "realm_access.groups", config.Security.AuthN.OpenID.GroupsAttributePath, "GroupsAttributePath")
+}
+
+func Test_LoadConfig_AuthBearer(t *testing.T) {
+	// Given
+	viper.Set("config", "testdata/application.yaml")
+	// When
+	config := GetAppConfig()
+	// Then
+	assert.Equal(t, "http://keycloak:7080/realms/master", config.Security.AuthN.Bearer.IssuerUri, "IssuerUri")
+	assert.Equal(t, "http://keycloak:7080/realms/master/protocol/openid-connect/certs", config.Security.AuthN.Bearer.JwksURL, "JwksURL")
+	assert.Equal(t, "realm_access.roles", config.Security.AuthN.Bearer.RolesAttributePath, "RolesAttributePath")
+	assert.Equal(t, "realm_access.groups", config.Security.AuthN.Bearer.GroupsAttributePath, "GroupsAttributePath")
+	assert.True(t, config.Security.AuthN.Bearer.SkipIssuerCheck, "SkipIssuerCheck")
+	assert.False(t, config.Security.AuthN.Bearer.SkipSignatureCheck, "SkipSignatureCheck")
 }

@@ -34,11 +34,11 @@ type Security struct {
 	AuthN               AuthN              `yaml:"authN"`
 }
 
-
 // Authentication configuration
 type AuthN struct {
 	Provider            []string          `yaml:"provider"`
 	OpenID              OpenIDAuth        `yaml:"openid"`
+	Bearer              BearerAuth        `yaml:"bearer"`
 	Basic               []BasicAuth       `yaml:"basic"`
 }
 
@@ -63,6 +63,17 @@ type OpenIDAuth struct {
 	RolesAttributePath  string `yaml:"rolesAttributePath"`
 	GroupsAttributePath string `yaml:"groupsAttributePath"`
 }
+
+// Bearer based authentication configuration
+type BearerAuth struct {
+	IssuerUri           string `yaml:"issuerUri"`
+	JwksURL             string `yaml:"jwksURL"`
+	RolesAttributePath  string `yaml:"rolesAttributePath"`
+	GroupsAttributePath string `yaml:"groupsAttributePath"`
+	SkipIssuerCheck     bool   `yaml:"skipIssuerCheck"`
+	SkipSignatureCheck  bool   `yaml:"skipSignatureCheck"`
+}
+
 
 var (
 	instance *ApplicationConfig
