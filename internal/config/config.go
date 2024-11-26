@@ -26,8 +26,16 @@ import (
 
 // Application configuration
 type ApplicationConfig struct {
+	Server   Server   `mapstructure:"server"`
 	Security Security `mapstructure:"security"`
 	Logging  Logging  `mapstructure:"logging"`
+}
+
+// Server configuration
+type Server struct {
+	ListenAddress string                 `mapstructure:"listenAddress"`
+	Port          int                    `mapstructure:"port"`
+	Mode          string                 `mapstructure:"mode"`
 }
 
 // Logging configuration

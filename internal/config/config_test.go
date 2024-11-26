@@ -13,7 +13,7 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-
+ 
 package config
 
 import (
@@ -22,6 +22,17 @@ import (
 	"github.com/spf13/viper"
 	"github.com/stretchr/testify/assert"
 )
+
+func Test_LoadConfig_Server(t *testing.T) {
+	// Given
+	viper.Set("config", "testdata/application.yaml")
+	// When
+	server := GetAppConfig().Server
+	// Then
+	assert.Equal(t, "0.0.0.0", server.ListenAddress, "ListenAddress")
+	assert.Equal(t, 8090, server.Port, "Port")
+	assert.Equal(t, "debug", server.Mode, "Mode")
+}
 
 func Test_LoadConfig_Server_Logging(t *testing.T) {
 	// Given
