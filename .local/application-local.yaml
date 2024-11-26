@@ -1,0 +1,61 @@
+server:
+  listenAddress: 0.0.0.0
+  port: 8090
+  #Server Mode: one of => debug, release, test
+  mode: debug
+
+logging:
+  # debug, info, warn, error, fatal, panic
+  level: "debug"
+  # console or json
+  format: "console"
+
+security:
+  authN:
+    provider: ["bearer"]
+    openid:
+      clientId: confidential-oidc-client
+      clientSecret: secret1
+      issuerUri: http://keycloak:7080/realms/master
+      redirectUri: http://localhost:8090/oauth2/callback
+      cookieSecret: secret1!
+      scope: "openid+profile+email+roles"
+      rolesAttributePath: "realm_access.roles"
+      groupsAttributePath: "realm_access.groups"
+    bearer:
+      issuerUri: http://keycloak:7080/realms/master
+      jwksURL: http://keycloak:7080/realms/master/protocol/openid-connect/certs
+      rolesAttributePath: "realm_access.roles"
+      groupsAttributePath: "realm_access.groups"
+      skipIssuerCheck: false
+      skipSignatureCheck: false
+    # Static users for sandbox testing
+    basic:
+      - login: "dev1"
+        password: "passW!"
+        firstName: "dev1"
+        lastName: "dev"
+        email: "dev1.dev@example.org"
+        roles: ["developers", "team1"]
+  authZ:
+    provider: file
+    file:
+      modelPath: ".local/authz-model.conf"
+      policyPath: ".local/authz-policy.csv"
+    database:
+      host: "localhost"
+      port: 5432
+      username: "adm"
+      password: "passDB!"
+      name: "okdp"
+  cors:
+    allowedOrigins: ["*"]
+    allowedMethods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS", "HEAD"]
+    allowedHeaders: ["Origin", "Accept", "Authorization", "Content-Length", "Content-Type"]
+    exposedHeaders: ["Content-Length"]
+    allowCredentials: true 
+    maxAge: 3600
+  headers:
+    X-Frame-Options: "DENY"
+    X-Content-Type-Options: nosniff
+
