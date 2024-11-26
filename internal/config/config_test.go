@@ -34,6 +34,7 @@ func Test_LoadConfig_Server_Logging(t *testing.T) {
 	assert.Equal(t, "console", logging.Format, "Format")
 }
 
+
 func Test_LoadConfig_AuthBasic(t *testing.T) {
 	// Given
 	viper.Set("config", "testdata/application.yaml")
@@ -78,4 +79,42 @@ func Test_LoadConfig_AuthBearer(t *testing.T) {
 	assert.Equal(t, "realm_access.groups", config.Security.AuthN.Bearer.GroupsAttributePath, "GroupsAttributePath")
 	assert.True(t, config.Security.AuthN.Bearer.SkipIssuerCheck, "SkipIssuerCheck")
 	assert.False(t, config.Security.AuthN.Bearer.SkipSignatureCheck, "SkipSignatureCheck")
+}
+
+func Test_LoadConfig_AuthZProvider_File(t *testing.T) {
+	// Given
+	viper.Set("config", "testdata/application.yaml")
+	// When
+	config := GetAppConfig()
+	// Then
+	assert.Equal(t, "testdata/security/authz-model.conf", config.Security.AuthZ.File.ModelPath, "ModelPath")
+	assert.Equal(t, "testdata/security/authz-policy.csv", config.Security.AuthZ.File.PolicyPath, "PolicyPath")
+}
+
+func Test_LoadConfig_AuthZProvider_Database(t *testing.T) {
+	// Given
+	viper.Set("config", "testdata/application.yaml")
+	// When
+	config := GetAppConfig()
+	// Then
+	assert.Equal(t, "okdp", config.Security.AuthZ.Database.Name, "Name")
+	assert.Equal(t, "localhost", config.Security.AuthZ.Database.Host, "Host")
+	assert.Equal(t, 5432, config.Security.AuthZ.Database.Port, "Port")
+	assert.Equal(t, "adm", config.Security.AuthZ.Database.Username, "Username")
+	assert.Equal(t, "passDB!", config.Security.AuthZ.Database.Password, "Password")
+}
+
+func Test_LoadConfig_ConfigFileNotFound(t *testing.T) {
+	defer func() {
+		if r := recover(); r != nil {
+			t.Log("Recover panic, unable to parse the configuration file")
+		}
+	}()
+	// Given
+	viper.Set("config", "not-found/application.yaml")
+	resetAppConfig()
+	// When
+	GetAppConfig()
+	// Then
+	t.Errorf("Panic was expected")
 }

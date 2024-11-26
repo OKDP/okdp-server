@@ -39,6 +39,7 @@ type Logging struct {
 // Security configuration
 type Security struct {
 	AuthN               AuthN              `yaml:"authN"`
+	AuthZ               AuthZ              `yaml:"authZ"`
 }
 
 // Authentication configuration
@@ -79,6 +80,28 @@ type BearerAuth struct {
 	GroupsAttributePath string `yaml:"groupsAttributePath"`
 	SkipIssuerCheck     bool   `yaml:"skipIssuerCheck"`
 	SkipSignatureCheck  bool   `yaml:"skipSignatureCheck"`
+}
+
+// AuthZ configuration options
+type AuthZ struct {
+	Provider            string    `yaml:"provider"`
+	File                FileAuthZ `yaml:"file"`
+	Database            DBAuthZ   `yaml:"database"`
+}
+
+// File-based authorization
+type FileAuthZ struct {
+	ModelPath           string `yaml:"modelPath"`
+	PolicyPath          string `yaml:"policyPath"`
+}
+
+// Database-based authorization
+type DBAuthZ struct {
+	Host                string `yaml:"host"`
+	Port                int    `yaml:"port"`
+	Username            string `yaml:"username"`
+	Password            string `yaml:"password"`
+	Name                string `yaml:"name"`
 }
 
 var (
