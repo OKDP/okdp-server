@@ -1,0 +1,16 @@
+### IntelliJ ###
+.idea
+*.iml
+
+### VS Code ###
+.vscode/
+
+### Mac OS ###
+**/.DS_Store
+
+**/version_.go
+
+### Others
+tmp/
+.tmp/
+.go-cache/

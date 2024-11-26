@@ -1,0 +1,14 @@
+run:
+  timeout: 5m
+
+linters:
+  enable:
+    - megacheck
+    - govet
+    - goconst
+    - goimports
+    - gofmt
+    - revive
+    - unconvert
+  fast: false
+
