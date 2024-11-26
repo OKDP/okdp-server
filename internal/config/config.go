@@ -40,6 +40,18 @@ type Logging struct {
 type Security struct {
 	AuthN               AuthN              `yaml:"authN"`
 	AuthZ               AuthZ              `yaml:"authZ"`
+	Cors                Cors               `yaml:"cors"`
+	Headers             map[string]string  `yaml:"headers"`
+}
+
+// Cors configuration
+type Cors struct {
+	AllowedOrigins      []string   `json:"allowedOrigins"`
+	AllowedMethods      []string   `json:"allowedMethods"`
+	AllowedHeaders      []string   `json:"allowedHeaders"`
+	ExposedHeaders      []string   `json:"exposedHeaders"`
+	AllowCredentials    bool     `json:"allowCredentials"`
+	MaxAge              int64    `json:"maxAge"`
 }
 
 // Authentication configuration

@@ -13,7 +13,7 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
- 
+
 package config
 
 import (
@@ -22,7 +22,6 @@ import (
 	"github.com/spf13/viper"
 	"github.com/stretchr/testify/assert"
 )
-
 
 func Test_LoadConfig_Server_Logging(t *testing.T) {
 	// Given
@@ -34,6 +33,28 @@ func Test_LoadConfig_Server_Logging(t *testing.T) {
 	assert.Equal(t, "console", logging.Format, "Format")
 }
 
+func Test_LoadConfig_Server_Cors(t *testing.T) {
+	// Given
+	viper.Set("config", "testdata/application.yaml")
+	// When
+	security := GetAppConfig().Security
+	// Then
+	assert.Equal(t, []string{"*"}, security.Cors.AllowedOrigins, "AllowedOrigins")
+	assert.Equal(t, []string{"GET", "POST", "PUT", "DELETE", "PATCH"}, security.Cors.AllowedMethods, "AllowedMethods")
+	assert.Equal(t, []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"}, security.Cors.AllowedHeaders, "AllowedHeaders")
+	assert.Equal(t, []string{"Link"}, security.Cors.ExposedHeaders, "ExposedHeaders")
+	assert.True(t, true, security.Cors.AllowCredentials, "AllowCredentials")
+	assert.Equal(t, int64(3600), security.Cors.MaxAge, "MaxAge")
+}
+
+func Test_LoadConfig_Server_Headers(t *testing.T) {
+	// Given
+	viper.Set("config", "testdata/application.yaml")
+	// When
+	security := GetAppConfig().Security
+	// Then
+	assert.Equal(t, map[string]string{"x-frame-options": "DENY", "x-content-type-options": "nosniff",}, security.Headers, "Headers")
+}
 
 func Test_LoadConfig_AuthBasic(t *testing.T) {
 	// Given
