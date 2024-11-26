@@ -61,7 +61,7 @@ func ensureUserAuthenticated() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		_, found := c.Get(constants.OAuth2UserInfo)
 		if !found {
-			log.Error("Failed to authenticate user")
+			log.Warn("Failed to authenticate user")
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "Authentication failed"})
 			return
 		}

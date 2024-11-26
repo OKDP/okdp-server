@@ -71,14 +71,14 @@ func (p *BearerProvider) authenticate() gin.HandlerFunc {
 		accessToken := strings.TrimPrefix(authorization, "Bearer ")
 		err := p.verifyAccessToken(accessToken)
 		if err != nil {
-			log.Error("Failed to verify access Token: %w", err)
+			log.Warn("Failed to verify access Token: %w", err)
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "Failed to verify access Token: " + err.Error()})
 			return
 		}
 
 		userInfo, err = p.getUserInfo(accessToken)
 		if err != nil {
-			log.Error("Unable to get user roles/groups from access token: %w", err)
+			log.Warn("Unable to get user roles/groups from access token: %w", err)
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "Unable to get user roles/groups from access token: " + err.Error()})
 			return
 		}

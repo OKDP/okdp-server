@@ -122,40 +122,40 @@ func (p *OidcProvider) authenticate() gin.HandlerFunc {
 
 		state := session.Get(constants.OAuth2State)
 		if c.Query("state") != state {
-			log.Error("Invalid authentication OAuth2 state")
+			log.Warn("Invalid authentication OAuth2 state")
 			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"message": "Invalid authentication OAuth2 'state': " + state.(string)})
 			return
 		}
 		// Exchange the authorization code for an access token
 		token, err := p.Config.Exchange(p.Context, c.Query("code"))
 		if err != nil {
-			log.Error("Failed to exchange the authorization code with an access token: %w", err)
+			log.Warn("Failed to exchange the authorization code with an access token: %w", err)
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "Failed to exchange authorization code with an access token: " + err.Error()})
 			return
 		}
 
 		rawIDToken, ok := token.Extra("id_token").(string)
 		if !ok {
-			log.Error("No id_token field found in the OAuth2 token")
+			log.Warn("No id_token field found in the OAuth2 token")
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "No id_token field found in the OAuth2 token"})
 			return
 		}
 		idToken, err := p.Verify(p.Context, rawIDToken)
 		if err != nil {
-			log.Error("Failed to verify the ID Token: %w", err)
+			log.Warn("Failed to verify the ID Token: %w", err)
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "Failed to verify the ID Token: " + err.Error()})
 			return
 		}
 
 		nonce := session.Get(constants.OAuth2Nonce)
 		if idToken.Nonce != nonce {
-			log.Error("")
+			log.Warn("Invalid authentication OAuth2 'nonce': %s", nonce.(string))
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "Invalid authentication OAuth2 'nonce': " + nonce.(string)})
 			return
 		}
 		userInfo, err = p.getUserInfo(token.AccessToken)
 		if err != nil {
-			log.Error("Unable to get user roles/groups from the access token: %w", err)
+			log.Warn("Unable to get user roles/groups from the access token: %w", err)
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "Unable to get user roles/groups from access token: " + err.Error()})
 			return
 		}

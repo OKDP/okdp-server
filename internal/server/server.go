@@ -31,9 +31,7 @@ import (
 	"github.com/okdp/okdp-server/internal/security/authz"
 )
 
-func NewOKDPServer() *http.Server {
-
-	config := config.GetAppConfig()
+func NewOKDPServer(config *config.ApplicationConfig) *http.Server {
 
 	gin.SetMode(config.Server.Mode)
 	r := &controllers.Router{gin.New()}                               //nolint:all

@@ -57,7 +57,7 @@ func (e *Enforcer) authorize() gin.HandlerFunc {
 		)
 		userInfo, ok := c.Get(constants.OAuth2UserInfo)
 		if !ok {
-			log.Error("Unable to authorize user, no user informtaion found in context")
+			log.Warn("Unable to authorize user, no user informtaion found in context")
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "Unable to authorize user, no user informtaion found in context"})
 			return
 		}
@@ -84,12 +84,12 @@ func (e *Enforcer) authorize() gin.HandlerFunc {
 		}
 
 		if err != nil {
-			log.Error("Unable to authorize user (%s/%s): %s",email, sub, err.Error())
+			log.Warn("Unable to authorize user (%s/%s): %s",email, sub, err.Error())
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": err.Error()})
 			return
 		}
 		if !allowed {
-			log.Error("User (%s/%s) not allowed to execute the action", email, sub)
+			log.Warn("User (%s/%s) not allowed to execute the action", email, sub)
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "Unauthorized action"})
 			return
 		}
