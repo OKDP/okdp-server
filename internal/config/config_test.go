@@ -23,6 +23,17 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+
+func Test_LoadConfig_Server_Logging(t *testing.T) {
+	// Given
+	viper.Set("config", "testdata/application.yaml")
+	// When
+	logging := GetAppConfig().Logging
+	// Then
+	assert.Equal(t, "debug",   logging.Level, "Level")
+	assert.Equal(t, "console", logging.Format, "Format")
+}
+
 func Test_LoadConfig_AuthBasic(t *testing.T) {
 	// Given
 	viper.Set("config", "testdata/application.yaml")

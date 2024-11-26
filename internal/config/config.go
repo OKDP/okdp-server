@@ -27,6 +27,13 @@ import (
 // Application configuration
 type ApplicationConfig struct {
 	Security Security `mapstructure:"security"`
+	Logging  Logging  `mapstructure:"logging"`
+}
+
+// Logging configuration
+type Logging struct {
+	Level         string                `yaml:"provider"`
+	Format        string                `yaml:"format"`
 }
 
 // Security configuration
@@ -73,7 +80,6 @@ type BearerAuth struct {
 	SkipIssuerCheck     bool   `yaml:"skipIssuerCheck"`
 	SkipSignatureCheck  bool   `yaml:"skipSignatureCheck"`
 }
-
 
 var (
 	instance *ApplicationConfig
