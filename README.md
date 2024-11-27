@@ -30,6 +30,18 @@ adm1/user
 
 view1/user
 
+Test the following endpoint:
+```
+http://localhost:8092/#/deployments/ListDeployments
+spaceId: 1
+compositionId:1
+```
+
+Then:
+```
+spaceId: 2
+compositionId:1
+```
 
 ### Rebuild
 
