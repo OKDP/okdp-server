@@ -22,6 +22,12 @@ docker-compose up
 
 Open swagger UI at: http://localhost:8092/
 
+Authenticate with Swagger : oauth2 (OAuth2, authorizationCode with PKCE)
+
+dev1/user
+adm1/user
+view1/user
+
 ### Rebuild
 
 ```shell
