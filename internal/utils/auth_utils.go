@@ -19,13 +19,7 @@ package utils
 import (
 	"crypto/rand"
 	"encoding/base64"
-	//"encoding/json"
-	//"fmt"
 	"io"
-	//"strings"
-
-	//"github.com/okdp/okdp-server/internal/security/authc/model"
-	//"github.com/tidwall/gjson"
 )
 
 const NB_BYTES int = 16

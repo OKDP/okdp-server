@@ -29,55 +29,56 @@ type ApplicationConfig struct {
 	Server   Server   `mapstructure:"server"`
 	Security Security `mapstructure:"security"`
 	Logging  Logging  `mapstructure:"logging"`
+	Kad      Kad      `mapstructure:"kad"`
 }
 
 // Server configuration
 type Server struct {
-	ListenAddress string                 `mapstructure:"listenAddress"`
-	Port          int                    `mapstructure:"port"`
-	Mode          string                 `mapstructure:"mode"`
+	ListenAddress string `mapstructure:"listenAddress"`
+	Port          int    `mapstructure:"port"`
+	Mode          string `mapstructure:"mode"`
 }
 
 // Logging configuration
 type Logging struct {
-	Level         string                `yaml:"provider"`
-	Format        string                `yaml:"format"`
+	Level  string `yaml:"provider"`
+	Format string `yaml:"format"`
 }
 
 // Security configuration
 type Security struct {
-	AuthN               AuthN              `yaml:"authN"`
-	AuthZ               AuthZ              `yaml:"authZ"`
-	Cors                Cors               `yaml:"cors"`
-	Headers             map[string]string  `yaml:"headers"`
+	AuthN   AuthN             `yaml:"authN"`
+	AuthZ   AuthZ             `yaml:"authZ"`
+	Cors    Cors              `yaml:"cors"`
+	Headers map[string]string `yaml:"headers"`
 }
 
 // Cors configuration
 type Cors struct {
-	AllowedOrigins      []string   `json:"allowedOrigins"`
-	AllowedMethods      []string   `json:"allowedMethods"`
-	AllowedHeaders      []string   `json:"allowedHeaders"`
-	ExposedHeaders      []string   `json:"exposedHeaders"`
-	AllowCredentials    bool     `json:"allowCredentials"`
-	MaxAge              int64    `json:"maxAge"`
+	AllowedOrigins   []string `json:"allowedOrigins"`
+	AllowedMethods   []string `json:"allowedMethods"`
+	AllowedHeaders   []string `json:"allowedHeaders"`
+	ExposedHeaders   []string `json:"exposedHeaders"`
+	AllowCredentials bool     `json:"allowCredentials"`
+	MaxAge           int64    `json:"maxAge"`
 }
 
 // Authentication configuration
 type AuthN struct {
-	Provider            []string          `yaml:"provider"`
-	OpenID              OpenIDAuth        `yaml:"openid"`
-	Bearer              BearerAuth        `yaml:"bearer"`
-	Basic               []BasicAuth       `yaml:"basic"`
+	Provider []string    `yaml:"provider"`
+	OpenID   OpenIDAuth  `yaml:"openid"`
+	Bearer   BearerAuth  `yaml:"bearer"`
+	Basic    []BasicAuth `yaml:"basic"`
 }
 
 // Basic auth based authentication configuration
 type BasicAuth struct {
-	Login               string   `json:"login"`
-	Password            string   `json:"password"`
-	FirstName           string   `json:"firstName"`
-	LastName            string   `json:"lastName"`
-	Email               string   `json:"email"`
-	Roles               []string `json:"roles"`
+	Login     string   `json:"login"`
+	Password  string   `json:"password"`
+	FirstName string   `json:"firstName"`
+	LastName  string   `json:"lastName"`
+	Email     string   `json:"email"`
+	Roles     []string `json:"roles"`
 }
 
 // OpenID based authentication configuration
@@ -104,24 +105,30 @@ type BearerAuth struct {
 
 // AuthZ configuration options
 type AuthZ struct {
-	Provider            string    `yaml:"provider"`
-	File                FileAuthZ `yaml:"file"`
-	Database            DBAuthZ   `yaml:"database"`
+	Provider string    `yaml:"provider"`
+	File     FileAuthZ `yaml:"file"`
+	Database DBAuthZ   `yaml:"database"`
 }
 
 // File-based authorization
 type FileAuthZ struct {
-	ModelPath           string `yaml:"modelPath"`
-	PolicyPath          string `yaml:"policyPath"`
+	ModelPath  string `yaml:"modelPath"`
+	PolicyPath string `yaml:"policyPath"`
 }
 
 // Database-based authorization
 type DBAuthZ struct {
-	Host                string `yaml:"host"`
-	Port                int    `yaml:"port"`
-	Username            string `yaml:"username"`
-	Password            string `yaml:"password"`
-	Name                string `yaml:"name"`
+	Host     string `yaml:"host"`
+	Port     int    `yaml:"port"`
+	Username string `yaml:"username"`
+	Password string `yaml:"password"`
+	Name     string `yaml:"name"`
+}
+
+type Kad struct {
+	ApiUrl             string `yaml:"apiUrl"`
+	AuthBearer         string `yaml:"authBearer"`
+	InsecureSkipVerify bool   `yaml:"insecureSkipVerify"`
 }
 
 var (
@@ -166,4 +173,3 @@ func resetAppConfig() {
 	instance = nil
 	once = sync.Once{}
 }
-

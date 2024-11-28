@@ -1,0 +1,52 @@
+get:
+  summary: List all components
+  description: |
+    todo
+  tags:
+    - components
+  operationId: listComponents
+  parameters:
+    - in: query
+      name: includeRawSpec
+      schema:
+        type: boolean
+        default: false
+      required: true
+      description: Include or not the raw json spec
+  responses:
+    '200':
+      description: todo
+      content:
+        application/json:
+          schema:
+            $ref: '../../definition/Components.yaml'
+    default:
+      description: unexpected error
+      content:
+        application/json:
+          schema:
+            $ref: '../../definition/Error.yaml'
+
+# post:
+#   summary: Create a new component
+#   description: |
+#     todo
+#   tags:
+#     - components
+#   operationId: createComponent
+#   requestBody:
+#     description: todo
+#     required: true
+#     content:
+#       application/json:
+#         schema:
+#           $ref: '../../definition/Component.yaml'
+#   responses:
+#     '204':
+#       description: todo
+#     default:
+#       description: unexpected error
+#       content:
+#         application/json:
+#           schema:
+#             $ref: '../../definition/Error.yaml'

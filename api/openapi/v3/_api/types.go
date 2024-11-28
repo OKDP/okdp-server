@@ -50,6 +50,18 @@ type Error struct {
 	Slug    string `json:"slug"`
 }
 
+// ListComponentsParams defines parameters for ListComponents.
+type ListComponentsParams struct {
+	// IncludeRawSpec Include or not the raw json spec
+	IncludeRawSpec bool `form:"includeRawSpec" json:"includeRawSpec"`
+}
+
+// GetComponentsParams defines parameters for GetComponents.
+type GetComponentsParams struct {
+	// IncludeRawSpec Include or not the raw json spec
+	IncludeRawSpec bool `form:"includeRawSpec" json:"includeRawSpec"`
+}
+
 // CreateSpaceJSONBody defines parameters for CreateSpace.
 type CreateSpaceJSONBody struct {
 	ToDo1 string `json:"ToDo1"`

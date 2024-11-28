@@ -18,6 +18,10 @@ servers:
   - url: /api/v1
 
 tags:
+  - name: components
+    description: Access to components
+    externalDocs:
+      url: https://github.com/kubotal/kad-controller/tree/main
   - name: spaces
     description: Access to spaces
     externalDocs:
@@ -36,6 +40,11 @@ tags:
       url: https://github.com/kubotal/kad-controller/tree/main
 
 paths:
+  ### KAD Components API - In the main, check the real endpint TODO
+  /components:
+    $ref: ./paths/components/component.yaml
+  /components/{componentId}:
+    $ref: ./paths/components/component-by-id.yaml
   ### Spaces API
   /spaces:
     $ref: ./paths/spaces/space.yaml

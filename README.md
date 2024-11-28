@@ -14,6 +14,12 @@ Manually add the following entry in /etc/hosts
 127.0.0.1       keycloak
 ```
 
+Forward kad webserver to localhost:
+
+```shell
+kubectl port-forward svc/kad-webserver 6553:6553
+```
+
 ### Start
 
 ```shell
@@ -42,6 +48,10 @@ Then:
 spaceId: 2
 compositionId:1
 ```
+
+For KAD, test the following endpoint:
+
+http://localhost:8092/#/components/ListComponents
 
 ### Rebuild
 

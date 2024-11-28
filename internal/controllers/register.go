@@ -20,6 +20,7 @@ import (
 	"github.com/gin-gonic/gin"
 	_composition "github.com/okdp/okdp-server/api/openapi/v3/_api/compositions"
 	_deployment "github.com/okdp/okdp-server/api/openapi/v3/_api/deployments"
+	_component "github.com/okdp/okdp-server/api/openapi/v3/_api/components"
 	"github.com/okdp/okdp-server/internal/constants"
 )
 
@@ -34,6 +35,7 @@ type Group struct {
 func (g *Group) RegisterControllers() {
 	_deployment.RegisterHandlers(g, DeploymentController())
 	_composition.RegisterHandlers(g, CompositionController())
+	_component.RegisterHandlers(g, ComponentController())
 }
 
 func (r *Router) RegisterSwaggerApiDoc() {
