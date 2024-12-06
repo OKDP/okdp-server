@@ -30,4 +30,9 @@ const (
 	CasbinRolePrefix  = "role:"
 	// Swagger API Docs URI
 	SwaggerApiDocsUri = OkdpServerBaseUrl + "/api-docs"
+	// KAD
+	ComponentURL = "/mycluster/component"
+	ComponentReleaseURL = "/mycluster/component-release"
+	TemplateReleaseURL = "/mycluster/template-release"
+	CatalogURL = "/mycluster/catalog"
 )

@@ -1,0 +1,43 @@
+get:
+  summary: Get a template release by name
+  description: |
+    Get a template release by name
+  tags:
+    - templatereleases
+  operationId: getTemplateRelease
+  parameters:
+    - in: path
+      name: kadInstanceId
+      schema:
+        type: string
+      required: true
+      description: KAD instance ID
+    - in: path
+      name: name
+      schema:
+        type: string
+      required: true
+      description: Template release name
+    - in: query
+      name: catalog
+      schema:
+        type: string
+      required: false
+      description: Filter by catalogs (comma separated)
+  responses:
+    '200':
+      description: Template release information
+      content:
+        application/json:
+          schema:
+            $ref: '../../definition/TemplateRelease.yaml'
+    default:
+      description: unexpected error
+      content:
+        application/json:
+          schema:
+            $ref: '../../definition/Error.yaml'
+
+
+
+

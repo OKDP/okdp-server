@@ -1,0 +1,23 @@
+type: object
+xml:
+  name: service
+required:
+- "name"
+- "isComposition"
+- "flatComponents"
+properties:
+  name:
+    type: string
+    x-order: 1
+  isComposition:
+    type: "boolean"
+    default: false
+    x-order: 3
+  flatComponents:
+    type: "array"
+    x-order: 4
+    items:
+      $ref: './FlatComponent.yaml'
+
+
+

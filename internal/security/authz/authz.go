@@ -24,7 +24,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/okdp/okdp-server/internal/config"
 	"github.com/okdp/okdp-server/internal/constants"
-	"github.com/okdp/okdp-server/internal/model/auth"
+	"github.com/okdp/okdp-server/internal/security/authc/model"
 	"github.com/okdp/okdp-server/internal/utils"
 	"github.com/okdp/okdp-server/internal/logging"
 )

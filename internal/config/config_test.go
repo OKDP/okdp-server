@@ -140,11 +140,12 @@ func Test_LoadConfig_Kad(t *testing.T) {
 	// Given
 	viper.Set("config", "testdata/application.yaml")
 	// When
-	kad := GetAppConfig().Kad
+	KadInstances := GetAppConfig().Kad
 	// Then
-	assert.Equal(t, "https://host.docker.internal:6553/api/kad/v1", kad.ApiUrl, "ApiUrl")
-	assert.Equal(t, "JUDtoP55C2dLfeaXqSbehhKKRdmAWTfj", kad.AuthBearer, "AuthBearer")
-	assert.True(t, kad.InsecureSkipVerify, "InsecureSkipVerify should be true")
+	assert.Equal(t, "sandbox", KadInstances[0].Id, "Id")
+	assert.Equal(t, "https://host.docker.internal:6553/api/kad/v1", KadInstances[0].ApiUrl, "ApiUrl")
+	assert.Equal(t, "JUDtoP55C2dLfeaXqSbehhKKRdmAWTfj", KadInstances[0].AuthBearer, "AuthBearer")
+	assert.True(t, KadInstances[0].InsecureSkipVerify, "InsecureSkipVerify should be true")
 }
 
 func Test_LoadConfig_ConfigFileNotFound(t *testing.T) {

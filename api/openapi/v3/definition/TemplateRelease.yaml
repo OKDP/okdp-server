@@ -1,0 +1,73 @@
+type: object
+xml:
+  name: templateRelease
+required: 
+  - "kind"
+  - "spec"
+  - "status"
+properties: 
+  kind: 
+    type: "string"
+  spec: 
+    required: 
+      - "name"
+      - "template"
+      - "enabled"
+    properties: 
+      name: 
+        type: "string"
+      template: 
+        required: 
+          - "Ref"
+          - "parameters"
+          - "parameterFiles"
+        properties: 
+          Ref: 
+            required: 
+              - "Name"
+              - "Version"
+            properties: 
+              Name: 
+                type: "string"
+              Version: 
+                type: "string"
+            type: "object"
+          parameters: 
+            description: List of paramters as key/value pairs
+            additionalProperties: true
+            type: "object"
+        type: "object"
+      enabled: 
+        type: "boolean"
+    type: "object"
+  status: 
+    required: 
+      - "file"
+      - "path"
+      - "error"
+      - "parameters"
+      - "children"
+      - "usage"
+      - "catalogs"
+    properties: 
+      file: 
+        type: "string"
+      path: 
+        type: "string"
+      error: 
+        type: "string"
+      parameters: 
+        description: List of paramters as key/value pairs
+        additionalProperties: true
+        type: "object"
+      children: 
+        type: "array"
+        items: 
+          type: "string"
+      usage: 
+        type: "string"
+      catalogs: 
+        type: "array"
+        items: 
+          type: "string"
+    type: "object"

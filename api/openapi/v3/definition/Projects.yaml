@@ -1,7 +1,0 @@
-type: object
-required: [projects]
-properties:
-  projects:
-    type: array
-    items:
-      $ref: './Project.yaml'

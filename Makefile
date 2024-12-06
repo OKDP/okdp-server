@@ -1,5 +1,6 @@
 generate: install gogenerate
-test: generate gotest
+compile: generate gocompile
+test: compile gotest
 build: test gobuild
 run: test gorun
 
@@ -10,7 +11,7 @@ install:
 .PHONY: gogenerate
 gogenerate:
     # Generate Open API V3 model (all types)
-	oapi-codegen -package=_api -generate types,skip-prune  \
+	oapi-codegen -package=_api -generate types,skip-prune \
 	             -o api/openapi/v3/_api/types.go \
 				 api/openapi/v3/api.yaml
 	
@@ -43,7 +44,12 @@ lint:
 
 .PHONY: gobuild
 gobuild:
-	CGO_ENABLED=0 go build -a -o okdp-server main.go
+	mkdir -p .bin/
+	CGO_ENABLED=0 go build -a -o .bin/okdp-server main.go
+
+.PHONY: gocompile
+gocompile:
+	CGO_ENABLED=0 go build -a -o /dev/null main.go
 
 .PHONY: gotest
 gotest:

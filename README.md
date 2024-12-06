@@ -59,3 +59,8 @@ http://localhost:8092/#/components/ListComponents
 docker-compose build --no-cache 
 ```
 
+```shell
+curl -H "Authorization: Bearer qn7ccrJQhBJ9bdJ4sPa3LAXR8mrjsHen" -X PUT 'https://kad.ingress.kubo4.mbp/api/git/v1/mycluster/deployments/minio3.yaml' -F kadfile=@minio3.yaml -F commit-message='A commit Message' -F committer-name='Serge' -F committer-email=''
+
+```
+

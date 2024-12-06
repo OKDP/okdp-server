@@ -1,0 +1,123 @@
+type: object
+xml:
+  name: componentRelease
+required: 
+  - "kind"
+  - "spec"
+  - "status"
+properties: 
+  kind: 
+    type: "string"
+  spec: 
+    required: 
+      - "name"
+      - "enabled"
+      - "component"
+      - "namespace"
+      - "helmReleaseName__"
+      - "roles"
+      - "dependsOn"
+    properties: 
+      name: 
+        type: "string"
+      enabled: 
+        type: "boolean"
+      component: 
+        required: 
+          - "Ref"
+          - "suspended"
+          - "protected"
+          - "Source"
+          - "parameters"
+          - "parameterFiles"
+          - "config"
+          - "values"
+        properties: 
+          Ref: 
+            required: 
+              - "Name"
+              - "Version"
+            properties: 
+              Name: 
+                type: "string"
+              Version: 
+                type: "string"
+            type: "object"
+          suspended: 
+            type: "boolean"
+          protected: 
+            type: "boolean"
+          Source: 
+            required: 
+              - "version"
+            properties: 
+              version: 
+                type: "string"
+            type: "object"
+          parameters: 
+            description: List of paramters as key/value pairs
+            additionalProperties: true
+            type: "object"
+          parameterFiles: 
+            type: "array"
+            items: 
+              type: "object"
+              properties: 
+                Document: 
+                  type: "string"
+                File: 
+                  type: "string"
+                Unwrap: 
+                  type: "string"
+                Wrap: 
+                  type: "string"
+          values:
+            description: List of values as key/value pairs
+            additionalProperties: true
+            type: "object"
+        type: "object"
+      namespace: 
+        type: "string"
+      helmReleaseName__: 
+        type: "string"
+      roles: 
+        type: "array"
+        items: 
+          type: "string"
+      dependsOn: 
+        type: "array"
+        items: 
+          type: "string"
+    type: "object"
+  status: 
+    required: 
+      - "file"
+      - "path"
+      - "error"
+      - "parameters"
+      - "dependencies"
+      - "usage"
+      - "catalogs"
+    properties: 
+      file: 
+        type: "string"
+      path: 
+        type: "string"
+      error: 
+        type: "string"
+      parameters: 
+        description: List of values as key/value pairs
+        additionalProperties: true
+        type: "object"
+      dependencies: 
+        type: "array"
+        items: 
+          type: "string"
+      usage: 
+        type: "string"
+      catalogs: 
+        type: "array"
+        items: 
+          type: "string"
+    type: "object"
+

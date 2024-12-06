@@ -18,24 +18,24 @@ const (
 
 // ListComponentsParams defines parameters for ListComponents.
 type ListComponentsParams struct {
-	// IncludeRawSpec Include or not the raw json spec
-	IncludeRawSpec bool `form:"includeRawSpec" json:"includeRawSpec"`
+	// Catalog Filter by catalogs (comma separated)
+	Catalog *string `form:"catalog,omitempty" json:"catalog,omitempty"`
 }
 
-// GetComponentsParams defines parameters for GetComponents.
-type GetComponentsParams struct {
-	// IncludeRawSpec Include or not the raw json spec
-	IncludeRawSpec bool `form:"includeRawSpec" json:"includeRawSpec"`
+// GetComponentParams defines parameters for GetComponent.
+type GetComponentParams struct {
+	// Catalog Filter by catalogs (comma separated)
+	Catalog *string `form:"catalog,omitempty" json:"catalog,omitempty"`
 }
 
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
 	// List all components
-	// (GET /components)
-	ListComponents(c *gin.Context, params ListComponentsParams)
-	// Get a component by componentId
-	// (GET /components/{componentId})
-	GetComponents(c *gin.Context, componentId string, params GetComponentsParams)
+	// (GET /kad/{kadInstanceId}/components)
+	ListComponents(c *gin.Context, kadInstanceId string, params ListComponentsParams)
+	// Get a component by name
+	// (GET /kad/{kadInstanceId}/components/{name})
+	GetComponent(c *gin.Context, kadInstanceId string, name string, params GetComponentParams)
 }
 
 // ServerInterfaceWrapper converts contexts to parameters.
@@ -52,6 +52,15 @@ func (siw *ServerInterfaceWrapper) ListComponents(c *gin.Context) {
 
 	var err error
 
+	// ------------- Path parameter "kadInstanceId" -------------
+	var kadInstanceId string
+
+	err = runtime.BindStyledParameterWithOptions("simple", "kadInstanceId", c.Param("kadInstanceId"), &kadInstanceId, runtime.BindStyledParameterOptions{Explode: false, Required: true})
+	if err != nil {
+		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter kadInstanceId: %w", err), http.StatusBadRequest)
+		return
+	}
+
 	c.Set(BasicAuthScopes, []string{})
 
 	c.Set(Oauth2Scopes, []string{"openid", "email", "profile", "roles"})
@@ -59,18 +68,11 @@ func (siw *ServerInterfaceWrapper) ListComponents(c *gin.Context) {
 	// Parameter object where we will unmarshal all parameters from the context
 	var params ListComponentsParams
 
-	// ------------- Required query parameter "includeRawSpec" -------------
+	// ------------- Optional query parameter "catalog" -------------
 
-	if paramValue := c.Query("includeRawSpec"); paramValue != "" {
-
-	} else {
-		siw.ErrorHandler(c, fmt.Errorf("Query argument includeRawSpec is required, but not found"), http.StatusBadRequest)
-		return
-	}
-
-	err = runtime.BindQueryParameter("form", true, true, "includeRawSpec", c.Request.URL.Query(), &params.IncludeRawSpec)
+	err = runtime.BindQueryParameter("form", true, false, "catalog", c.Request.URL.Query(), &params.Catalog)
 	if err != nil {
-		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter includeRawSpec: %w", err), http.StatusBadRequest)
+		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter catalog: %w", err), http.StatusBadRequest)
 		return
 	}
 
@@ -81,20 +83,29 @@ func (siw *ServerInterfaceWrapper) ListComponents(c *gin.Context) {
 		}
 	}
 
-	siw.Handler.ListComponents(c, params)
+	siw.Handler.ListComponents(c, kadInstanceId, params)
 }
 
-// GetComponents operation middleware
-func (siw *ServerInterfaceWrapper) GetComponents(c *gin.Context) {
+// GetComponent operation middleware
+func (siw *ServerInterfaceWrapper) GetComponent(c *gin.Context) {
 
 	var err error
 
-	// ------------- Path parameter "componentId" -------------
-	var componentId string
+	// ------------- Path parameter "kadInstanceId" -------------
+	var kadInstanceId string
 
-	err = runtime.BindStyledParameterWithOptions("simple", "componentId", c.Param("componentId"), &componentId, runtime.BindStyledParameterOptions{Explode: false, Required: true})
+	err = runtime.BindStyledParameterWithOptions("simple", "kadInstanceId", c.Param("kadInstanceId"), &kadInstanceId, runtime.BindStyledParameterOptions{Explode: false, Required: true})
 	if err != nil {
-		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter componentId: %w", err), http.StatusBadRequest)
+		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter kadInstanceId: %w", err), http.StatusBadRequest)
+		return
+	}
+
+	// ------------- Path parameter "name" -------------
+	var name string
+
+	err = runtime.BindStyledParameterWithOptions("simple", "name", c.Param("name"), &name, runtime.BindStyledParameterOptions{Explode: false, Required: true})
+	if err != nil {
+		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter name: %w", err), http.StatusBadRequest)
 		return
 	}
 
@@ -103,20 +114,13 @@ func (siw *ServerInterfaceWrapper) GetComponents(c *gin.Context) {
 	c.Set(Oauth2Scopes, []string{"openid", "email", "profile", "roles"})
 
 	// Parameter object where we will unmarshal all parameters from the context
-	var params GetComponentsParams
+	var params GetComponentParams
 
-	// ------------- Required query parameter "includeRawSpec" -------------
+	// ------------- Optional query parameter "catalog" -------------
 
-	if paramValue := c.Query("includeRawSpec"); paramValue != "" {
-
-	} else {
-		siw.ErrorHandler(c, fmt.Errorf("Query argument includeRawSpec is required, but not found"), http.StatusBadRequest)
-		return
-	}
-
-	err = runtime.BindQueryParameter("form", true, true, "includeRawSpec", c.Request.URL.Query(), &params.IncludeRawSpec)
+	err = runtime.BindQueryParameter("form", true, false, "catalog", c.Request.URL.Query(), &params.Catalog)
 	if err != nil {
-		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter includeRawSpec: %w", err), http.StatusBadRequest)
+		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter catalog: %w", err), http.StatusBadRequest)
 		return
 	}
 
@@ -127,7 +131,7 @@ func (siw *ServerInterfaceWrapper) GetComponents(c *gin.Context) {
 		}
 	}
 
-	siw.Handler.GetComponents(c, componentId, params)
+	siw.Handler.GetComponent(c, kadInstanceId, name, params)
 }
 
 // GinServerOptions provides options for the Gin server.
@@ -157,6 +161,6 @@ func RegisterHandlersWithOptions(router gin.IRouter, si ServerInterface, options
 		ErrorHandler:       errorHandler,
 	}
 
-	router.GET(options.BaseURL+"/components", wrapper.ListComponents)
-	router.GET(options.BaseURL+"/components/:componentId", wrapper.GetComponents)
+	router.GET(options.BaseURL+"/kad/:kadInstanceId/components", wrapper.ListComponents)
+	router.GET(options.BaseURL+"/kad/:kadInstanceId/components/:name", wrapper.GetComponent)
 }

@@ -1,0 +1,41 @@
+get:
+  summary: List all component releases
+  description: |
+    todo
+  tags:
+    - componentreleases
+  operationId: listComponentReleases
+  parameters:
+    - in: path
+      name: kadInstanceId
+      schema:
+        type: string
+      required: true
+      description: KAD instance ID
+    - in: query
+      name: catalog
+      schema:
+        type: string
+      required: false
+      description: Filter by catalogs (comma separated)
+  responses:
+    '200':
+      description: List of the component releases
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [componentreleases]
+            properties:
+              componentreleases:
+                type: array
+                items:
+                  $ref: '../../definition/ComponentRelease.yaml'
+    default:
+      description: unexpected error
+      content:
+        application/json:
+          schema:
+            $ref: '../../definition/Error.yaml'
+
+

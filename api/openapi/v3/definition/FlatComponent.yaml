@@ -1,0 +1,43 @@
+type: "object"
+xml:
+  name: flatComponent
+required: 
+- "packageName"
+- "packageVersion"
+- "componentName"
+- "componentVersion"
+- "templateName"
+- "templateVersion"
+- "componentReleaseName"
+- "templateReleaseName"
+- "enabled"
+- "suspended"
+- "protected"
+- "catalogs"
+properties:
+  packageName:
+    type: string
+  packageVersion:
+    type: string
+  componentName:
+    type: string
+  componentVersion:
+    type: string
+  templateName:
+    type: string
+  templateVersion:
+    type: string
+  componentReleaseName:
+    type: string
+  templateReleaseName:
+    type: string
+  enabled:
+    type: boolean
+  suspended:
+    type: boolean
+  protected:
+    type: boolean
+  catalogs:
+    type: array
+    items:
+      type: string

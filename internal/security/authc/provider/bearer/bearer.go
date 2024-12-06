@@ -26,7 +26,7 @@ import (
 	"github.com/okdp/okdp-server/internal/config"
 	"github.com/okdp/okdp-server/internal/constants"
 	"github.com/okdp/okdp-server/internal/logging"
-	"github.com/okdp/okdp-server/internal/model/auth"
+	"github.com/okdp/okdp-server/internal/security/authc/model"
 	"golang.org/x/net/context"
 )
 

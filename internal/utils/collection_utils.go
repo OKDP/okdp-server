@@ -17,11 +17,17 @@
 package utils
 
 func Map[T, L any](array []T, f func(T) L) []L {
-    result := make([]L, 0, len(array))
-    for _, e := range array {
-        result = append(result, f(e))
-    }
-    return result
+	result := make([]L, 0, len(array))
+	for _, e := range array {
+		result = append(result, f(e))
+	}
+	return result
 }
 
+func ArrayNullToEmpty[T any](a []T) []T {
+	if len(a) > 0 {
+		return a
+	}
+	return []T{}
+}
 

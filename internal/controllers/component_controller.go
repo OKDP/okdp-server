@@ -22,7 +22,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	_component "github.com/okdp/okdp-server/api/openapi/v3/_api/components"
-	log "github.com/okdp/okdp-server/internal/logging"
+	"github.com/okdp/okdp-server/internal/logging"
 	"github.com/okdp/okdp-server/internal/services"
 )
 
@@ -31,17 +31,13 @@ type IComponentController struct {
 }
 
 func ComponentController() *IComponentController {
-	componentService, err := services.NewComponentService()
-	if err != nil {
-		return nil
-	}
 	return &IComponentController{
-		componentService: componentService,
+		componentService:services.NewComponentService(),
 	}
 }
 
-func (r IComponentController) ListComponents(c *gin.Context, params _component.ListComponentsParams) {
-	components, err := r.componentService.List(params.IncludeRawSpec)
+func (r IComponentController) ListComponents(c *gin.Context, kadInstanceId string, params _component.ListComponentsParams) {
+	components, err := r.componentService.List(kadInstanceId, params.Catalog)
 	if err != nil {
 		log.Error("Unable to get data from kad: %s", err.Error())
 		c.JSON(http.StatusInternalServerError, err.Error())
@@ -50,18 +46,18 @@ func (r IComponentController) ListComponents(c *gin.Context, params _component.L
 	c.JSON(http.StatusOK, components)
 }
 
-func (r IComponentController) GetComponents(c *gin.Context, componentid string, params _component.GetComponentsParams) {
-	components, err := r.componentService.Get(componentid, params.IncludeRawSpec)
+func (r IComponentController) GetComponent(c *gin.Context, kadInstanceId string, name string, params _component.GetComponentParams) {
+	component, err := r.componentService.Get(kadInstanceId, name, params.Catalog)
 	if err != nil {
 		log.Error("Unable to get data from kad: %s", err.Error())
 		c.JSON(http.StatusInternalServerError, err.Error())
 		return
 	}
-	if len(components) == 0 {
-		c.JSON(http.StatusNotFound, fmt.Sprintf("Component with id %s not found", componentid))
+	if component == nil {
+		c.JSON(http.StatusNotFound, fmt.Sprintf("Component with id %s not found", name))
 		return
 	}
-	c.JSON(http.StatusOK, components)
+	c.JSON(http.StatusOK, component)
 
 }
 

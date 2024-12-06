@@ -18,9 +18,12 @@ package controllers
 
 import (
 	"github.com/gin-gonic/gin"
-	_composition "github.com/okdp/okdp-server/api/openapi/v3/_api/compositions"
-	_deployment "github.com/okdp/okdp-server/api/openapi/v3/_api/deployments"
+	_catalog "github.com/okdp/okdp-server/api/openapi/v3/_api/catalogs"
+	_componentrelease "github.com/okdp/okdp-server/api/openapi/v3/_api/componentreleases"
+	_templaterelease "github.com/okdp/okdp-server/api/openapi/v3/_api/templatereleases"
 	_component "github.com/okdp/okdp-server/api/openapi/v3/_api/components"
+	_service "github.com/okdp/okdp-server/api/openapi/v3/_api/services"
+	_kad "github.com/okdp/okdp-server/api/openapi/v3/_api/kad"
 	"github.com/okdp/okdp-server/internal/constants"
 )
 
@@ -33,9 +36,12 @@ type Group struct {
 }
 
 func (g *Group) RegisterControllers() {
-	_deployment.RegisterHandlers(g, DeploymentController())
-	_composition.RegisterHandlers(g, CompositionController())
+	_catalog.RegisterHandlers(g, CatalogController())
+	_componentrelease.RegisterHandlers(g, ComponentReleaseController())
+	_templaterelease.RegisterHandlers(g, TemplateReleaseController())
 	_component.RegisterHandlers(g, ComponentController())
+	_service.RegisterHandlers(g, ServiceController())
+	_kad.RegisterHandlers(g, KadController())
 }
 
 func (r *Router) RegisterSwaggerApiDoc() {

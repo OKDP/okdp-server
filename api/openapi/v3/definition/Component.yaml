@@ -1,18 +1,223 @@
+# https://swagger-toolbox.firebaseapp.com/
 type: object
-required: [ToDo1, toDo2, toDo3, toDo4]
-properties:
-  ToDo1:
-    type: string
-  toDo2:
-    type: string
-    example: toDo2
-  toDo3:
-    type: string
-    example: toDo3
-  toDo4:
-    type: string
-    example: "toDo4"
 xml:
   name: component
-
-  
+required:
+- "kind"
+- "spec"
+- "status"
+properties:
+  kind: 
+    type: "string"
+  spec: 
+    required:
+      - "name"
+      - "version"
+      - "catalogs"
+      - "usage"
+      - "config"
+      - "suspended"
+      - "protected"
+      - "source"
+      - "parameters"
+      - "parametersSchema"
+      - "contextSchema"
+      - "values"
+      - "allowValues"
+      - "allowCreateNamespace"
+      - "roles"
+      - "dependsOn"
+    properties:
+      name: 
+        type: "string"
+      version: 
+        type: "string"
+      catalogs: 
+        type: "array"
+        items: 
+          type: "string"
+      usage: 
+        type: "string"
+      config: 
+        required: 
+          - "install"
+          - "timeout"
+          - "upgrade"
+        properties: 
+          install: 
+            required: 
+              - "createNamespace"
+              - "remediation"
+            properties: 
+              createNamespace: 
+                type: "boolean"
+              remediation: 
+                required: 
+                  - "remediateLastFailure"
+                  - "retries"
+                properties: 
+                  remediateLastFailure: 
+                    type: "boolean"
+                  retries: 
+                    type: "number"
+                type: "object"
+            type: "object"
+          timeout: 
+            type: "string"
+          upgrade: 
+            required: 
+              - "remediation"
+            properties: 
+              remediation: 
+                required: 
+                  - "remediateLastFailure"
+                  - "retries"
+                properties: 
+                  remediateLastFailure: 
+                    type: "boolean"
+                  retries: 
+                    type: "number"
+                type: "object"
+            type: "object"
+        type: "object"
+      suspended: 
+        type: "boolean"
+      protected: 
+        type: "boolean"
+      source: 
+        required: 
+          - "allowedVersions"
+          - "defaultVersion"
+          - "gitRepository"
+          - "ociRepository"
+          - "helmRepository"
+        properties: 
+          allowedVersions: 
+            type: "array"
+            items: 
+              type: "string"
+          defaultVersion: 
+            type: "string"
+          gitRepository: 
+            required: 
+              - "name"
+              - "path"
+              - "unmanaged"
+              - "namespace"
+            properties: 
+              name: 
+                type: "string"
+              path: 
+                type: "string"
+              unmanaged: 
+                type: "boolean"
+              namespace: 
+                type: "string"
+            type: "object"
+          ociRepository: 
+            required: 
+              - "url"
+              - "insecure"
+              - "interval"
+              - "secretRef"
+              - "certSecretRef"
+            properties: 
+              url: 
+                type: "string"
+              insecure: 
+                type: "boolean"
+              interval: 
+                type: "string"
+              secretRef: 
+                type: "string"
+              certSecretRef: 
+                type: "string"
+            type: "object"
+          helmRepository: 
+            required: 
+              - "url"
+              - "chart"
+              - "interval"
+              - "secretRef"
+              - "certSecretRef"
+            properties: 
+              url: 
+                type: "string"
+              chart: 
+                type: "string"
+              interval: 
+                type: "string"
+              secretRef: 
+                type: "string"
+              certSecretRef: 
+                type: "string"
+            type: "object"
+        type: "object"
+      parameters: 
+        description: List of paramters as key/value pairs
+        additionalProperties: true
+        type: "object"
+      parametersSchema: 
+        required: 
+          - "File"
+          - "Json"
+          - "Yaml"
+        properties: 
+          File: 
+            type: "string"
+          Json: 
+            type: "string"
+        type: "object"
+      contextSchema: 
+        required: 
+          - "File"
+          - "Json"
+          - "Yaml"
+        properties: 
+          File: 
+            type: "string"
+          Json: 
+            type: "string"
+        type: "object"
+      values: 
+        oneOf:
+          - type: string
+          - type: object
+            additionalProperties: true
+      allowValues: 
+        type: "boolean"
+      allowCreateNamespace: 
+        type: "boolean"
+      roles: 
+        type: "array"
+        items: 
+          type: "string"
+      dependsOn: 
+        type: "array"
+        items: 
+          type: "string"
+    type: "object"
+  status: 
+    required: 
+      - "file"
+      - "path"
+      - "error"
+      - "parametersSchema"
+      - "releases"
+      - "title"
+    properties: 
+      file: 
+        type: "string"
+      path: 
+        type: "string"
+      error: 
+        type: "string"
+      parametersSchema: 
+        type: "object"
+      releases: 
+        type: "array"
+        items: 
+          type: "string"
+      title: 
+        type: "string"
+    type: "object"

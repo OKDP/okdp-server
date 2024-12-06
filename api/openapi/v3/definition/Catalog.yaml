@@ -1,0 +1,19 @@
+type: object
+xml:
+  name: catalog
+required: 
+- "name"
+- "components"
+- "templates"
+properties:
+  name:
+    type: string
+  components:
+    type: array
+    items:
+      type: string
+  templates:
+    type: array
+    items:
+      type: string
+

@@ -60,7 +60,11 @@ security:
     X-Content-Type-Options: nosniff
 
 kad:
-  apiUrl: https://host.docker.internal:6553/api/kad/v1
-  authBearer: JUDtoP55C2dLfeaXqSbehhKKRdmAWTfj
-  insecureSkipVerify: true
-
+  - id: sandbox
+    apiUrl: https://host.docker.internal:6553/api/kad/v1
+    authBearer: JUDtoP55C2dLfeaXqSbehhKKRdmAWTfj
+    insecureSkipVerify: true
+  - id: sandbox2
+    apiUrl: https://host.docker.internal:6553/api/kad/v1
+    authBearer: JUDtoP55C2dLfeaXqSbehhKKRdmAWTfj
+    insecureSkipVerify: true

@@ -1,81 +1,94 @@
 openapi: "3.0.0"
 info:
   version: 1.0.0
-  title: OKDP Server
-  description: OKDP Server
+  title: OKDP Server REST Api
+  description: This is a REST API reference for the OKDP Server
   contact:
-    name: okdp community
+    name: OKDP community
     email: idir.izitounene@kubotal.io
     url: https://okdp.io/
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
 externalDocs:
-  description: OKDP Server
+  description: OKDP documentation
   url: https://okdp.io/
 
 servers:
   - url: /api/v1
 
 tags:
+  - name: kad
+    description: Kad instances configuration
+    externalDocs:
+      url: https://github.com/okdp/okdp-server
+  - name: services
+    description: Services
+    externalDocs:
+      url: https://github.com/okdp/okdp-server
+  - name: catalogs
+    description: Catalogs
+    externalDocs:
+      url: https://github.com/okdp/okdp-server
+  - name: templatereleases
+    description: Template releases
+    externalDocs:
+      url: https://github.com/okdp/okdp-server
+  - name: componentreleases
+    description: Component releases
+    externalDocs:
+      url: https://github.com/okdp/okdp-server
   - name: components
-    description: Access to components
+    description: Components
     externalDocs:
-      url: https://github.com/kubotal/kad-controller/tree/main
-  - name: spaces
-    description: Access to spaces
-    externalDocs:
-      url: https://github.com/kubotal/kad-controller/tree/main
-  - name: compositions
-    description: Access to compositions
-    externalDocs:
-      url: https://github.com/kubotal/kad-controller/tree/main
-  - name: deployments
-    description: Access to deployments
-    externalDocs:
-      url: https://github.com/kubotal/kad-controller/tree/main
-  - name: projects
-    description: Access to projects
-    externalDocs:
-      url: https://github.com/kubotal/kad-controller/tree/main
-
+      url: https://github.com/okdp/okdp-server
+      
 paths:
-  ### KAD Components API - In the main, check the real endpint TODO
-  /components:
+  ### KAD instances
+  /kad:
+    $ref: ./paths/kad/kad.yaml
+  /kad/{kadInstanceId}:
+    $ref: ./paths/kad/kad-by-name.yaml
+  ### KAD Catalog API
+  /kad/{kadInstanceId}/catalog:
+    $ref: ./paths/catalogs/catalog.yaml
+  /kad/{kadInstanceId}/catalog/{name}:
+    $ref: ./paths/catalogs/catalog-by-name.yaml
+  ### Services API
+  /kad/{kadInstanceId}/services:
+    $ref: ./paths/services/service.yaml
+  ### KAD Component Releases API
+  /kad/{kadInstanceId}/componentreleases:
+    $ref: ./paths/componentreleases/component-releases.yaml
+  /kad/{kadInstanceId}/componentreleases/{name}:
+    $ref: ./paths/componentreleases/component-releases-by-name.yaml
+  ### KAD Template Releases API
+  /kad/{kadInstanceId}/templatereleases:
+    $ref: ./paths/templatereleases/template-releases.yaml
+  /kad/{kadInstanceId}/templatereleases/{name}:
+    $ref: ./paths/templatereleases/template-releases-by-name.yaml
+  ### KAD Components API
+  /kad/{kadInstanceId}/components:
     $ref: ./paths/components/component.yaml
-  /components/{componentId}:
-    $ref: ./paths/components/component-by-id.yaml
-  ### Spaces API
-  /spaces:
-    $ref: ./paths/spaces/space.yaml
-  /spaces/{spaceId}:
-    $ref: ./paths/spaces/space-by-id.yaml
-  ### Compositions API
-  /spaces/{spaceId}/composition:
-    $ref: ./paths/compositions/composition.yaml
-  /spaces/{spaceId}/composition/{compositionId}:
-    $ref: ./paths/compositions/composition-by-id.yaml
-  ### Deployments API
-  /spaces/{spaceId}/composition/{compositionId}/deployment:
-    $ref: ./paths/deployments/deployment.yaml
-  /spaces/{spaceId}/composition/{compositionId}/deployment/{deploymentId}:
-    $ref: ./paths/deployments/deployment-by-id.yaml
-  ### Projects API
-  /spaces/{spaceId}/projects:
-    $ref: ./paths/projects/project.yaml
-  /spaces/{spaceId}/projects/{projectId}:
-    $ref: ./paths/projects/project-by-id.yaml
+  /kad/{kadInstanceId}/components/{name}:
+    $ref: ./paths/components/component-by-name.yaml
 
 components:
   schemas:
-    Composition:
-      $ref: './definition/Composition.yaml'
-    Compositions:
-      $ref: './definition/Compositions.yaml'
-    Deployment:
-      $ref: './definition/Deployment.yaml'
-    Deployments:
-      $ref: './definition/Deployments.yaml'
+    Catalog:
+      $ref: './definition/Catalog.yaml'
+    TemplateRelease:
+      $ref: './definition/TemplateRelease.yaml'
+    ComponentRelease:
+      $ref: './definition/ComponentRelease.yaml'
+    Component:
+      $ref: './definition/Component.yaml'
+    Service:
+      $ref: './definition/Service.yaml'
+    FlatComponent:
+      $ref: './definition/FlatComponent.yaml'
+    Kad:
+      $ref: './definition/Kad.yaml'
     Error:
       $ref: './definition/Error.yaml'
 

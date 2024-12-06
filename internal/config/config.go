@@ -26,10 +26,10 @@ import (
 
 // Application configuration
 type ApplicationConfig struct {
-	Server   Server   `mapstructure:"server"`
-	Security Security `mapstructure:"security"`
-	Logging  Logging  `mapstructure:"logging"`
-	Kad      Kad      `mapstructure:"kad"`
+	Server      Server   `mapstructure:"server"`
+	Security    Security `mapstructure:"security"`
+	Logging     Logging  `mapstructure:"logging"`
+	Kad []KadInstance `mapstructure:"kad"`
 }
 
 // Server configuration
@@ -125,7 +125,8 @@ type DBAuthZ struct {
 	Name     string `yaml:"name"`
 }
 
-type Kad struct {
+type KadInstance struct {
+	Id                 string `yaml:"id"`
 	ApiUrl             string `yaml:"apiUrl"`
 	AuthBearer         string `yaml:"authBearer"`
 	InsecureSkipVerify bool   `yaml:"insecureSkipVerify"`

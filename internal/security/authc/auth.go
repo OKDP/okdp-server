@@ -56,7 +56,7 @@ func Authenticator(authNConfig config.AuthN) []gin.HandlerFunc {
 	return handlers
 }
 
-// Ensure the user was authenticated by any of the autentication provides
+// Ensure the user was authenticated by any of the autentication providers
 func ensureUserAuthenticated() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		_, found := c.Get(constants.OAuth2UserInfo)
