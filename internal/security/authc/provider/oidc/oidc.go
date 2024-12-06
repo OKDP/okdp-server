@@ -35,7 +35,7 @@ import (
 	"golang.org/x/oauth2"
 )
 
-type OidcProvider struct {
+type Provider struct {
 	*oidc.Provider
 	*oauth2.Config
 	*oidc.IDTokenVerifier
@@ -52,12 +52,12 @@ func init() {
 	gob.Register(model.UserInfo{})
 }
 
-func NewProvider(oidcConf config.OpenIDAuth) (*OidcProvider, error) {
+func NewProvider(oidcConf config.OpenIDAuth) (*Provider, error) {
 	ctx := context.Background()
 	store := cookie.NewStore([]byte(oidcConf.CookieSecret))
-	oidcProvider, err := oidc.NewProvider(ctx, oidcConf.IssuerUri)
+	oidcProvider, err := oidc.NewProvider(ctx, oidcConf.IssuerURI)
 	if err != nil {
-		return &OidcProvider{}, err
+		return &Provider{}, err
 	}
 	oidcConfig := &oidc.Config{
 		ClientID: oidcConf.ClientID,
@@ -68,17 +68,17 @@ func NewProvider(oidcConf config.OpenIDAuth) (*OidcProvider, error) {
 		ClientID:     oidcConf.ClientID,
 		ClientSecret: oidcConf.ClientSecret,
 		Endpoint:     oidcProvider.Endpoint(),
-		RedirectURL:  oidcConf.RedirectUri,
+		RedirectURL:  oidcConf.RedirectURI,
 		Scopes:       strings.Split(oidcConf.Scope, "+"),
 	}
 
 	rolesAttributePath = oidcConf.RolesAttributePath
 	groupsAttributePath = oidcConf.GroupsAttributePath
 
-	return &OidcProvider{oidcProvider, config, verifier, ctx, store}, nil
+	return &Provider{oidcProvider, config, verifier, ctx, store}, nil
 }
 
-func (p *OidcProvider) AuthLogin(c *gin.Context) {
+func (p *Provider) AuthLogin(c *gin.Context) {
 	state, err := utils.RandomString()
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, errors.OfType(errors.OkdpServer).GenericError(http.StatusUnauthorized, "Failed to to create OAuth2 state"))
@@ -93,18 +93,20 @@ func (p *OidcProvider) AuthLogin(c *gin.Context) {
 	session := sessions.Default(c)
 	session.Set(constants.OAuth2State, state)
 	session.Set(constants.OAuth2Nonce, nonce)
-	session.Save()
+	if err = session.Save(); err != nil {
+		c.JSON(http.StatusInternalServerError, errors.OfType(errors.OkdpServer).GenericError(http.StatusInternalServerError, "Failed to save user session in cookie"))
+	}
 	c.Redirect(http.StatusTemporaryRedirect, url)
 }
 
 // Auth returns a middleware which authenticates the user with a oidc authentication
 // and returns a second middleware which stores the user info in a secure cookie.
 // It also propagates the user info (roles/groups) into the autorization provider.
-func (p *OidcProvider) Auth() []gin.HandlerFunc {
+func (p *Provider) Auth() []gin.HandlerFunc {
 	return []gin.HandlerFunc{p.authenticate(), p.cookieSessionStore()}
 }
 
-func (p *OidcProvider) authenticate() gin.HandlerFunc {
+func (p *Provider) authenticate() gin.HandlerFunc {
 	return func(c *gin.Context) {
 
 		var (
@@ -178,16 +180,16 @@ func (p *OidcProvider) authenticate() gin.HandlerFunc {
 		// }
 		c.Set(constants.OAuth2UserInfo, userInfo)
 		session.Set(constants.OAuth2UserInfo, userInfo)
-		log.Debug("Successfully authenticated user : %s", userInfo.AsJsonString())
+		log.Debug("Successfully authenticated user : %s", userInfo.AsJSONString())
 		c.Next()
 	}
 }
 
-func (p *OidcProvider) getUserInfo(accessToken string) (model.UserInfo, error) {
+func (p *Provider) getUserInfo(accessToken string) (model.UserInfo, error) {
 	token := &model.Token{AccessToken: accessToken}
 	return token.GetUserInfo(rolesAttributePath, groupsAttributePath)
 }
 
-func (p *OidcProvider) cookieSessionStore() gin.HandlerFunc {
+func (p *Provider) cookieSessionStore() gin.HandlerFunc {
 	return sessions.Sessions(constants.OAuth2SessionName, p.Store)
 }

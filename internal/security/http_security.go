@@ -24,9 +24,9 @@ import (
 	"github.com/okdp/okdp-server/internal/config"
 )
 
-func HttpSecurity(securityConfig config.Security) []gin.HandlerFunc {
+func HTTPSecurity(securityConfig config.Security) []gin.HandlerFunc {
 	var handlers = []gin.HandlerFunc{}
-	return append(handlers, Cors(securityConfig.Cors), SecurityHeaders(securityConfig.Headers))
+	return append(handlers, Cors(securityConfig.Cors), Headers(securityConfig.Headers))
 }
 
 func Cors(corsConfig config.Cors) gin.HandlerFunc {
@@ -40,7 +40,7 @@ func Cors(corsConfig config.Cors) gin.HandlerFunc {
 	})
 }
 
-func SecurityHeaders(headersConf map[string]string) gin.HandlerFunc {
+func Headers(headersConf map[string]string) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		for header, value := range headersConf {
 			c.Header(header, value)

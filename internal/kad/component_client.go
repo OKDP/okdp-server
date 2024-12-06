@@ -18,9 +18,9 @@ package kad
 
 import (
 	"github.com/okdp/okdp-server/internal/constants"
+	"github.com/okdp/okdp-server/internal/errors"
 	"github.com/okdp/okdp-server/internal/kad/client"
 	"github.com/okdp/okdp-server/internal/model"
-	"github.com/okdp/okdp-server/internal/errors"
 )
 
 type ComponentClient struct {
@@ -33,20 +33,20 @@ func NewComponentClient() *ComponentClient {
 	}
 }
 
-func (c ComponentClient) Get(kadInstanceId string, name string, catalog *string) (*model.Component, *errors.ServerError) {
-	kadClient, err := c.KAD.ID(kadInstanceId)
+func (c ComponentClient) Get(kadInstanceID string, name string, catalog *string) (*model.Component, *errors.ServerError) {
+	kadClient, err := c.KAD.ID(kadInstanceID)
 	if err != nil {
 		return nil, err
 	}
-	req := kadClient.NewRequest(constants.ComponentURL)
+	req := kadClient.NewRequest(constants.ComponentURL + "/" + name)
 	if catalog != nil {
 		req = req.SetQueryParam("catalog", *catalog)
 	}
 	return client.DoGet[model.Component](req)
 }
 
-func (c ComponentClient) List(kadInstanceId string, catalog *string) (*model.Components, *errors.ServerError) {
-	kadClient, err := c.KAD.ID(kadInstanceId)
+func (c ComponentClient) List(kadInstanceID string, catalog *string) (*model.Components, *errors.ServerError) {
+	kadClient, err := c.KAD.ID(kadInstanceID)
 	if err != nil {
 		return nil, err
 	}

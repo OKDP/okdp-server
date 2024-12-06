@@ -23,31 +23,30 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/okdp/okdp-server/internal/config"
-	"github.com/okdp/okdp-server/internal/logging"
 	"github.com/okdp/okdp-server/internal/constants"
+	log "github.com/okdp/okdp-server/internal/logging"
 	"github.com/okdp/okdp-server/internal/security/authc/model"
 	"github.com/stretchr/testify/assert"
 )
 
-
 func Test_AuthZ_Succeed(t *testing.T) {
-    // Given
+	// Given
 	log.SetupGlobalLogger(config.Logging{})
-	authzConfig := config.AuthZ{ Provider: "file", 
-	                             File: config.FileAuthZ { 
-												ModelPath: "testdata/authz-model.conf",
-												PolicyPath: "testdata/authz-policy.csv",
-								},
-					}
+	authzConfig := config.AuthZ{Provider: "file",
+		File: config.FileAuthZ{
+			ModelPath:  "testdata/authz-model.conf",
+			PolicyPath: "testdata/authz-policy.csv",
+		},
+	}
 	called := false
-    // Create a ResponseRecorder to capture the response
+	// Create a ResponseRecorder to capture the response
 	resp := httptest.NewRecorder()
 	gin.SetMode(gin.TestMode)
 	c, router := gin.CreateTestContext(resp)
-	router.Use(Set(constants.OAuth2UserInfo, &model.UserInfo{Roles: []string{"developers"}} ))
+	router.Use(Set(constants.OAuth2UserInfo, &model.UserInfo{Roles: []string{"developers"}}))
 
 	router.Use(Authorizer(authzConfig))
-	router.GET("/api/v1/spaces/1/composition/1/deployment", func(c *gin.Context) { called = true })
+	router.GET("/api/v1/spaces/1/composition/1/deployment", func(_ *gin.Context) { called = true })
 
 	// When
 	c.Request, _ = http.NewRequest(http.MethodGet, "/api/v1/spaces/1/composition/1/deployment", nil)
@@ -59,23 +58,23 @@ func Test_AuthZ_Succeed(t *testing.T) {
 }
 
 func Test_AuthZ_Failed(t *testing.T) {
-    // Given
+	// Given
 	log.SetupGlobalLogger(config.Logging{})
-	authzConfig := config.AuthZ{ Provider: "file", 
-	                             File: config.FileAuthZ { 
-												ModelPath: "testdata/authz-model.conf",
-												PolicyPath: "testdata/authz-policy.csv",
-								},
-				   }
+	authzConfig := config.AuthZ{Provider: "file",
+		File: config.FileAuthZ{
+			ModelPath:  "testdata/authz-model.conf",
+			PolicyPath: "testdata/authz-policy.csv",
+		},
+	}
 	called := false
-    // Create a ResponseRecorder to capture the response
+	// Create a ResponseRecorder to capture the response
 	resp := httptest.NewRecorder()
 	gin.SetMode(gin.TestMode)
 	c, router := gin.CreateTestContext(resp)
-	router.Use(Set(constants.OAuth2UserInfo, &model.UserInfo{Roles: []string{"developers"}} ))
+	router.Use(Set(constants.OAuth2UserInfo, &model.UserInfo{Roles: []string{"developers"}}))
 
 	router.Use(Authorizer(authzConfig))
-	router.GET("/api/v1/spaces/2/composition/1/deployment", func(c *gin.Context) { called = true})
+	router.GET("/api/v1/spaces/2/composition/1/deployment", func(_ *gin.Context) { called = true })
 
 	// When
 	c.Request, _ = http.NewRequest(http.MethodGet, "/api/v1/spaces/2/composition/1/deployment", nil)
@@ -86,8 +85,8 @@ func Test_AuthZ_Failed(t *testing.T) {
 	assert.False(t, called, "The endpoint should not be called")
 }
 
-func Set (key string, value any) gin.HandlerFunc {
-    return func(c *gin.Context) {
-        c.Set(key, value)
-    }
+func Set(key string, value any) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.Set(key, value)
+	}
 }

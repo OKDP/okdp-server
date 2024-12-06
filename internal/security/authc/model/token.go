@@ -21,6 +21,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"strings"
+
 	"github.com/tidwall/gjson"
 )
 
@@ -28,7 +29,7 @@ type Token struct {
 	AccessToken string
 }
 
-func (t *Token) GetUserInfo (rolesAttributePath string, groupsAttributePath string) (UserInfo, error){
+func (t *Token) GetUserInfo(rolesAttributePath string, groupsAttributePath string) (UserInfo, error) {
 
 	var userInfo UserInfo
 	accessTokenPayload := strings.Split(t.AccessToken, ".")[1]
@@ -56,7 +57,7 @@ func (t *Token) GetUserInfo (rolesAttributePath string, groupsAttributePath stri
 
 func attributeFromPath(attribute string, accessTokenDecoded string,
 	str *[]string) error {
-	value := gjson.Get(string(accessTokenDecoded), attribute)
+	value := gjson.Get(accessTokenDecoded, attribute)
 	if value.Exists() {
 		err := json.Unmarshal([]byte(value.String()), &str)
 		if err != nil {
@@ -67,7 +68,3 @@ func attributeFromPath(attribute string, accessTokenDecoded string,
 	}
 	return nil
 }
-
-
-
-

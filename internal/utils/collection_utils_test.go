@@ -18,17 +18,17 @@ package utils
 
 import (
 	"testing"
+
 	"github.com/stretchr/testify/assert"
 )
 
 func Test_Map_function(t *testing.T) {
 
-	    // Given
-		numbers := []int {1, 2, 3}
-		f := func (i int) int{ return i*2 }
-		// When
-		result := Map(numbers, f)
-		// Then
-		assert.Equal(t, []int{2, 4, 6}, result)
+	// Given
+	numbers := []int{1, 2, 3}
+	f := func(i int) int { return i * 2 }
+	// When
+	result := Map(numbers, f)
+	// Then
+	assert.Equal(t, []int{2, 4, 6}, result)
 }
-

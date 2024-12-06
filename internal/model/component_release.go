@@ -27,7 +27,7 @@ type FlatComponent _api.FlatComponent
 type FlatComponents []*FlatComponent
 
 func (r *ComponentReleases) Flatten() *FlatComponents {
-	var flatComponents FlatComponents
+	var flatComponents = make(FlatComponents, 0, 100)
 	for _, c := range *r {
 		extC := &FlatComponent{
 			ComponentName:        c.Spec.Component.Ref.Name,
@@ -71,11 +71,11 @@ func (f *FlatComponents) ConvertToService() *Services {
 		}
 		componentsByServiceName[serviceName] = append(componentsByServiceName[serviceName], *c)
 	}
-    
+
 	for serviceName, components := range componentsByServiceName {
-		services = append(services, &Service {
-			Name: serviceName,
-			IsComposition: len(components) > 1,
+		services = append(services, &Service{
+			Name:           serviceName,
+			IsComposition:  len(components) > 1,
 			FlatComponents: components,
 		})
 	}

@@ -3,12 +3,33 @@ run:
 
 linters:
   enable:
-    - megacheck
-    - govet
-    - goconst
+    # Code Formatting & Imports
     - goimports
     - gofmt
-    - revive
+    # Static Code Analysis
+    - govet
+    - staticcheck
+    - gosimple
+    - unused
+    # Error Handling
+    - errcheck
+    # Code Optimization
+    - ineffassign
     - unconvert
+    - prealloc
+    # Code Quality
+    - gocritic
+    - revive
+    - goconst
+    # Code Complexity
+    - cyclop
+    # Code Robustness
+    - bodyclose
   fast: false
 
+issues:
+  max-same-issues: 5
+  max-issues-per-linter: 10
+  exclude-use-default: true
+  exclude-dirs:
+    - ^api/

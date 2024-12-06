@@ -18,13 +18,13 @@ package controllers
 
 import (
 	"github.com/gin-gonic/gin"
-	_user "github.com/okdp/okdp-server/api/openapi/v3/_api/users"
 	_catalog "github.com/okdp/okdp-server/api/openapi/v3/_api/catalogs"
 	_componentrelease "github.com/okdp/okdp-server/api/openapi/v3/_api/componentreleases"
-	_templaterelease "github.com/okdp/okdp-server/api/openapi/v3/_api/templatereleases"
 	_component "github.com/okdp/okdp-server/api/openapi/v3/_api/components"
-	_service "github.com/okdp/okdp-server/api/openapi/v3/_api/services"
 	_kad "github.com/okdp/okdp-server/api/openapi/v3/_api/kad"
+	_service "github.com/okdp/okdp-server/api/openapi/v3/_api/services"
+	_templaterelease "github.com/okdp/okdp-server/api/openapi/v3/_api/templatereleases"
+	_user "github.com/okdp/okdp-server/api/openapi/v3/_api/users"
 	"github.com/okdp/okdp-server/internal/constants"
 )
 
@@ -46,6 +46,6 @@ func (g *Group) RegisterControllers() {
 	_kad.RegisterHandlers(g, KadController())
 }
 
-func (r *Router) RegisterSwaggerApiDoc() {
-	r.GET(constants.SwaggerApiDocsUri, Swagger)
+func (r *Router) RegisterSwaggerAPIDoc() {
+	r.GET(constants.SwaggerAPIDocsURI, Swagger)
 }

@@ -14,30 +14,28 @@
  *    limitations under the License.
  */
 
- package services
+package services
 
- import (
-	 "github.com/okdp/okdp-server/internal/kad"
-	 "github.com/okdp/okdp-server/internal/model"
-	 "github.com/okdp/okdp-server/internal/errors"
- )
- 
- 
- type ComponentReleaseService struct {
-	 componentRelease *kad.ComponentReleaseClient
- }
- 
- func NewComponentReleaseService() *ComponentReleaseService {
-	 return &ComponentReleaseService{
+import (
+	"github.com/okdp/okdp-server/internal/errors"
+	"github.com/okdp/okdp-server/internal/kad"
+	"github.com/okdp/okdp-server/internal/model"
+)
+
+type ComponentReleaseService struct {
+	componentRelease *kad.ComponentReleaseClient
+}
+
+func NewComponentReleaseService() *ComponentReleaseService {
+	return &ComponentReleaseService{
 		componentRelease: kad.NewComponentReleaseClient(),
-	 }
- }
- 
- func (s ComponentReleaseService) Get(kadInstanceId string, name string, catalog *string) (*model.ComponentRelease, *errors.ServerError) {
-	 return s.componentRelease.Get(kadInstanceId, name, catalog)
- }
- 
- func (s ComponentReleaseService) List(kadInstanceId string, catalog *string) (*model.ComponentReleases, *errors.ServerError) {
-	 return s.componentRelease.List(kadInstanceId, catalog)
- }
- 
+	}
+}
+
+func (s ComponentReleaseService) Get(kadInstanceID string, name string, catalog *string) (*model.ComponentRelease, *errors.ServerError) {
+	return s.componentRelease.Get(kadInstanceID, name, catalog)
+}
+
+func (s ComponentReleaseService) List(kadInstanceID string, catalog *string) (*model.ComponentReleases, *errors.ServerError) {
+	return s.componentRelease.List(kadInstanceID, catalog)
+}

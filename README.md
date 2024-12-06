@@ -1,8 +1,10 @@
 # OKDP Server
 
 ## Using Makefile
-
+```shell
+make help (or make)
 make run
+```
 
 ## Using docker compose
 

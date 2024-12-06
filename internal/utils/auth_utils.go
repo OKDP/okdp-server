@@ -22,14 +22,10 @@ import (
 	"io"
 )
 
-const NB_BYTES int = 16
-
 func RandomString() (string, error) {
-	b := make([]byte, NB_BYTES)
+	b := make([]byte, 16)
 	if _, err := io.ReadFull(rand.Reader, b); err != nil {
 		return "", err
 	}
 	return base64.RawURLEncoding.EncodeToString(b), nil
 }
-
-

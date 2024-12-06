@@ -30,11 +30,11 @@ import (
 )
 
 func Test_BasicAuth_Succeed(t *testing.T) {
-    // Given
+	// Given
 	basicProvider, err := NewProvider([]config.BasicAuth{
 		{Login: "user1", Password: "secret1", Roles: []string{"admin"}},
 	})
-    // Create a ResponseRecorder to capture the response
+	// Create a ResponseRecorder to capture the response
 	resp := httptest.NewRecorder()
 	gin.SetMode(gin.TestMode)
 	c, router := gin.CreateTestContext(resp)
@@ -47,7 +47,7 @@ func Test_BasicAuth_Succeed(t *testing.T) {
 	c.Request.Header.Set("Authorization", basicAuthHeader("user1", "secret1"))
 	router.HandleContext(c)
 
-	// Then 
+	// Then
 	// 1- Ensure the user was authenticated
 	assert.NoError(t, err)
 	assert.Equal(t, http.StatusOK, resp.Code)
@@ -62,11 +62,11 @@ func Test_BasicAuth_Succeed(t *testing.T) {
 }
 
 func Test_BasicAuth_Failed(t *testing.T) {
-    // Given
+	// Given
 	basicProvider, err := NewProvider([]config.BasicAuth{
 		{Login: "user1", Password: "secret1", Roles: []string{"admin"}},
 	})
-    // Create a ResponseRecorder to capture the response
+	// Create a ResponseRecorder to capture the response
 	resp := httptest.NewRecorder()
 	gin.SetMode(gin.TestMode)
 	c, router := gin.CreateTestContext(resp)
@@ -79,7 +79,7 @@ func Test_BasicAuth_Failed(t *testing.T) {
 	c.Request.Header.Set("Authorization", basicAuthHeader("user2", "secret1"))
 	router.HandleContext(c)
 
-	// Then 
+	// Then
 	// 1- Ensure the user was not authorized
 	assert.NoError(t, err)
 	assert.Equal(t, http.StatusUnauthorized, resp.Code)
@@ -89,6 +89,5 @@ func Test_BasicAuth_Failed(t *testing.T) {
 }
 
 func basicAuthHeader(login string, password string) string {
-	return "Basic " +  base64.StdEncoding.EncodeToString([]byte(login + ":" + password))
+	return "Basic " + base64.StdEncoding.EncodeToString([]byte(login+":"+password))
 }
-

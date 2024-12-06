@@ -18,13 +18,14 @@ package model
 
 import (
 	"testing"
+
 	"github.com/stretchr/testify/assert"
 )
 
 func Test_UserInfoFromAccessToken(t *testing.T) {
 	// Given
 	accessToken := "eyJh.eyJleHAiOjE3MzIxMjQxNDIsImlhdCI6MTczMjEyMzU0MiwiYXV0aF90aW1lIjoxNzMyMTIzNTQyLCJqdGkiOiJlYjgwNjhlOS1mODZjLTQ3ZTktOTFmYS0xODAzOGE5YjIxMGIiLCJpc3MiOiJodHRwOi8va2V5Y2xvYWs6NzA4MC9yZWFsbXMvbWFzdGVyIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6Ijk2ZjM0ZjNjLTEzODYtNDdhYi05YTg4LTA3MDdhODcwYTQ3ZSIsInR5cCI6IkJlYXJlciIsImF6cCI6ImNvbmZpZGVudGlhbC1vaWRjLWNsaWVudCIsInNpZCI6ImEyMDcxYWE5LTU0MTYtNGE5Yy04MzM5LWQzYWM4YjA4OThiNSIsImFjciI6IjEiLCJhbGxvd2VkLW9yaWdpbnMiOlsiaHR0cDovL2xvY2FsaG9zdDo4MDkwIiwiaHR0cDovL2xvY2FsaG9zdDo4MDkyIl0sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJkZWZhdWx0LXJvbGVzLW1hc3RlciIsImRldmVsb3BlcnMiLCJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJvcGVuaWQgZW1haWwgcHJvZmlsZSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJuYW1lIjoiZGV2MSBkZXYxIiwicHJlZmVycmVkX3VzZXJuYW1lIjoiZGV2MSIsImdpdmVuX25hbWUiOiJkZXYxIiwiZmFtaWx5X25hbWUiOiJkZXYxIiwiZW1haWwiOiJkZXYxLmRldmVsb3BlcnNAZXhhbXBsZS5vcmcifQ.gc"
-	token := &Token {AccessToken: accessToken}
+	token := &Token{AccessToken: accessToken}
 	// When
 	userInfo, err := token.GetUserInfo("realm_access.roles", "realm_access.groups")
 	// Then
@@ -36,4 +37,3 @@ func Test_UserInfoFromAccessToken(t *testing.T) {
 	assert.Equal(t, []string{"default-roles-master", "developers", "offline_access", "uma_authorization"}, userInfo.Roles, "The user roles does not match the expected result")
 	assert.Equal(t, []string{}, userInfo.Groups, "The user groups does not match the expected result")
 }
-

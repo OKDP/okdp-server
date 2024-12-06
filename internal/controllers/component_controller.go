@@ -22,7 +22,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	_component "github.com/okdp/okdp-server/api/openapi/v3/_api/components"
-	"github.com/okdp/okdp-server/internal/logging"
+	log "github.com/okdp/okdp-server/internal/logging"
 	"github.com/okdp/okdp-server/internal/services"
 )
 
@@ -32,24 +32,24 @@ type IComponentController struct {
 
 func ComponentController() *IComponentController {
 	return &IComponentController{
-		componentService:services.NewComponentService(),
+		componentService: services.NewComponentService(),
 	}
 }
 
-func (r IComponentController) ListComponents(c *gin.Context, kadInstanceId string, params _component.ListComponentsParams) {
-	components, err := r.componentService.List(kadInstanceId, params.Catalog)
+func (r IComponentController) ListComponents(c *gin.Context, kadInstanceID string, params _component.ListComponentsParams) {
+	components, err := r.componentService.List(kadInstanceID, params.Catalog)
 	if err != nil {
-		log.Error("Unexpected error was occured: %+v", err)
+		log.Error("Unable to list Components on kad instance %s, details: %+v", kadInstanceID, err)
 		c.JSON(err.Status, err)
 		return
 	}
 	c.JSON(http.StatusOK, components)
 }
 
-func (r IComponentController) GetComponent(c *gin.Context, kadInstanceId string, name string, params _component.GetComponentParams) {
-	component, err := r.componentService.Get(kadInstanceId, name, params.Catalog)
+func (r IComponentController) GetComponent(c *gin.Context, kadInstanceID string, name string, params _component.GetComponentParams) {
+	component, err := r.componentService.Get(kadInstanceID, name, params.Catalog)
 	if err != nil {
-		log.Error("Unexpected error was occured: %+v", err)
+		log.Error("Unable to get Component '%s' on kad instance %s, details: %+v", name, kadInstanceID, err)
 		c.JSON(err.Status, err)
 		return
 	}
@@ -60,6 +60,3 @@ func (r IComponentController) GetComponent(c *gin.Context, kadInstanceId string,
 	c.JSON(http.StatusOK, component)
 
 }
-
-
-

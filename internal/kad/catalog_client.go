@@ -18,9 +18,9 @@ package kad
 
 import (
 	"github.com/okdp/okdp-server/internal/constants"
+	"github.com/okdp/okdp-server/internal/errors"
 	"github.com/okdp/okdp-server/internal/kad/client"
 	"github.com/okdp/okdp-server/internal/model"
-	"github.com/okdp/okdp-server/internal/errors"
 )
 
 type CatalogClient struct {
@@ -33,8 +33,8 @@ func NewCatalogClient() *CatalogClient {
 	}
 }
 
-func (c CatalogClient) Get(kadInstanceId string, name string) (*model.Catalog, *errors.ServerError) {
-	kadClient, err := c.KAD.ID(kadInstanceId)
+func (c CatalogClient) Get(kadInstanceID string, name string) (*model.Catalog, *errors.ServerError) {
+	kadClient, err := c.KAD.ID(kadInstanceID)
 	if err != nil {
 		return nil, err
 	}
@@ -42,8 +42,8 @@ func (c CatalogClient) Get(kadInstanceId string, name string) (*model.Catalog, *
 	return client.DoGet[model.Catalog](req)
 }
 
-func (c CatalogClient) List(kadInstanceId string) (*model.Catalogs, *errors.ServerError) {
-	kadClient, err := c.KAD.ID(kadInstanceId)
+func (c CatalogClient) List(kadInstanceID string) (*model.Catalogs, *errors.ServerError) {
+	kadClient, err := c.KAD.ID(kadInstanceID)
 	if err != nil {
 		return nil, err
 	}

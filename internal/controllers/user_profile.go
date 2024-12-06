@@ -14,17 +14,17 @@
  *    limitations under the License.
  */
 
- package controllers
+package controllers
 
 import (
 	"net/http"
+
 	"github.com/gin-gonic/gin"
 	"github.com/okdp/okdp-server/internal/constants"
 	"github.com/okdp/okdp-server/internal/security/authc/model"
 )
 
 type IUserProfileController struct {
-
 }
 
 func UserProfileController() *IUserProfileController {
@@ -32,11 +32,9 @@ func UserProfileController() *IUserProfileController {
 }
 
 func (r IUserProfileController) GetMyProfile(c *gin.Context) {
-	
+
 	if maybeUserInfo, found := c.Get(constants.OAuth2UserInfo); found {
 		c.JSON(http.StatusOK, maybeUserInfo.(*model.UserInfo))
 	}
-	
- }
 
-
+}

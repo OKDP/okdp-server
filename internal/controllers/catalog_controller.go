@@ -14,52 +14,48 @@
  *    limitations under the License.
  */
 
- package controllers
+package controllers
 
- import (
-	 "fmt"
-	 "net/http"
- 
-	 "github.com/gin-gonic/gin"
-	 log "github.com/okdp/okdp-server/internal/logging"
-	 "github.com/okdp/okdp-server/internal/services"
- )
- 
- type ICatalogController struct {
-	 catalogService *services.CatalogService
- }
- 
- func CatalogController() *ICatalogController {
-	 return &ICatalogController{
+import (
+	"fmt"
+	"net/http"
+
+	"github.com/gin-gonic/gin"
+	log "github.com/okdp/okdp-server/internal/logging"
+	"github.com/okdp/okdp-server/internal/services"
+)
+
+type ICatalogController struct {
+	catalogService *services.CatalogService
+}
+
+func CatalogController() *ICatalogController {
+	return &ICatalogController{
 		catalogService: services.NewCatalogService(),
-	 }
- }
- 
- func (r ICatalogController) ListCatalogs(c *gin.Context, kadInstanceId string) {
-	catalogs, err := r.catalogService.List(kadInstanceId)
-	 if err != nil {
-		 log.Error("Unexpected error was occured: %+v", err)
-		 c.JSON(err.Status, err)
-		 return
-	 }
-	 c.JSON(http.StatusOK, catalogs)
- }
- 
- func (r ICatalogController) GetCatalog(c *gin.Context, kadInstanceId string, name string) {
-	 catalog, err := r.catalogService.Get(kadInstanceId, name)
-	 if err != nil {
-		log.Error("Unexpected error was occured: %+v", err)
+	}
+}
+
+func (r ICatalogController) ListCatalogs(c *gin.Context, kadInstanceID string) {
+	catalogs, err := r.catalogService.List(kadInstanceID)
+	if err != nil {
+		log.Error("Unable to list Catalogs on kad instance %s, details: %+v", kadInstanceID, err)
 		c.JSON(err.Status, err)
-		 return
-	 }
-	 if catalog == nil {
-		 c.JSON(http.StatusNotFound, fmt.Sprintf("Component with id %s not found", name))
-		 return
-	 }
-	 c.JSON(http.StatusOK, catalog)
- 
- }
- 
- 
- 
- 
+		return
+	}
+	c.JSON(http.StatusOK, catalogs)
+}
+
+func (r ICatalogController) GetCatalog(c *gin.Context, kadInstanceID string, name string) {
+	catalog, err := r.catalogService.Get(kadInstanceID, name)
+	if err != nil {
+		log.Error("Unable to get Catalog info '%s' on kad instance %s, details: %+v", name, kadInstanceID, err)
+		c.JSON(err.Status, err)
+		return
+	}
+	if catalog == nil {
+		c.JSON(http.StatusNotFound, fmt.Sprintf("Component with id %s not found", name))
+		return
+	}
+	c.JSON(http.StatusOK, catalog)
+
+}

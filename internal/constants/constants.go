@@ -17,22 +17,25 @@
 package constants
 
 const (
-	OkdpServerBaseUrl = "/api/v1"
-	// OAuth2
+	// OkdpServerBaseURL is the API URI
+	OkdpServerBaseURL = "/api/v1"
+	// OAuth2LoginURL is the OAuth2 login URI
+	OAuth2LoginURL = "/oauth_login"
+	// OAuth2SessionName is name of the OAuth2 user session
 	OAuth2SessionName = "OKDP_OAUT2_SESSION"
 	OAuth2State       = "state"
 	OAuth2Nonce       = "nonce"
 	OAuth2UserInfo    = "userInfo"
-	OAuth2LoginUrl    = "/oauth_login"
-	// Authorization
-	CasbinAuthzModel  = "pkg/auth/authz/authz-model.conf"
-	CasbinAuthzPolicy = "pkg/auth/authz/authz-policy.csv"
-	CasbinRolePrefix  = "role:"
-	// Swagger API Docs URI
-	SwaggerApiDocsUri = OkdpServerBaseUrl + "/api-docs"
-	// KAD
+	// CasbinRolePrefix is used to prefix the roles/groups in the casbin policy (p, role:viewers, /api/v1/users/myprofile, *)
+	CasbinRolePrefix = "role:"
+	// SwaggerAPIDocsURI is the swagger API Docs public URI
+	SwaggerAPIDocsURI = OkdpServerBaseURL + "/api-docs"
+	// ComponentURL is the kad components URI
 	ComponentURL = "/mycluster/component"
+	// ComponentURL is the kad component releases URI
 	ComponentReleaseURL = "/mycluster/component-release"
+	// ComponentURL is the kad template releases URI
 	TemplateReleaseURL = "/mycluster/template-release"
+	// ComponentURL is the kad catalogs URI
 	CatalogURL = "/mycluster/catalog"
 )

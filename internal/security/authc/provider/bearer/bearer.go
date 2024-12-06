@@ -36,33 +36,33 @@ var (
 	groupsAttributePath string
 )
 
-type BearerProvider struct {
+type Provider struct {
 	context.Context
 	*oidc.IDTokenVerifier
 }
 
-func NewProvider(bearerConf config.BearerAuth) BearerProvider {
+func NewProvider(bearerConf config.BearerAuth) Provider {
 	ctx := context.Background()
 	config := &oidc.Config{
 		SkipClientIDCheck:          true,
 		InsecureSkipSignatureCheck: bearerConf.SkipSignatureCheck,
 		SkipIssuerCheck:            bearerConf.SkipIssuerCheck,
 	}
-	verifier := oidc.NewVerifier(bearerConf.IssuerUri, oidc.NewRemoteKeySet(ctx, bearerConf.JwksURL), config)
+	verifier := oidc.NewVerifier(bearerConf.IssuerURI, oidc.NewRemoteKeySet(ctx, bearerConf.JwksURL), config)
 
 	rolesAttributePath = bearerConf.RolesAttributePath
 	groupsAttributePath = bearerConf.GroupsAttributePath
 
-	return BearerProvider{ctx, verifier}
+	return Provider{ctx, verifier}
 }
 
 // Auth returns a middleware which authenticates the user with a bearer authentication
 // and propagates the user info (roles/groups) into the autorization provider.
-func (p *BearerProvider) Auth() []gin.HandlerFunc {
+func (p *Provider) Auth() []gin.HandlerFunc {
 	return []gin.HandlerFunc{p.authenticate()}
 }
 
-func (p *BearerProvider) authenticate() gin.HandlerFunc {
+func (p *Provider) authenticate() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var (
 			userInfo model.UserInfo
@@ -83,13 +83,13 @@ func (p *BearerProvider) authenticate() gin.HandlerFunc {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, errors.OfType(errors.OkdpServer).GenericError(http.StatusUnauthorized, "Unable to get user roles/groups from access token: "+err.Error()))
 			return
 		}
-		log.Debug("Successfully authenticated user : %s", userInfo.AsJsonString())
+		log.Debug("Successfully authenticated user : %s", userInfo.AsJSONString())
 		c.Set(constants.OAuth2UserInfo, &userInfo)
 		c.Next()
 	}
 }
 
-func (p *BearerProvider) verifyAccessToken(accessToken string) error {
+func (p *Provider) verifyAccessToken(accessToken string) error {
 	if len(strings.TrimSpace(accessToken)) == 0 {
 		return fmt.Errorf("no access token found in the Authorization header")
 	}
@@ -101,7 +101,7 @@ func (p *BearerProvider) verifyAccessToken(accessToken string) error {
 	return nil
 }
 
-func (p *BearerProvider) getUserInfo(accessToken string) (model.UserInfo, error) {
+func (p *Provider) getUserInfo(accessToken string) (model.UserInfo, error) {
 	token := &model.Token{AccessToken: accessToken}
 	return token.GetUserInfo(rolesAttributePath, groupsAttributePath)
 }

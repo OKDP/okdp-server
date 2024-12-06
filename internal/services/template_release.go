@@ -14,29 +14,28 @@
  *    limitations under the License.
  */
 
- package services
+package services
 
- import (
-	 "github.com/okdp/okdp-server/internal/kad"
-	 "github.com/okdp/okdp-server/internal/model"
-	 "github.com/okdp/okdp-server/internal/errors"
- )
- 
- type TemplateReleaseService struct {
-	 templateRelease *kad.TemplateReleaseClient
- }
- 
- func NewTemplateReleaseService() *TemplateReleaseService {
-	 return &TemplateReleaseService{
+import (
+	"github.com/okdp/okdp-server/internal/errors"
+	"github.com/okdp/okdp-server/internal/kad"
+	"github.com/okdp/okdp-server/internal/model"
+)
+
+type TemplateReleaseService struct {
+	templateRelease *kad.TemplateReleaseClient
+}
+
+func NewTemplateReleaseService() *TemplateReleaseService {
+	return &TemplateReleaseService{
 		templateRelease: kad.NewTemplateReleaseClient(),
-	 }
- }
- 
- func (s TemplateReleaseService) Get(kadInstanceId string, name string, catalog *string) (*model.TemplateRelease, *errors.ServerError) {
-	 return s.templateRelease.Get(kadInstanceId, name, catalog)
- }
- 
- func (s TemplateReleaseService) List(kadInstanceId string, catalog *string) (*model.TemplateReleases, *errors.ServerError) {
-	 return s.templateRelease.List(kadInstanceId, catalog)
- }
- 
+	}
+}
+
+func (s TemplateReleaseService) Get(kadInstanceID string, name string, catalog *string) (*model.TemplateRelease, *errors.ServerError) {
+	return s.templateRelease.Get(kadInstanceID, name, catalog)
+}
+
+func (s TemplateReleaseService) List(kadInstanceID string, catalog *string) (*model.TemplateReleases, *errors.ServerError) {
+	return s.templateRelease.List(kadInstanceID, catalog)
+}

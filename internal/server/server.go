@@ -22,10 +22,10 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/okdp/okdp-server/internal/logging"
 	"github.com/okdp/okdp-server/internal/config"
 	"github.com/okdp/okdp-server/internal/constants"
 	"github.com/okdp/okdp-server/internal/controllers"
+	log "github.com/okdp/okdp-server/internal/logging"
 	"github.com/okdp/okdp-server/internal/security"
 	"github.com/okdp/okdp-server/internal/security/authc"
 	"github.com/okdp/okdp-server/internal/security/authz"
@@ -35,15 +35,15 @@ func NewOKDPServer(config *config.ApplicationConfig) *http.Server {
 
 	gin.SetMode(config.Server.Mode)
 	r := &controllers.Router{gin.New()}                               //nolint:all
-	apiV1 := &controllers.Group{r.Group(constants.OkdpServerBaseUrl)} //nolint:all
+	apiV1 := &controllers.Group{r.Group(constants.OkdpServerBaseURL)} //nolint:all
 
 	r.Use(log.Logger()...)
 	r.Use(gin.Recovery())
-	
+
 	// Apply http security (cors, headers, etc) on the root path (/) and the groups (/api/v1)
-	r.Use(security.HttpSecurity(config.Security)...)
+	r.Use(security.HTTPSecurity(config.Security)...)
 	// https://github.com/gin-gonic/gin/issues/3546
-	apiV1.Use(security.HttpSecurity(config.Security)...)
+	apiV1.Use(security.HTTPSecurity(config.Security)...)
 
 	// Authentication
 	apiV1.Use(authc.Authenticator(config.Security.AuthN)...)
@@ -52,7 +52,7 @@ func NewOKDPServer(config *config.ApplicationConfig) *http.Server {
 
 	// Register Controllers
 	apiV1.RegisterControllers()
-	r.RegisterSwaggerApiDoc()
+	r.RegisterSwaggerAPIDoc()
 
 	server := &http.Server{
 		Handler: r,

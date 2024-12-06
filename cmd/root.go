@@ -40,7 +40,9 @@ func init() {
 	viper.SetConfigType("yaml")
 
 	RootCmd.PersistentFlags().String("config", "config.yaml", "Path to configuration file")
-	viper.BindPFlag("config", RootCmd.PersistentFlags().Lookup("config"))
+	if err := viper.BindPFlag("config", RootCmd.PersistentFlags().Lookup("config")); err != nil {
+		panic("Unable to read server configuration: " + err.Error())
+	}
 }
 
 func Execute() {
@@ -49,13 +51,13 @@ func Execute() {
 	}
 }
 
-func runOkdpServer(cmd *cobra.Command, args []string) {
+func runOkdpServer(_ *cobra.Command, _ []string) {
 	config := config.GetAppConfig()
 	log.SetupGlobalLogger(config.Logging)
 
 	server := server.NewOKDPServer(config)
 	log.Info("ListenAddress %s: ", config.Server.ListenAddress)
 	log.Info("Port %d: ", config.Server.Port)
-	log.Info("okdp server started on port %d, requests api on %s", config.Server.Port, constants.OkdpServerBaseUrl)
+	log.Info("okdp server started on port %d, requests api on %s", config.Server.Port, constants.OkdpServerBaseURL)
 	log.Fatal(server.ListenAndServe())
 }

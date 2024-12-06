@@ -87,16 +87,16 @@ func Test_LoadConfig_AuthOpenId(t *testing.T) {
 	// Given
 	viper.Set("config", "testdata/application.yaml")
 	// When
-	openId := GetAppConfig().Security.AuthN.OpenID
+	openID := GetAppConfig().Security.AuthN.OpenID
 	// Then
-	assert.Equal(t, "confidential-oidc-client", openId.ClientID, "ClientID")
-	assert.Equal(t, "secret1", openId.ClientSecret, "ClientSecret")
-	assert.Equal(t, "http://keycloak:7080/realms/master", openId.IssuerUri, "IssuerUri")
-	assert.Equal(t, "http://localhost:8090/oauth2/callback", openId.RedirectUri, "RedirectUri")
-	assert.Equal(t, "secret1!", openId.CookieSecret, "CookieSecret")
-	assert.Equal(t, "openid+profile+email+roles", openId.Scope, "Scope")
-	assert.Equal(t, "realm_access.roles", openId.RolesAttributePath, "RolesAttributePath")
-	assert.Equal(t, "realm_access.groups", openId.GroupsAttributePath, "GroupsAttributePath")
+	assert.Equal(t, "confidential-oidc-client", openID.ClientID, "ClientID")
+	assert.Equal(t, "secret1", openID.ClientSecret, "ClientSecret")
+	assert.Equal(t, "http://keycloak:7080/realms/master", openID.IssuerURI, "IssuerUri")
+	assert.Equal(t, "http://localhost:8090/oauth2/callback", openID.RedirectURI, "RedirectUri")
+	assert.Equal(t, "secret1!", openID.CookieSecret, "CookieSecret")
+	assert.Equal(t, "openid+profile+email+roles", openID.Scope, "Scope")
+	assert.Equal(t, "realm_access.roles", openID.RolesAttributePath, "RolesAttributePath")
+	assert.Equal(t, "realm_access.groups", openID.GroupsAttributePath, "GroupsAttributePath")
 }
 
 func Test_LoadConfig_AuthBearer(t *testing.T) {
@@ -105,7 +105,7 @@ func Test_LoadConfig_AuthBearer(t *testing.T) {
 	// When
 	bearer := GetAppConfig().Security.AuthN.Bearer
 	// Then
-	assert.Equal(t, "http://keycloak:7080/realms/master", bearer.IssuerUri, "IssuerUri")
+	assert.Equal(t, "http://keycloak:7080/realms/master", bearer.IssuerURI, "IssuerUri")
 	assert.Equal(t, "http://keycloak:7080/realms/master/protocol/openid-connect/certs", bearer.JwksURL, "JwksURL")
 	assert.Equal(t, "realm_access.roles", bearer.RolesAttributePath, "RolesAttributePath")
 	assert.Equal(t, "realm_access.groups", bearer.GroupsAttributePath, "GroupsAttributePath")
@@ -142,8 +142,8 @@ func Test_LoadConfig_Kad(t *testing.T) {
 	// When
 	KadInstances := GetAppConfig().Kad
 	// Then
-	assert.Equal(t, "sandbox", KadInstances[0].Id, "Id")
-	assert.Equal(t, "https://host.docker.internal:6553/api/kad/v1", KadInstances[0].ApiUrl, "ApiUrl")
+	assert.Equal(t, "sandbox", KadInstances[0].ID, "Id")
+	assert.Equal(t, "https://host.docker.internal:6553/api/kad/v1", KadInstances[0].APIURL, "ApiUrl")
 	assert.Equal(t, "JUDtoP55C2dLfeaXqSbehhKKRdmAWTfj", KadInstances[0].AuthBearer, "AuthBearer")
 	assert.True(t, KadInstances[0].InsecureSkipVerify, "InsecureSkipVerify should be true")
 }

@@ -23,35 +23,34 @@ import (
 	"github.com/okdp/okdp-server/internal/security/authc/model"
 )
 
-type BasicProvider struct {
+type Provider struct {
 	accounts gin.Accounts
 	roles    map[string][]string
 }
 
-func NewProvider(basicUsers []config.BasicAuth) (*BasicProvider, error) {
+func NewProvider(basicUsers []config.BasicAuth) (*Provider, error) {
 	accounts := make(gin.Accounts)
 	userRoles := make(map[string][]string)
 	for _, user := range basicUsers {
 		accounts[user.Login] = user.Password
 		userRoles[user.Login] = user.Roles
 	}
-	return &BasicProvider{accounts: accounts, roles: userRoles}, nil
+	return &Provider{accounts: accounts, roles: userRoles}, nil
 }
 
-
-// Auth returns a middleware which authenticates the user with a basic authentication 
+// Auth returns a middleware which authenticates the user with a basic authentication
 // and returns a second middleware which propagates the user info (roles) into the autorization provider.
-func (p *BasicProvider) Auth() []gin.HandlerFunc {
+func (p *Provider) Auth() []gin.HandlerFunc {
 	return []gin.HandlerFunc{p.authenticate(), p.setUserInfo()}
 }
 
 // Authenticate User
-func (p *BasicProvider) authenticate() gin.HandlerFunc {
+func (p *Provider) authenticate() gin.HandlerFunc {
 	return gin.BasicAuth(p.accounts)
 }
 
 // Propagate userInfo to authorization
-func (p *BasicProvider) setUserInfo() gin.HandlerFunc {
+func (p *Provider) setUserInfo() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		login, ok := c.Get(gin.AuthUserKey)
 		if ok {
@@ -60,11 +59,10 @@ func (p *BasicProvider) setUserInfo() gin.HandlerFunc {
 	}
 }
 
-func (p *BasicProvider) getUserRoles(login string) []string {
+func (p *Provider) getUserRoles(login string) []string {
 	roles, found := p.roles[login]
 	if found {
 		return roles
 	}
 	return []string{}
 }
-

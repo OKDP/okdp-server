@@ -53,7 +53,7 @@ func Authorizer(authzConfig config.AuthZ) gin.HandlerFunc {
 func (e *Enforcer) authorize() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var (
-			allowed bool = false
+			allowed = false
 			err     error
 		)
 		userInfo, ok := c.Get(constants.OAuth2UserInfo)
@@ -72,7 +72,6 @@ func (e *Enforcer) authorize() gin.HandlerFunc {
 		roles := utils.Map(rSub, func(s string) string {
 			return constants.CasbinRolePrefix + s
 		})
-		e.Enforce(roles, rObj, rAct)
 
 		// Check the role is allowed to access the path with the action
 		for _, role := range roles {

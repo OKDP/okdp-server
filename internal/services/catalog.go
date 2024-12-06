@@ -14,29 +14,28 @@
  *    limitations under the License.
  */
 
- package services
+package services
 
- import (
-	 "github.com/okdp/okdp-server/internal/kad"
-	 "github.com/okdp/okdp-server/internal/model"
-	 "github.com/okdp/okdp-server/internal/errors"
- )
- 
- type CatalogService struct {
-	 catalog *kad.CatalogClient
- }
- 
- func NewCatalogService() *CatalogService {
-	 return &CatalogService{
-		 catalog: kad.NewCatalogClient(),
-	 }
- }
- 
- func (s CatalogService) Get(kadInstanceId string, name string) (*model.Catalog, *errors.ServerError) {
-	 return s.catalog.Get(kadInstanceId, name)
- }
- 
- func (s CatalogService) List(kadInstanceId string) (*model.Catalogs, *errors.ServerError) {
-	 return s.catalog.List(kadInstanceId)
- }
- 
+import (
+	"github.com/okdp/okdp-server/internal/errors"
+	"github.com/okdp/okdp-server/internal/kad"
+	"github.com/okdp/okdp-server/internal/model"
+)
+
+type CatalogService struct {
+	catalog *kad.CatalogClient
+}
+
+func NewCatalogService() *CatalogService {
+	return &CatalogService{
+		catalog: kad.NewCatalogClient(),
+	}
+}
+
+func (s CatalogService) Get(kadInstanceID string, name string) (*model.Catalog, *errors.ServerError) {
+	return s.catalog.Get(kadInstanceID, name)
+}
+
+func (s CatalogService) List(kadInstanceID string) (*model.Catalogs, *errors.ServerError) {
+	return s.catalog.List(kadInstanceID)
+}

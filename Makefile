@@ -1,12 +1,26 @@
-generate: install gogenerate
-compile: generate gocompile
+.PHONY: help
+help:
+	@echo "Available commands:"
+	@echo "  format      Format the project code"
+	@echo "  lint        Run the configured linters (before pushing)"
+	@echo "  compile     Compile the project code"
+	@echo "  test        Run the unit tests"
+	@echo "  build       Build a binary"
+	@echo "  run         Run the project locally"
+
+generate: tools gogenerate
+format: generate gofmt
+lint: format golint
+compile: lint gocompile
 test: compile gotest
 build: test gobuild
 run: test gorun
 
-.PHONY: install
-install:
+.PHONY: tools
+tools:
 	go install github.com/oapi-codegen/oapi-codegen/v2/cmd/oapi-codegen@v2.4.1
+	go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.62.2
+	go install golang.org/x/tools/cmd/goimports@v0.28.0
 
 .PHONY: gogenerate
 gogenerate:
@@ -37,10 +51,13 @@ gogenerate:
 	#              -o api/openapi/v3/_api/client.go \
 	# 			   api/openapi/v3/api.yaml
 
-.PHONY: lint
-lint:
-	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.61.0
-	golangci-lint run ./ --out-format=colored-line-number --timeout=5m
+.PHONY: gofmt
+gofmt:
+	goimports  -w ./internal/ ./cmd/
+
+.PHONY: golint
+golint:
+	golangci-lint run
 
 .PHONY: gobuild
 gobuild:

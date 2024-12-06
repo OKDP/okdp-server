@@ -18,17 +18,16 @@ package model
 
 import (
 	"encoding/json"
+
 	"github.com/okdp/okdp-server/api/openapi/v3/_api"
 )
 
 type UserInfo _api.UserProfile
 
-func (u *UserInfo) AsJsonString() (string){
-	asJson, err := json.MarshalIndent(u, "", "  ")
-    if err != nil {
-        return err.Error()
-    }
-    return string(asJson)
+func (u *UserInfo) AsJSONString() string {
+	asJSON, err := json.MarshalIndent(u, "", "  ")
+	if err != nil {
+		return err.Error()
+	}
+	return string(asJSON)
 }
-
-

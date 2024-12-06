@@ -34,8 +34,8 @@ func KadController() *IKadController {
 	}
 }
 
-func (r IKadController) GetKadInstance(c *gin.Context, kadInstanceId string) {
-	instance, err := client.GetInstanceById(kadInstanceId)
+func (r IKadController) GetKadInstance(c *gin.Context, kadInstanceID string) {
+	instance, err := client.GetInstanceByID(kadInstanceID)
 	if err != nil {
 		c.JSON(err.Status, err)
 	} else {

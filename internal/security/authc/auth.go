@@ -33,22 +33,23 @@ func Authenticator(authNConfig config.AuthN) []gin.HandlerFunc {
 	var handlers = []gin.HandlerFunc{}
 	log.Info("Loading authentication providers: ", authNConfig.Provider)
 	for _, provider := range authNConfig.Provider {
-		if provider == "basic" {
+		switch provider {
+		case "basic":
 			p, err := basic.NewProvider(config.GetAppConfig().Security.AuthN.Basic)
 			if err != nil {
 				log.Panic("Unable to get a basic auth provider: %w", err)
 			}
 			handlers = append(handlers, p.Auth()...)
-		} else if provider == "openid" {
+		case "openid":
 			p, err := oidc.NewProvider(config.GetAppConfig().Security.AuthN.OpenID)
 			if err != nil {
 				log.Panic("Unable to get an OIDC provider: %w", err)
 			}
 			handlers = append(handlers, p.Auth()...)
-		} else if provider == "bearer" {
+		case "bearer":
 			p := bearer.NewProvider(config.GetAppConfig().Security.AuthN.Bearer)
 			handlers = append(handlers, p.Auth()...)
-		} else {
+		default:
 			log.Panic("Unknown authentication provider: %s", provider)
 		}
 	}

@@ -14,18 +14,18 @@
  *    limitations under the License.
  */
 
- package controllers
+package controllers
 
- import (
-	 "net/http"
- 
-	 "github.com/gin-gonic/gin"
-	 "github.com/okdp/okdp-server/internal/logging"
-	 "github.com/okdp/okdp-server/internal/services"
-	 _services "github.com/okdp/okdp-server/api/openapi/v3/_api/services"
- )
- 
- type IServiceController struct {
+import (
+	"net/http"
+
+	"github.com/gin-gonic/gin"
+	_services "github.com/okdp/okdp-server/api/openapi/v3/_api/services"
+	log "github.com/okdp/okdp-server/internal/logging"
+	"github.com/okdp/okdp-server/internal/services"
+)
+
+type IServiceController struct {
 	service *services.Service
 }
 
@@ -35,22 +35,16 @@ func ServiceController() *IServiceController {
 		return nil
 	}
 	return &IServiceController{
-	   service: service,
+		service: service,
 	}
 }
 
-func (r IServiceController) ListServices(c *gin.Context, kadInstanceId string, params _services.ListServicesParams) {
-   services, err := r.service.List(kadInstanceId, params.Catalog)
+func (r IServiceController) ListServices(c *gin.Context, kadInstanceID string, params _services.ListServicesParams) {
+	services, err := r.service.List(kadInstanceID, params.Catalog)
 	if err != nil {
-		log.Error("Unexpected error was occured: %+v", err)
+		log.Error("Unable to list services, details: %+v", err)
 		c.JSON(err.Status, err)
 		return
 	}
 	c.JSON(http.StatusOK, services)
 }
-
-
-
-
- 
-

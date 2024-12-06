@@ -14,15 +14,13 @@
  *    limitations under the License.
  */
 
- package model
+package model
 
- // https://github.com/oapi-codegen/oapi-codegen/issues/1139
+// https://github.com/oapi-codegen/oapi-codegen/issues/1139
 type Service struct {
-	Name            string          `json:"name"`
-	IsComposition   bool            `json:"isComposition"`
-	FlatComponents   []FlatComponent `json:"components"`
- }
+	Name           string          `json:"name"`
+	IsComposition  bool            `json:"isComposition"`
+	FlatComponents []FlatComponent `json:"components"`
+}
 
- type Services             []*Service
-
- 
+type Services []*Service

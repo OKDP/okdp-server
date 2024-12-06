@@ -20,5 +20,5 @@ import (
 	"github.com/okdp/okdp-server/api/openapi/v3/_api"
 )
 
-type Component  = _api.Component
+type Component = _api.Component
 type Components = []*Component

@@ -53,11 +53,10 @@ func (r *TemplateReleases) GroupTemplateReleaseInfoByComponentRelease() *Templat
 	return m
 }
 
-func (r *TemplateReleaseInfo) GetByComponentReleaseName (name string) (*TemplateReleaseSummary, bool) {
-    s, found := r.mapping[name]
+func (r *TemplateReleaseInfo) GetByComponentReleaseName(name string) (*TemplateReleaseSummary, bool) {
+	s, found := r.mapping[name]
 	if !found {
-        return nil, false
+		return nil, false
 	}
 	return &s, true
 }
-

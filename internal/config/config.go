@@ -26,10 +26,10 @@ import (
 
 // Application configuration
 type ApplicationConfig struct {
-	Server      Server   `mapstructure:"server"`
-	Security    Security `mapstructure:"security"`
-	Logging     Logging  `mapstructure:"logging"`
-	Kad []KadInstance `mapstructure:"kad"`
+	Server   Server        `mapstructure:"server"`
+	Security Security      `mapstructure:"security"`
+	Logging  Logging       `mapstructure:"logging"`
+	Kad      []KadInstance `mapstructure:"kad"`
 }
 
 // Server configuration
@@ -85,8 +85,8 @@ type BasicAuth struct {
 type OpenIDAuth struct {
 	ClientID            string `yaml:"clientId"`
 	ClientSecret        string `yaml:"clientSecret"`
-	IssuerUri           string `yaml:"issuerUri"`
-	RedirectUri         string `yaml:"redirectUri"`
+	IssuerURI           string `yaml:"issuerUri"`
+	RedirectURI         string `yaml:"redirectUri"`
 	CookieSecret        string `yaml:"cookieSecret"`
 	Scope               string `yaml:"scope"`
 	RolesAttributePath  string `yaml:"rolesAttributePath"`
@@ -95,7 +95,7 @@ type OpenIDAuth struct {
 
 // Bearer based authentication configuration
 type BearerAuth struct {
-	IssuerUri           string `yaml:"issuerUri"`
+	IssuerURI           string `yaml:"issuerUri"`
 	JwksURL             string `yaml:"jwksURL"`
 	RolesAttributePath  string `yaml:"rolesAttributePath"`
 	GroupsAttributePath string `yaml:"groupsAttributePath"`
@@ -126,8 +126,8 @@ type DBAuthZ struct {
 }
 
 type KadInstance struct {
-	Id                 string `yaml:"id"`
-	ApiUrl             string `yaml:"apiUrl"`
+	ID                 string `yaml:"id"`
+	APIURL             string `yaml:"apiUrl"`
 	AuthBearer         string `yaml:"authBearer"`
 	InsecureSkipVerify bool   `yaml:"insecureSkipVerify"`
 }

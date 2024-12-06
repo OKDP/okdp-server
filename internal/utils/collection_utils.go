@@ -30,4 +30,3 @@ func ArrayNullToEmpty[T any](a []T) []T {
 	}
 	return []T{}
 }
-

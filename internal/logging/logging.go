@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package log
+package logging
 
 import (
 	"fmt"
@@ -36,13 +36,13 @@ var (
 func SetupGlobalLogger(loggingConf config.Logging) {
 	once.Do(func() {
 
-		if (loggingConf.Level == ""){
+		if loggingConf.Level == "" {
 			loggingConf.Level = "info"
 		}
-		if (loggingConf.Format == ""){
+		if loggingConf.Format == "" {
 			loggingConf.Format = "console"
 		}
-		
+
 		fmt.Println("Initializing logger with: logging Level: ", loggingConf.Level, "Logging format: ", loggingConf.Format)
 
 		logLevel, err := zapcore.ParseLevel(loggingConf.Level)
@@ -99,6 +99,6 @@ func Panic(args ...interface{}) {
 // Logger returns a middleware that will write the logs to gin.DefaultWriter.
 // By default, gin.DefaultWriter = os.Stdout.
 func Logger() []gin.HandlerFunc {
-	return []gin.HandlerFunc {ginzap.Ginzap(instance.Desugar(), time.RFC3339, true),
+	return []gin.HandlerFunc{ginzap.Ginzap(instance.Desugar(), time.RFC3339, true),
 		ginzap.RecoveryWithZap(instance.Desugar(), true)}
 }

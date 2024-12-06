@@ -20,6 +20,5 @@ import (
 	"github.com/okdp/okdp-server/api/openapi/v3/_api"
 )
 
-type Catalog  = _api.Catalog
+type Catalog = _api.Catalog
 type Catalogs = []*Catalog
-

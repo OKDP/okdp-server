@@ -14,53 +14,49 @@
  *    limitations under the License.
  */
 
- package controllers
+package controllers
 
- import (
-	 "fmt"
-	 "net/http"
- 
-	 "github.com/gin-gonic/gin"
-	 _component "github.com/okdp/okdp-server/api/openapi/v3/_api/templatereleases"
-	 "github.com/okdp/okdp-server/internal/logging"
-	 "github.com/okdp/okdp-server/internal/services"
- )
- 
- type ITemplateReleaseController struct {
+import (
+	"fmt"
+	"net/http"
+
+	"github.com/gin-gonic/gin"
+	_component "github.com/okdp/okdp-server/api/openapi/v3/_api/templatereleases"
+	log "github.com/okdp/okdp-server/internal/logging"
+	"github.com/okdp/okdp-server/internal/services"
+)
+
+type ITemplateReleaseController struct {
 	templateReleaseService *services.TemplateReleaseService
- }
- 
- func TemplateReleaseController() *ITemplateReleaseController {
-	 return &ITemplateReleaseController{
+}
+
+func TemplateReleaseController() *ITemplateReleaseController {
+	return &ITemplateReleaseController{
 		templateReleaseService: services.NewTemplateReleaseService(),
-	 }
- }
- 
- func (r ITemplateReleaseController) ListTemplateReleases(c *gin.Context, kadInstanceId string, params _component.ListTemplateReleasesParams) {
-	 components, err := r.templateReleaseService.List(kadInstanceId, params.Catalog)
-	 if err != nil {
-		log.Error("Unexpected error was occured: %+v", err)
+	}
+}
+
+func (r ITemplateReleaseController) ListTemplateReleases(c *gin.Context, kadInstanceID string, params _component.ListTemplateReleasesParams) {
+	components, err := r.templateReleaseService.List(kadInstanceID, params.Catalog)
+	if err != nil {
+		log.Error("Unable to list Template Releases on kad instance '%s', details: %+v", kadInstanceID, err)
 		c.JSON(err.Status, err)
-		 return
-	 }
-	 c.JSON(http.StatusOK, components)
- }
- 
- func (r ITemplateReleaseController) GetTemplateRelease(c *gin.Context, kadInstanceId string, name string, params _component.GetTemplateReleaseParams) {
-	 component, err := r.templateReleaseService.Get(kadInstanceId, name, params.Catalog)
-	 if err != nil {
-		log.Error("Unexpected error was occured: %+v", err)
+		return
+	}
+	c.JSON(http.StatusOK, components)
+}
+
+func (r ITemplateReleaseController) GetTemplateRelease(c *gin.Context, kadInstanceID string, name string, params _component.GetTemplateReleaseParams) {
+	component, err := r.templateReleaseService.Get(kadInstanceID, name, params.Catalog)
+	if err != nil {
+		log.Error("Unable to get Template Release: '%s' on kad instance '%s', details: %+v", name, kadInstanceID, err)
 		c.JSON(err.Status, err)
-		 return
-	 }
-	 if component == nil {
-		 c.JSON(http.StatusNotFound, fmt.Sprintf("Component with id %s not found", name))
-		 return
-	 }
-	 c.JSON(http.StatusOK, component)
- 
- }
- 
- 
- 
- 
+		return
+	}
+	if component == nil {
+		c.JSON(http.StatusNotFound, fmt.Sprintf("Component with id %s not found", name))
+		return
+	}
+	c.JSON(http.StatusOK, component)
+
+}

@@ -62,8 +62,8 @@ func GetClients() *KadClients {
 			client.SetTLSClientConfig(&tls.Config{InsecureSkipVerify: kadConf.InsecureSkipVerify}).
 				SetAuthToken(kadConf.AuthBearer).
 				SetHeader("Content-Type", "application/json").
-				SetBaseURL(kadConf.ApiUrl)
-			clients[kadConf.Id] = &KadClient{client}
+				SetBaseURL(kadConf.APIURL)
+			clients[kadConf.ID] = &KadClient{client}
 		}
 		instance = &KadClients{clients: clients}
 	})
@@ -82,10 +82,10 @@ func ListInstances() []config.KadInstance {
 	return config.GetAppConfig().Kad
 }
 
-func GetInstanceById(id string) (config.KadInstance, *errors.ServerError) {
+func GetInstanceByID(id string) (config.KadInstance, *errors.ServerError) {
 	instances := ListInstances()
 	for _, i := range instances {
-		if i.Id == id {
+		if i.ID == id {
 			return i, nil
 		}
 	}
@@ -106,7 +106,7 @@ func (c *KadClient) NewRequest(url string) *resty.Request {
 
 func doExecute[T any](request *resty.Request) (*T, *errors.ServerError) {
 	var object T
-	//request.SetError(&KadError{})
+	// request.SetError(&KadError{})
 	resp, err := request.Send()
 
 	if err != nil {
@@ -130,7 +130,7 @@ func doExecute[T any](request *resty.Request) (*T, *errors.ServerError) {
 }
 
 func invalidInstanceError(provided string) *errors.ServerError {
-	instances := utils.Map(ListInstances(), func(k config.KadInstance) string { return k.Id })
+	instances := utils.Map(ListInstances(), func(k config.KadInstance) string { return k.ID })
 	return errors.OfType(errors.OkdpServer).
 		NotFoundError("kad instance with id %s not found, valid ones: %+v", provided, instances)
 }
