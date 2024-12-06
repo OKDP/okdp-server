@@ -1,36 +1,21 @@
 get:
-  summary: List all services
+  summary: Get my user profile
   description: |
-    List all services
+    Get my user profile
   tags:
-    - services
-  operationId: listServices
-  parameters:
-    - in: path
-      name: kadInstanceId
-      schema:
-        type: string
-      required: true
-      description: KAD instance ID
-    - in: query
-      name: catalog
-      schema:
-        type: string
-      required: false
-      description: Filter by catalogs (comma separated)
+    - users
+  operationId: getMyProfile
   responses:
     '200':
-      description: List of the services
+      description: My user profile
       content:
         application/json:
           schema:
             type: object
-            required: [services]
+            required: [user]
             properties:
-              services:
-                type: array
-                items:
-                  $ref: '../../definition/Service.yaml'
+              user:
+                $ref: '../../definition/UserProfile.yaml'
     default:
       description: Server error
       content:

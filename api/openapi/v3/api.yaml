@@ -18,6 +18,10 @@ servers:
   - url: /api/v1
 
 tags:
+  - name: users
+    description: User profile
+    externalDocs:
+      url: https://github.com/okdp/okdp-server
   - name: kad
     description: Kad instances configuration
     externalDocs:
@@ -44,6 +48,9 @@ tags:
       url: https://github.com/okdp/okdp-server
       
 paths:
+  ### Users
+  /users/myprofile:
+    $ref: ./paths/users/user-profile.yaml
   ### KAD instances
   /kad:
     $ref: ./paths/kad/kad.yaml
@@ -75,6 +82,8 @@ paths:
 
 components:
   schemas:
+    UserProfile:
+      $ref: './definition/UserProfile.yaml'
     Catalog:
       $ref: './definition/Catalog.yaml'
     TemplateRelease:

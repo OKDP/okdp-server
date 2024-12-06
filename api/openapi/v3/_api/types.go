@@ -236,6 +236,16 @@ type TemplateRelease struct {
 	} `json:"status"`
 }
 
+// UserProfile defines model for UserProfile.
+type UserProfile struct {
+	Email   string   `json:"email"`
+	Groups  []string `json:"groups"`
+	Login   string   `json:"login"`
+	Name    string   `json:"name"`
+	Roles   []string `json:"roles"`
+	Subject string   `json:"sub"`
+}
+
 // ListComponentReleasesParams defines parameters for ListComponentReleases.
 type ListComponentReleasesParams struct {
 	// Catalog Filter by catalogs (comma separated)

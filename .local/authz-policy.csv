@@ -1,3 +1,4 @@
+p, role:viewers, /api/v1/users/myprofile, *
 p, role:viewers, /api/v1/kad, *
 p, role:viewers, /api/v1/kad/*/services, *
 p, role:viewers, /api/v1/kad/*/catalog, *

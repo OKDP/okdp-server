@@ -1,0 +1,28 @@
+type: object
+xml:
+  name: userProfile
+required: 
+- sub
+- login
+- name
+- email
+- groups
+- roles
+properties:
+  sub:
+    type: string
+    x-go-name: subject
+  login:
+    type: string
+  name:
+    type: string
+  email:
+    type: string
+  groups:
+    type: array
+    items:
+      type: string
+  roles:
+    type: array
+    items:
+      type: string

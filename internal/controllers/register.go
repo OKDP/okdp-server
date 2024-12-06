@@ -18,6 +18,7 @@ package controllers
 
 import (
 	"github.com/gin-gonic/gin"
+	_user "github.com/okdp/okdp-server/api/openapi/v3/_api/users"
 	_catalog "github.com/okdp/okdp-server/api/openapi/v3/_api/catalogs"
 	_componentrelease "github.com/okdp/okdp-server/api/openapi/v3/_api/componentreleases"
 	_templaterelease "github.com/okdp/okdp-server/api/openapi/v3/_api/templatereleases"
@@ -36,6 +37,7 @@ type Group struct {
 }
 
 func (g *Group) RegisterControllers() {
+	_user.RegisterHandlers(g, UserProfileController())
 	_catalog.RegisterHandlers(g, CatalogController())
 	_componentrelease.RegisterHandlers(g, ComponentReleaseController())
 	_templaterelease.RegisterHandlers(g, TemplateReleaseController())

@@ -14,21 +14,29 @@
  *    limitations under the License.
  */
 
-package model
+ package controllers
 
 import (
-	"encoding/json"
-	"github.com/okdp/okdp-server/api/openapi/v3/_api"
+	"net/http"
+	"github.com/gin-gonic/gin"
+	"github.com/okdp/okdp-server/internal/constants"
+	"github.com/okdp/okdp-server/internal/security/authc/model"
 )
 
-type UserInfo _api.UserProfile
+type IUserProfileController struct {
 
-func (u *UserInfo) AsJsonString() (string){
-	asJson, err := json.MarshalIndent(u, "", "  ")
-    if err != nil {
-        return err.Error()
-    }
-    return string(asJson)
 }
+
+func UserProfileController() *IUserProfileController {
+	return &IUserProfileController{}
+}
+
+func (r IUserProfileController) GetMyProfile(c *gin.Context) {
+	
+	if maybeUserInfo, found := c.Get(constants.OAuth2UserInfo); found {
+		c.JSON(http.StatusOK, maybeUserInfo.(*model.UserInfo))
+	}
+	
+ }
 
 
