@@ -39,8 +39,8 @@
  func (r ITemplateReleaseController) ListTemplateReleases(c *gin.Context, kadInstanceId string, params _component.ListTemplateReleasesParams) {
 	 components, err := r.templateReleaseService.List(kadInstanceId, params.Catalog)
 	 if err != nil {
-		 log.Error("Unable to get data from kad: %s", err.Error())
-		 c.JSON(http.StatusInternalServerError, err.Error())
+		log.Error("Unexpected error was occured: %+v", err)
+		c.JSON(err.Status, err)
 		 return
 	 }
 	 c.JSON(http.StatusOK, components)
@@ -49,8 +49,8 @@
  func (r ITemplateReleaseController) GetTemplateRelease(c *gin.Context, kadInstanceId string, name string, params _component.GetTemplateReleaseParams) {
 	 component, err := r.templateReleaseService.Get(kadInstanceId, name, params.Catalog)
 	 if err != nil {
-		 log.Error("Unable to get data from kad: %s", err.Error())
-		 c.JSON(http.StatusInternalServerError, err.Error())
+		log.Error("Unexpected error was occured: %+v", err)
+		c.JSON(err.Status, err)
 		 return
 	 }
 	 if component == nil {

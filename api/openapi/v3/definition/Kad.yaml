@@ -1,7 +1,11 @@
 type: object
 xml:
   name: kad
-required: [id, apiUrl, authBearer, insecureSkipVerify]
+required: 
+- id
+- apiUrl
+- authBearer
+- insecureSkipVerify
 properties:
   id:
     type: string

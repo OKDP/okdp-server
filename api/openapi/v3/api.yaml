@@ -89,8 +89,8 @@ components:
       $ref: './definition/FlatComponent.yaml'
     Kad:
       $ref: './definition/Kad.yaml'
-    Error:
-      $ref: './definition/Error.yaml'
+    ServerError:
+      $ref: './definition/ServerError.yaml'
 
   securitySchemes:
     basicAuth:

@@ -20,6 +20,7 @@ import (
 	"github.com/okdp/okdp-server/internal/constants"
 	"github.com/okdp/okdp-server/internal/kad/client"
 	"github.com/okdp/okdp-server/internal/model"
+	"github.com/okdp/okdp-server/internal/errors"
 )
 
 type ComponentReleaseClient struct {
@@ -32,10 +33,10 @@ func NewComponentReleaseClient() *ComponentReleaseClient {
 	}
 }
 
-func (c ComponentReleaseClient) Get(kadInstanceId string, name string, catalog *string) (*model.ComponentRelease, error) {
-	kadClient := c.KAD.ID(kadInstanceId)
-	if kadClient == nil {
-		return nil, client.InvalidInstanceError(kadInstanceId)
+func (c ComponentReleaseClient) Get(kadInstanceId string, name string, catalog *string) (*model.ComponentRelease, *errors.ServerError) {
+	kadClient, err := c.KAD.ID(kadInstanceId)
+	if err != nil {
+		return nil, err
 	}
 	req := kadClient.NewRequest(constants.ComponentReleaseURL)
 	if catalog != nil {
@@ -44,10 +45,10 @@ func (c ComponentReleaseClient) Get(kadInstanceId string, name string, catalog *
 	return client.DoGet[model.ComponentRelease](req)
 }
 
-func (c ComponentReleaseClient) List(kadInstanceId string, catalog *string) (*model.ComponentReleases, error) {
-	kadClient := c.KAD.ID(kadInstanceId)
-	if kadClient == nil {
-		return nil, client.InvalidInstanceError(kadInstanceId)
+func (c ComponentReleaseClient) List(kadInstanceId string, catalog *string) (*model.ComponentReleases, *errors.ServerError) {
+	kadClient, err := c.KAD.ID(kadInstanceId)
+	if err != nil {
+		return nil, err
 	}
 	req := kadClient.NewRequest(constants.ComponentReleaseURL)
 	if catalog != nil {

@@ -18,9 +18,9 @@ get:
                 items:
                   $ref: '../../definition/Kad.yaml'
     default:
-      description: unexpected error
+      description: Server error
       content:
         application/json:
           schema:
-            $ref: '../../definition/Error.yaml'
+            $ref: '../../definition/ServerError.yaml'
 

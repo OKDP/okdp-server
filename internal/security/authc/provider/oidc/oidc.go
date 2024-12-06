@@ -27,11 +27,12 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/okdp/okdp-server/internal/config"
 	"github.com/okdp/okdp-server/internal/constants"
+	"github.com/okdp/okdp-server/internal/errors"
+	log "github.com/okdp/okdp-server/internal/logging"
 	"github.com/okdp/okdp-server/internal/security/authc/model"
 	"github.com/okdp/okdp-server/internal/utils"
 	"golang.org/x/net/context"
 	"golang.org/x/oauth2"
-	"github.com/okdp/okdp-server/internal/logging"
 )
 
 type OidcProvider struct {
@@ -80,12 +81,12 @@ func NewProvider(oidcConf config.OpenIDAuth) (*OidcProvider, error) {
 func (p *OidcProvider) AuthLogin(c *gin.Context) {
 	state, err := utils.RandomString()
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to to create OAuth2 state"})
+		c.JSON(http.StatusUnauthorized, errors.OfType(errors.OkdpServer).GenericError(http.StatusUnauthorized, "Failed to to create OAuth2 state"))
 		return
 	}
 	nonce, err := utils.RandomString()
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to to create OAuth2 nonce"})
+		c.JSON(http.StatusUnauthorized, errors.OfType(errors.OkdpServer).GenericError(http.StatusUnauthorized, "Failed to to create OAuth2 nonce"))
 		return
 	}
 	url := p.Config.AuthCodeURL(state, oidc.Nonce(nonce))
@@ -123,57 +124,57 @@ func (p *OidcProvider) authenticate() gin.HandlerFunc {
 		state := session.Get(constants.OAuth2State)
 		if c.Query("state") != state {
 			log.Warn("Invalid authentication OAuth2 state")
-			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"message": "Invalid authentication OAuth2 'state': " + state.(string)})
+			c.AbortWithStatusJSON(http.StatusBadRequest, errors.OfType(errors.OkdpServer).GenericError(http.StatusBadRequest, "Invalid authentication OAuth2 'state': "+state.(string)))
 			return
 		}
 		// Exchange the authorization code for an access token
 		token, err := p.Config.Exchange(p.Context, c.Query("code"))
 		if err != nil {
 			log.Warn("Failed to exchange the authorization code with an access token: %w", err)
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "Failed to exchange authorization code with an access token: " + err.Error()})
+			c.AbortWithStatusJSON(http.StatusUnauthorized, errors.OfType(errors.OkdpServer).GenericError(http.StatusUnauthorized, "Failed to exchange authorization code with an access token: "+err.Error()))
 			return
 		}
 
 		rawIDToken, ok := token.Extra("id_token").(string)
 		if !ok {
 			log.Warn("No id_token field found in the OAuth2 token")
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "No id_token field found in the OAuth2 token"})
+			c.AbortWithStatusJSON(http.StatusUnauthorized, errors.OfType(errors.OkdpServer).GenericError(http.StatusUnauthorized, "No id_token field found in the OAuth2 token"))
 			return
 		}
 		idToken, err := p.Verify(p.Context, rawIDToken)
 		if err != nil {
 			log.Warn("Failed to verify the ID Token: %w", err)
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "Failed to verify the ID Token: " + err.Error()})
+			c.AbortWithStatusJSON(http.StatusUnauthorized, errors.OfType(errors.OkdpServer).GenericError(http.StatusUnauthorized, "Failed to verify the ID Token: "+err.Error()))
 			return
 		}
 
 		nonce := session.Get(constants.OAuth2Nonce)
 		if idToken.Nonce != nonce {
 			log.Warn("Invalid authentication OAuth2 'nonce': %s", nonce.(string))
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "Invalid authentication OAuth2 'nonce': " + nonce.(string)})
+			c.AbortWithStatusJSON(http.StatusUnauthorized, errors.OfType(errors.OkdpServer).GenericError(http.StatusUnauthorized, "Invalid authentication OAuth2 'nonce': "+nonce.(string)))
 			return
 		}
 		userInfo, err = p.getUserInfo(token.AccessToken)
 		if err != nil {
 			log.Warn("Unable to get user roles/groups from the access token: %w", err)
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "Unable to get user roles/groups from access token: " + err.Error()})
+			c.AbortWithStatusJSON(http.StatusUnauthorized, errors.OfType(errors.OkdpServer).GenericError(http.StatusUnauthorized, "Unable to get user roles/groups from access token: "+err.Error()))
 			return
 		}
 		// Retrieve the user information from the access token
 		// client := provider.Config.Client(provider.Ctx, token)
 		// resp, err := client.Get(provider.Provider.UserInfoEndpoint())
 		// if err != nil {
-		// 	c.JSON(http.StatusUnauthorized, gin.H{"error": "Failed to retrieve user information"})
+		// 	c.JSON(http.StatusUnauthorized, errors.OfType(errors.OKDP_SERVER).GenericError(http.StatusUnauthorized, "Failed to retrieve user information"))
 		// 	return
 		// }
 		// defer resp.Body.Close()
 		// err = json.NewDecoder(resp.Body).Decode(&userInfo)
 		// if err != nil {
-		// 	c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to parse user information" + err.Error()})
+		// 	c.JSON(http.StatusInternalServerError, errors.OfType(errors.OKDP_SERVER).GenericError(http.StatusUnauthorized, "Failed to parse user information" + err.Error()))
 		// 	return
 		// }
 		// if err := session.Save(); err != nil {
-		// 	c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save user information" + err.Error()})
+		// 	c.JSON(http.StatusInternalServerError, errors.OfType(errors.OKDP_SERVER).GenericError(http.StatusUnauthorized, "Failed to save user information" + err.Error()))
 		// }
 		c.Set(constants.OAuth2UserInfo, userInfo)
 		session.Set(constants.OAuth2UserInfo, userInfo)
@@ -183,11 +184,10 @@ func (p *OidcProvider) authenticate() gin.HandlerFunc {
 }
 
 func (p *OidcProvider) getUserInfo(accessToken string) (model.UserInfo, error) {
-	token := &model.Token {AccessToken: accessToken}
+	token := &model.Token{AccessToken: accessToken}
 	return token.GetUserInfo(rolesAttributePath, groupsAttributePath)
 }
 
 func (p *OidcProvider) cookieSessionStore() gin.HandlerFunc {
 	return sessions.Sessions(constants.OAuth2SessionName, p.Store)
 }
-

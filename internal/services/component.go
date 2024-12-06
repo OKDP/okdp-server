@@ -19,6 +19,7 @@ package services
 import (
 	"github.com/okdp/okdp-server/internal/kad"
 	"github.com/okdp/okdp-server/internal/model"
+	"github.com/okdp/okdp-server/internal/errors"
 	
 )
 
@@ -32,11 +33,11 @@ func NewComponentService() *ComponentService {
 	}
 }
 
-func (s ComponentService) Get(kadInstanceId string, name string, catalog *string) (*model.Component, error) {
+func (s ComponentService) Get(kadInstanceId string, name string, catalog *string) (*model.Component, *errors.ServerError) {
 	return s.component.Get(kadInstanceId, name, catalog)
 }
 
-func (s ComponentService) List(kadInstanceId string, catalog *string) (*model.Components, error) {
+func (s ComponentService) List(kadInstanceId string, catalog *string) (*model.Components, *errors.ServerError) {
 	return s.component.List(kadInstanceId, catalog)
 }
 

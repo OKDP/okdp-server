@@ -19,6 +19,7 @@
  import (
 	 "github.com/okdp/okdp-server/internal/kad"
 	 "github.com/okdp/okdp-server/internal/model"
+	 "github.com/okdp/okdp-server/internal/errors"
  )
  
  type CatalogService struct {
@@ -31,11 +32,11 @@
 	 }
  }
  
- func (s CatalogService) Get(kadInstanceId string, name string) (*model.Catalog, error) {
+ func (s CatalogService) Get(kadInstanceId string, name string) (*model.Catalog, *errors.ServerError) {
 	 return s.catalog.Get(kadInstanceId, name)
  }
  
- func (s CatalogService) List(kadInstanceId string) (*model.Catalogs, error) {
+ func (s CatalogService) List(kadInstanceId string) (*model.Catalogs, *errors.ServerError) {
 	 return s.catalog.List(kadInstanceId)
  }
  

@@ -37,7 +37,7 @@ func KadController() *IKadController {
 func (r IKadController) GetKadInstance(c *gin.Context, kadInstanceId string) {
 	instance, err := client.GetInstanceById(kadInstanceId)
 	if err != nil {
-		c.JSON(err.StatusCode, err.Error.Error())
+		c.JSON(err.Status, err)
 	} else {
 		c.JSON(http.StatusOK, instance)
 	}

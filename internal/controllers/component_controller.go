@@ -39,8 +39,8 @@ func ComponentController() *IComponentController {
 func (r IComponentController) ListComponents(c *gin.Context, kadInstanceId string, params _component.ListComponentsParams) {
 	components, err := r.componentService.List(kadInstanceId, params.Catalog)
 	if err != nil {
-		log.Error("Unable to get data from kad: %s", err.Error())
-		c.JSON(http.StatusInternalServerError, err.Error())
+		log.Error("Unexpected error was occured: %+v", err)
+		c.JSON(err.Status, err)
 		return
 	}
 	c.JSON(http.StatusOK, components)
@@ -49,8 +49,8 @@ func (r IComponentController) ListComponents(c *gin.Context, kadInstanceId strin
 func (r IComponentController) GetComponent(c *gin.Context, kadInstanceId string, name string, params _component.GetComponentParams) {
 	component, err := r.componentService.Get(kadInstanceId, name, params.Catalog)
 	if err != nil {
-		log.Error("Unable to get data from kad: %s", err.Error())
-		c.JSON(http.StatusInternalServerError, err.Error())
+		log.Error("Unexpected error was occured: %+v", err)
+		c.JSON(err.Status, err)
 		return
 	}
 	if component == nil {

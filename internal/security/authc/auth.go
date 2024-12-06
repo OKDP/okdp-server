@@ -22,10 +22,11 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/okdp/okdp-server/internal/config"
 	"github.com/okdp/okdp-server/internal/constants"
+	"github.com/okdp/okdp-server/internal/errors"
+	log "github.com/okdp/okdp-server/internal/logging"
 	"github.com/okdp/okdp-server/internal/security/authc/provider/basic"
 	"github.com/okdp/okdp-server/internal/security/authc/provider/bearer"
 	"github.com/okdp/okdp-server/internal/security/authc/provider/oidc"
-	"github.com/okdp/okdp-server/internal/logging"
 )
 
 func Authenticator(authNConfig config.AuthN) []gin.HandlerFunc {
@@ -62,7 +63,7 @@ func ensureUserAuthenticated() gin.HandlerFunc {
 		_, found := c.Get(constants.OAuth2UserInfo)
 		if !found {
 			log.Warn("Failed to authenticate user")
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "Authentication failed"})
+			c.AbortWithStatusJSON(http.StatusUnauthorized, errors.OfType(errors.OkdpServer).GenericError(http.StatusUnauthorized, "Authentication failed"))
 			return
 		}
 	}

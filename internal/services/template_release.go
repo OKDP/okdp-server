@@ -19,6 +19,7 @@
  import (
 	 "github.com/okdp/okdp-server/internal/kad"
 	 "github.com/okdp/okdp-server/internal/model"
+	 "github.com/okdp/okdp-server/internal/errors"
  )
  
  type TemplateReleaseService struct {
@@ -31,11 +32,11 @@
 	 }
  }
  
- func (s TemplateReleaseService) Get(kadInstanceId string, name string, catalog *string) (*model.TemplateRelease, error) {
+ func (s TemplateReleaseService) Get(kadInstanceId string, name string, catalog *string) (*model.TemplateRelease, *errors.ServerError) {
 	 return s.templateRelease.Get(kadInstanceId, name, catalog)
  }
  
- func (s TemplateReleaseService) List(kadInstanceId string, catalog *string) (*model.TemplateReleases, error) {
+ func (s TemplateReleaseService) List(kadInstanceId string, catalog *string) (*model.TemplateReleases, *errors.ServerError) {
 	 return s.templateRelease.List(kadInstanceId, catalog)
  }
  

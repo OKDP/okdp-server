@@ -32,9 +32,9 @@ get:
           schema:
             $ref: '../../definition/ComponentRelease.yaml'
     default:
-      description: unexpected error
+      description: Server error
       content:
         application/json:
           schema:
-            $ref: '../../definition/Error.yaml'
+            $ref: '../../definition/ServerError.yaml'
 

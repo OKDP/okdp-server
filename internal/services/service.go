@@ -18,6 +18,7 @@ package services
 
 import (
 	"github.com/okdp/okdp-server/internal/model"
+	"github.com/okdp/okdp-server/internal/errors"
 )
 
 type Service struct {
@@ -32,7 +33,7 @@ func NewService() (*Service, error) {
 	}, nil
 }
 
-func (s Service) List(kadInstanceId string, catalog *string) (*model.Services, error) {
+func (s Service) List(kadInstanceId string, catalog *string) (*model.Services, *errors.ServerError) {
 
 	componentReleases, err := s.componentReleaseService.List(kadInstanceId, catalog)
 	if err != nil {

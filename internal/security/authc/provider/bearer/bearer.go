@@ -25,7 +25,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/okdp/okdp-server/internal/config"
 	"github.com/okdp/okdp-server/internal/constants"
-	"github.com/okdp/okdp-server/internal/logging"
+	"github.com/okdp/okdp-server/internal/errors"
+	log "github.com/okdp/okdp-server/internal/logging"
 	"github.com/okdp/okdp-server/internal/security/authc/model"
 	"golang.org/x/net/context"
 )
@@ -55,7 +56,7 @@ func NewProvider(bearerConf config.BearerAuth) BearerProvider {
 	return BearerProvider{ctx, verifier}
 }
 
-// Auth returns a middleware which authenticates the user with a bearer authentication 
+// Auth returns a middleware which authenticates the user with a bearer authentication
 // and propagates the user info (roles/groups) into the autorization provider.
 func (p *BearerProvider) Auth() []gin.HandlerFunc {
 	return []gin.HandlerFunc{p.authenticate()}
@@ -72,14 +73,14 @@ func (p *BearerProvider) authenticate() gin.HandlerFunc {
 		err := p.verifyAccessToken(accessToken)
 		if err != nil {
 			log.Warn("Failed to verify access Token: %w", err)
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "Failed to verify access Token: " + err.Error()})
+			c.AbortWithStatusJSON(http.StatusUnauthorized, errors.OfType(errors.OkdpServer).GenericError(http.StatusUnauthorized, "Failed to verify access Token: "+err.Error()))
 			return
 		}
 
 		userInfo, err = p.getUserInfo(accessToken)
 		if err != nil {
 			log.Warn("Unable to get user roles/groups from access token: %w", err)
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "Unable to get user roles/groups from access token: " + err.Error()})
+			c.AbortWithStatusJSON(http.StatusUnauthorized, errors.OfType(errors.OkdpServer).GenericError(http.StatusUnauthorized, "Unable to get user roles/groups from access token: "+err.Error()))
 			return
 		}
 		log.Debug("Successfully authenticated user : %s", userInfo.AsJsonString())
@@ -101,6 +102,6 @@ func (p *BearerProvider) verifyAccessToken(accessToken string) error {
 }
 
 func (p *BearerProvider) getUserInfo(accessToken string) (model.UserInfo, error) {
-	token := &model.Token {AccessToken: accessToken}
+	token := &model.Token{AccessToken: accessToken}
 	return token.GetUserInfo(rolesAttributePath, groupsAttributePath)
 }

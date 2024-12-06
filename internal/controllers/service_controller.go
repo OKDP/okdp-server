@@ -42,8 +42,8 @@ func ServiceController() *IServiceController {
 func (r IServiceController) ListServices(c *gin.Context, kadInstanceId string, params _services.ListServicesParams) {
    services, err := r.service.List(kadInstanceId, params.Catalog)
 	if err != nil {
-		log.Error("Unable to get data from kad: %s", err.Error())
-		c.JSON(http.StatusInternalServerError, err.Error())
+		log.Error("Unexpected error was occured: %+v", err)
+		c.JSON(err.Status, err)
 		return
 	}
 	c.JSON(http.StatusOK, services)

@@ -19,6 +19,7 @@
  import (
 	 "github.com/okdp/okdp-server/internal/kad"
 	 "github.com/okdp/okdp-server/internal/model"
+	 "github.com/okdp/okdp-server/internal/errors"
  )
  
  
@@ -32,11 +33,11 @@
 	 }
  }
  
- func (s ComponentReleaseService) Get(kadInstanceId string, name string, catalog *string) (*model.ComponentRelease, error) {
+ func (s ComponentReleaseService) Get(kadInstanceId string, name string, catalog *string) (*model.ComponentRelease, *errors.ServerError) {
 	 return s.componentRelease.Get(kadInstanceId, name, catalog)
  }
  
- func (s ComponentReleaseService) List(kadInstanceId string, catalog *string) (*model.ComponentReleases, error) {
+ func (s ComponentReleaseService) List(kadInstanceId string, catalog *string) (*model.ComponentReleases, *errors.ServerError) {
 	 return s.componentRelease.List(kadInstanceId, catalog)
  }
  

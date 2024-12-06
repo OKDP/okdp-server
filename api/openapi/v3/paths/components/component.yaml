@@ -32,11 +32,11 @@ get:
                 items:
                   $ref: '../../definition/Component.yaml'
     default:
-      description: unexpected error
+      description: Server error
       content:
         application/json:
           schema:
-            $ref: '../../definition/Error.yaml'
+            $ref: '../../definition/ServerError.yaml'
 
 # post:
 #   summary: Create a new component
@@ -62,8 +62,8 @@ get:
 #     '204':
 #       description: todo
 #     default:
-#       description: unexpected error
+#       description: Server error
 #       content:
 #         application/json:
 #           schema:
-#             $ref: '../../definition/Error.yaml'
+#             $ref: '../../definition/ServerError.yaml'

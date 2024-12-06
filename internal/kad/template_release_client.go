@@ -20,6 +20,7 @@ import (
 	"github.com/okdp/okdp-server/internal/constants"
 	"github.com/okdp/okdp-server/internal/kad/client"
 	"github.com/okdp/okdp-server/internal/model"
+	"github.com/okdp/okdp-server/internal/errors"
 )
 
 type TemplateReleaseClient struct {
@@ -32,10 +33,10 @@ func NewTemplateReleaseClient() *TemplateReleaseClient {
 	}
 }
 
-func (c TemplateReleaseClient) Get(kadInstanceId string, name string, catalog *string) (*model.TemplateRelease, error) {
-	kadClient := c.KAD.ID(kadInstanceId)
-	if kadClient == nil {
-		return nil, client.InvalidInstanceError(kadInstanceId)
+func (c TemplateReleaseClient) Get(kadInstanceId string, name string, catalog *string) (*model.TemplateRelease, *errors.ServerError) {
+	kadClient, err := c.KAD.ID(kadInstanceId)
+	if err != nil {
+		return nil, err
 	}
 	req := kadClient.NewRequest(constants.TemplateReleaseURL)
 	if catalog != nil {
@@ -44,10 +45,10 @@ func (c TemplateReleaseClient) Get(kadInstanceId string, name string, catalog *s
 	return client.DoGet[model.TemplateRelease](req)
 }
 
-func (c TemplateReleaseClient) List(kadInstanceId string, catalog *string) (*model.TemplateReleases, error) {
-	kadClient := c.KAD.ID(kadInstanceId)
-	if kadClient == nil {
-		return nil, client.InvalidInstanceError(kadInstanceId)
+func (c TemplateReleaseClient) List(kadInstanceId string, catalog *string) (*model.TemplateReleases, *errors.ServerError) {
+	kadClient, err := c.KAD.ID(kadInstanceId)
+	if err != nil {
+		return nil, err
 	}
 	req := kadClient.NewRequest(constants.TemplateReleaseURL)
 	if catalog != nil {

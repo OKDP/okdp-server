@@ -156,12 +156,6 @@ type ComponentRelease struct {
 	} `json:"status"`
 }
 
-// Error defines model for Error.
-type Error struct {
-	Message string `json:"message"`
-	Slug    string `json:"slug"`
-}
-
 // FlatComponent defines model for FlatComponent.
 type FlatComponent struct {
 	Catalogs             []string `json:"catalogs"`
@@ -184,6 +178,13 @@ type Kad struct {
 	AuthBearer         string `json:"authBearer"`
 	Id                 string `json:"id"`
 	InsecureSkipVerify bool   `json:"insecureSkipVerify"`
+}
+
+// ServerError defines model for ServerError.
+type ServerError struct {
+	Message string `json:"message"`
+	Status  int    `json:"status"`
+	Type    string `json:"type"`
 }
 
 // Service defines model for Service.

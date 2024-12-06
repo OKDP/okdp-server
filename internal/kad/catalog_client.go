@@ -20,6 +20,7 @@ import (
 	"github.com/okdp/okdp-server/internal/constants"
 	"github.com/okdp/okdp-server/internal/kad/client"
 	"github.com/okdp/okdp-server/internal/model"
+	"github.com/okdp/okdp-server/internal/errors"
 )
 
 type CatalogClient struct {
@@ -32,19 +33,19 @@ func NewCatalogClient() *CatalogClient {
 	}
 }
 
-func (c CatalogClient) Get(kadInstanceId string, name string) (*model.Catalog, error) {
-	kadClient := c.KAD.ID(kadInstanceId)
-	if kadClient == nil {
-		return nil, client.InvalidInstanceError(kadInstanceId)
+func (c CatalogClient) Get(kadInstanceId string, name string) (*model.Catalog, *errors.ServerError) {
+	kadClient, err := c.KAD.ID(kadInstanceId)
+	if err != nil {
+		return nil, err
 	}
 	req := kadClient.NewRequest(constants.CatalogURL + "/" + name)
 	return client.DoGet[model.Catalog](req)
 }
 
-func (c CatalogClient) List(kadInstanceId string) (*model.Catalogs, error) {
-	kadClient := c.KAD.ID(kadInstanceId)
-	if kadClient == nil {
-		return nil, client.InvalidInstanceError(kadInstanceId)
+func (c CatalogClient) List(kadInstanceId string) (*model.Catalogs, *errors.ServerError) {
+	kadClient, err := c.KAD.ID(kadInstanceId)
+	if err != nil {
+		return nil, err
 	}
 	req := kadClient.NewRequest(constants.CatalogURL)
 	return client.DoGet[model.Catalogs](req)

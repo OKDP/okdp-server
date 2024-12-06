@@ -32,11 +32,11 @@ get:
           schema:
             $ref: '../../definition/Component.yaml'
     default:
-      description: unexpected error
+      description: Server error
       content:
         application/json:
           schema:
-            $ref: '../../definition/Error.yaml'
+            $ref: '../../definition/ServerError.yaml'
 
 # delete:
 #   summary: Delete a component
@@ -62,11 +62,11 @@ get:
 #     '204':
 #       description: todo
 #     default:
-#       description: unexpected error
+#       description: Server error
 #       content:
 #         application/json:
 #           schema:
-#             $ref: '../../definition/Error.yaml'
+#             $ref: '../../definition/ServerError.yaml'
 # put:
 #   summary: Update a component
 #   description: |
@@ -99,10 +99,10 @@ get:
 #     '204':
 #       description: todo
 #     default:
-#       description: unexpected error
+#       description: Server error
 #       content:
 #         application/json:
 #           schema:
-#             $ref: '../../definition/Error.yaml'
+#             $ref: '../../definition/ServerError.yaml'
 
 
