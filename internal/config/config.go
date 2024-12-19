@@ -21,6 +21,7 @@ import (
 	"sync"
 
 	"github.com/fsnotify/fsnotify"
+	"github.com/okdp/okdp-server/api/openapi/v3/_api"
 	"github.com/spf13/viper"
 )
 
@@ -125,12 +126,7 @@ type DBAuthZ struct {
 	Name     string `yaml:"name"`
 }
 
-type KadInstance struct {
-	ID                 string `yaml:"id"`
-	APIURL             string `yaml:"apiUrl"`
-	AuthBearer         string `yaml:"authBearer"`
-	InsecureSkipVerify bool   `yaml:"insecureSkipVerify"`
-}
+type KadInstance _api.Kad
 
 var (
 	instance *ApplicationConfig

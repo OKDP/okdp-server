@@ -174,10 +174,11 @@ type FlatComponent struct {
 
 // Kad defines model for Kad.
 type Kad struct {
-	ApiUrl             string `json:"apiUrl"`
+	APIURL             string `json:"apiUrl"`
 	AuthBearer         string `json:"authBearer"`
-	Id                 string `json:"id"`
+	ID                 string `json:"id"`
 	InsecureSkipVerify bool   `json:"insecureSkipVerify"`
+	Name               string `json:"name"`
 }
 
 // ServerError defines model for ServerError.

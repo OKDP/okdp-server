@@ -60,6 +60,7 @@ security:
 
 kad:
   - id: sandbox
+    name: Sandbox de idir
     apiUrl: https://host.docker.internal:6553/api/kad/v1
     authBearer: JUDtoP55C2dLfeaXqSbehhKKRdmAWTfj
     insecureSkipVerify: true

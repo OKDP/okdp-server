@@ -3,14 +3,19 @@ xml:
   name: kad
 required: 
 - id
+- name
 - apiUrl
 - authBearer
 - insecureSkipVerify
 properties:
   id:
     type: string
+    x-go-name: ID
+  name:
+    type: string
   apiUrl:
     type: string
+    x-go-name: APIURL
   authBearer:
     type: string
   insecureSkipVerify:
