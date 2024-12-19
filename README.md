@@ -45,7 +45,17 @@ docker-compose build --no-cache
 ```
 
 ```shell
+
+kadcli git remove projectA-1.yaml -m "Test remove" -n "idir" --insecureSkipVerify
+kadcli git add -m "test add" -n"idir"  projectA-1.yaml --insecureSkipVerify 
+
 curl -H "Authorization: Bearer qn7ccrJQhBJ9bdJ4sPa3LAXR8mrjsHen" -X PUT 'https://kad.ingress.kubo4.mbp/api/git/v1/mycluster/deployments/minio3.yaml' -F kadfile=@minio3.yaml -F commit-message='A commit Message' -F committer-name='Serge' -F committer-email=''
 
+
+kadcli kad componentReleases apply --insecureSkipVerify minio1
+kadcli kad componentReleases apply --insecureSkipVerify _all_ 
+
 ```
+
+
 

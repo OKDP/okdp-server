@@ -37,7 +37,10 @@ properties:
         items: 
           type: "string"
       usage: 
-        type: "string"
+        oneOf:
+          - type: string
+          - type: object
+            additionalProperties: true
       config: 
         required: 
           - "install"

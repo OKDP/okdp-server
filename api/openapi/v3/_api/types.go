@@ -84,7 +84,7 @@ type Component struct {
 			} `json:"ociRepository"`
 		} `json:"source"`
 		Suspended bool                  `json:"suspended"`
-		Usage     string                `json:"usage"`
+		Usage     Component_Spec_Usage  `json:"usage"`
 		Values    Component_Spec_Values `json:"values"`
 		Version   string                `json:"version"`
 	} `json:"spec"`
@@ -96,6 +96,17 @@ type Component struct {
 		Releases         []string               `json:"releases"`
 		Title            string                 `json:"title"`
 	} `json:"status"`
+}
+
+// ComponentSpecUsage0 defines model for .
+type ComponentSpecUsage0 = string
+
+// ComponentSpecUsage1 defines model for .
+type ComponentSpecUsage1 map[string]interface{}
+
+// Component_Spec_Usage defines model for Component.Spec.Usage.
+type Component_Spec_Usage struct {
+	union json.RawMessage
 }
 
 // ComponentSpecValues0 defines model for .
@@ -287,6 +298,68 @@ type ListTemplateReleasesParams struct {
 type GetTemplateReleaseParams struct {
 	// Catalog Filter by catalogs (comma separated)
 	Catalog *string `form:"catalog,omitempty" json:"catalog,omitempty"`
+}
+
+// AsComponentSpecUsage0 returns the union data inside the Component_Spec_Usage as a ComponentSpecUsage0
+func (t Component_Spec_Usage) AsComponentSpecUsage0() (ComponentSpecUsage0, error) {
+	var body ComponentSpecUsage0
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromComponentSpecUsage0 overwrites any union data inside the Component_Spec_Usage as the provided ComponentSpecUsage0
+func (t *Component_Spec_Usage) FromComponentSpecUsage0(v ComponentSpecUsage0) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeComponentSpecUsage0 performs a merge with any union data inside the Component_Spec_Usage, using the provided ComponentSpecUsage0
+func (t *Component_Spec_Usage) MergeComponentSpecUsage0(v ComponentSpecUsage0) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsComponentSpecUsage1 returns the union data inside the Component_Spec_Usage as a ComponentSpecUsage1
+func (t Component_Spec_Usage) AsComponentSpecUsage1() (ComponentSpecUsage1, error) {
+	var body ComponentSpecUsage1
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromComponentSpecUsage1 overwrites any union data inside the Component_Spec_Usage as the provided ComponentSpecUsage1
+func (t *Component_Spec_Usage) FromComponentSpecUsage1(v ComponentSpecUsage1) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeComponentSpecUsage1 performs a merge with any union data inside the Component_Spec_Usage, using the provided ComponentSpecUsage1
+func (t *Component_Spec_Usage) MergeComponentSpecUsage1(v ComponentSpecUsage1) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t Component_Spec_Usage) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *Component_Spec_Usage) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
 }
 
 // AsComponentSpecValues0 returns the union data inside the Component_Spec_Values as a ComponentSpecValues0
