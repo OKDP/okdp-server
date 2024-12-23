@@ -19,10 +19,10 @@ const (
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
 	// List all catalogs
-	// (GET /kad/{kadInstanceId}/catalog)
+	// (GET /kad/{kadInstanceId}/catalogs)
 	ListCatalogs(c *gin.Context, kadInstanceId string)
 	// Get a catalog info by name
-	// (GET /kad/{kadInstanceId}/catalog/{name})
+	// (GET /kad/{kadInstanceId}/catalogs/{name})
 	GetCatalog(c *gin.Context, kadInstanceId string, name string)
 }
 
@@ -127,6 +127,6 @@ func RegisterHandlersWithOptions(router gin.IRouter, si ServerInterface, options
 		ErrorHandler:       errorHandler,
 	}
 
-	router.GET(options.BaseURL+"/kad/:kadInstanceId/catalog", wrapper.ListCatalogs)
-	router.GET(options.BaseURL+"/kad/:kadInstanceId/catalog/:name", wrapper.GetCatalog)
+	router.GET(options.BaseURL+"/kad/:kadInstanceId/catalogs", wrapper.ListCatalogs)
+	router.GET(options.BaseURL+"/kad/:kadInstanceId/catalogs/:name", wrapper.GetCatalog)
 }
