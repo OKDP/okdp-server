@@ -36,10 +36,10 @@ echo "Creating users, roles and clients ..."
 
 # Create OAuth2 clients
 /opt/keycloak/bin/kcadm.sh create clients -r master -s clientId=public-oidc-client -s name=public-oidc-client -s publicClient=true \
-                            -s 'redirectUris=["http://localhost:8090/oauth2/callback", "http://localhost:8092/oauth2-redirect.html", "http://localhost:4200/index.html", "http://localhost:4200/silent-refresh.html"]' \
+                            -s 'redirectUris=["http://localhost:8090/oauth2/callback", "http://localhost:8092/oauth2-redirect.html", "http://localhost:4200/index.html", "http://localhost:4200/silent-refresh.html", "http://localhost:4200/home"]' \
                             -s 'webOrigins=["http://localhost:8090", "http://localhost:8092", "http://localhost:4200"]'
 /opt/keycloak/bin/kcadm.sh create clients -r master -s clientId=confidential-oidc-client -s name=confidential-oidc-client  -s 'secret=secret1' \
-                            -s 'redirectUris=["http://localhost:8090/oauth2/callback", "http://localhost:8092/oauth2-redirect.html", "http://localhost:4200/index.html", "http://localhost:4200/silent-refresh.html"]'  \
+                            -s 'redirectUris=["http://localhost:8090/oauth2/callback", "http://localhost:8092/oauth2-redirect.html", "http://localhost:4200/index.html", "http://localhost:4200/silent-refresh.html", "http://localhost:4200/home"]'  \
                             -s 'webOrigins=["http://localhost:8090", "http://localhost:8092", "http://localhost:4200"]'
 
 # Update access token lifetime

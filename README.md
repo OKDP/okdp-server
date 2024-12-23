@@ -25,7 +25,8 @@ kubectl port-forward svc/kad-webserver 6553:6553
 ### Start
 
 ```shell
-docker-compose up
+docker-compose rm -f
+docker-compose up --build
 ```
 
 Open swagger UI at: http://localhost:8092/
@@ -37,12 +38,6 @@ dev1/user
 adm1/user
 
 view1/user
-
-### Rebuild
-
-```shell
-docker-compose build --no-cache 
-```
 
 ```shell
 
