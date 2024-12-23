@@ -1,6 +1,6 @@
 type: object
 xml:
-  name: kad
+  name: kadInstance
 required: 
 - id
 - name

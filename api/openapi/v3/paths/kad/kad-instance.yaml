@@ -1,19 +1,12 @@
 get:
-  summary: Get KAD instance by name
-  description: Get KAD instance by name
+  summary: List all KAD configured instances
+  description: List all KAD configured instances
   tags:
     - kad
-  operationId: getKadInstance
-  parameters:
-    - in: path
-      name: kadInstanceId
-      schema:
-        type: string
-      required: true
-      description: KAD instance ID
+  operationId: listKadInstances
   responses:
     '200':
-      description: KAD instance configuration
+      description: List of KAD instances
       content:
         application/json:
           schema:
@@ -23,7 +16,7 @@ get:
               instances:
                 type: array
                 items:
-                  $ref: '../../definition/Kad.yaml'
+                  $ref: '../../definition/KadInstance.yaml'
     default:
       description: Server error
       content:

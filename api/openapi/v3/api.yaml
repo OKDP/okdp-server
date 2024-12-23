@@ -53,13 +53,13 @@ paths:
     $ref: ./paths/users/user-profile.yaml
   ### KAD instances
   /kad:
-    $ref: ./paths/kad/kad.yaml
+    $ref: ./paths/kad/kad-instance.yaml
   /kad/{kadInstanceId}:
-    $ref: ./paths/kad/kad-by-name.yaml
+    $ref: ./paths/kad/kad-instance-by-name.yaml
   ### KAD Catalog API
-  /kad/{kadInstanceId}/catalog:
+  /kad/{kadInstanceId}/catalogs:
     $ref: ./paths/catalogs/catalog.yaml
-  /kad/{kadInstanceId}/catalog/{name}:
+  /kad/{kadInstanceId}/catalogs/{name}:
     $ref: ./paths/catalogs/catalog-by-name.yaml
   ### Services API
   /kad/{kadInstanceId}/services:
@@ -96,8 +96,8 @@ components:
       $ref: './definition/Service.yaml'
     FlatComponent:
       $ref: './definition/FlatComponent.yaml'
-    Kad:
-      $ref: './definition/Kad.yaml'
+    KadInstance:
+      $ref: './definition/KadInstance.yaml'
     ServerError:
       $ref: './definition/ServerError.yaml'
 

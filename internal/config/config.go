@@ -126,7 +126,7 @@ type DBAuthZ struct {
 	Name     string `yaml:"name"`
 }
 
-type KadInstance _api.Kad
+type KadInstance _api.KadInstance
 
 var (
 	instance *ApplicationConfig

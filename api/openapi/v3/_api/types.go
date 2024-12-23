@@ -183,8 +183,8 @@ type FlatComponent struct {
 	TemplateVersion      string   `json:"templateVersion"`
 }
 
-// Kad defines model for Kad.
-type Kad struct {
+// KadInstance defines model for KadInstance.
+type KadInstance struct {
 	APIURL             string `json:"apiUrl"`
 	AuthBearer         string `json:"authBearer"`
 	ID                 string `json:"id"`
