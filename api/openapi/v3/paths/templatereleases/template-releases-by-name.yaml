@@ -38,6 +38,3 @@ get:
           schema:
             $ref: '../../definition/ServerError.yaml'
 
-
-
-

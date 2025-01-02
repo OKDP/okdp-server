@@ -70,3 +70,14 @@ kad:
     apiUrl: https://host.docker.internal:6553/api/kad/v1
     authBearer: HEDG296X4XjnjETBJ1HGEUEqQbn3pNaD
     insecureSkipVerify: true
+  - id: sandbox3
+    name: Sandbox3 de idir
+    apiUrl: https://host.docker.internal:6553/api/kad/v1
+    authBearer: HEDG296X4XjnjETBJ1HGEUEqQbn3pNaD
+    insecureSkipVerify: true
+  - id: sandbox4
+    name: Sandbox4 de idir
+    apiUrl: https://host.docker.internal:6553/api/kad/v1
+    authBearer: HEDG296X4XjnjETBJ1HGEUEqQbn3pNaD
+    insecureSkipVerify: true
+

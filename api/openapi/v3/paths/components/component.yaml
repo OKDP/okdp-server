@@ -38,32 +38,3 @@ get:
           schema:
             $ref: '../../definition/ServerError.yaml'
 
-# post:
-#   summary: Create a new component
-#   description: |
-#     todo
-#   tags:
-#     - components
-#   operationId: createComponent
-# - in: path
-#   name: kadInstanceId
-#   schema:
-#     type: string
-#   required: true
-#   description: todo
-#   requestBody:
-#     description: todo
-#     required: true
-#     content:
-#       application/json:
-#         schema:
-#           $ref: '../../definition/Component.yaml'
-#   responses:
-#     '204':
-#       description: todo
-#     default:
-#       description: Server error
-#       content:
-#         application/json:
-#           schema:
-#             $ref: '../../definition/ServerError.yaml'
