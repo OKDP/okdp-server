@@ -21,12 +21,13 @@ import (
 	"github.com/okdp/okdp-server/internal/utils"
 )
 
-type ComponentRelease _api.ComponentRelease
-type ComponentReleases []*ComponentRelease
+type ComponentReleaseRequest _api.ComponentReleaseRequest
+type ComponentReleaseResponse _api.ComponentReleaseResponse
+type ComponentReleasesResponse []*ComponentReleaseResponse
 type FlatComponent _api.FlatComponent
 type FlatComponents []*FlatComponent
 
-func (r *ComponentReleases) Flatten() *FlatComponents {
+func (r *ComponentReleasesResponse) Flatten() *FlatComponents {
 	var flatComponents = make(FlatComponents, 0, 100)
 	for _, c := range *r {
 		extC := &FlatComponent{

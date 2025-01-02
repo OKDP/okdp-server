@@ -31,11 +31,13 @@ const (
 	// SwaggerAPIDocsURI is the swagger API Docs public URI
 	SwaggerAPIDocsURI = OkdpServerBaseURL + "/api-docs"
 	// ComponentURL is the kad components URI
-	ComponentURL = "/mycluster/components"
+	ComponentURL = "/api/kad/v1/mycluster/components"
 	// ComponentURL is the kad component releases URI
-	ComponentReleaseURL = "/mycluster/component-releases"
+	ComponentReleaseURL = "/api/kad/v1/mycluster/component-releases"
 	// ComponentURL is the kad template releases URI
-	TemplateReleaseURL = "/mycluster/template-releases"
+	TemplateReleaseURL = "/api/kad/v1/mycluster/template-releases"
 	// ComponentURL is the kad catalogs URI
-	CatalogURL = "/mycluster/catalogs"
+	CatalogURL = "/api/kad/v1/mycluster/catalogs"
+	// GitURL is the kad GIT URI
+	GitURL = "/api/git/v1/mycluster"
 )

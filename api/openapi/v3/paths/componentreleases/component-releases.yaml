@@ -30,7 +30,7 @@ get:
               componentreleases:
                 type: array
                 items:
-                  $ref: '../../definition/ComponentRelease.yaml'
+                  $ref: '../../definition/ComponentReleaseResponse.yaml'
     default:
       description: Server error
       content:

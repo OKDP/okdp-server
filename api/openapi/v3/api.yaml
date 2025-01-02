@@ -88,8 +88,12 @@ components:
       $ref: './definition/Catalog.yaml'
     TemplateRelease:
       $ref: './definition/TemplateRelease.yaml'
-    ComponentRelease:
-      $ref: './definition/ComponentRelease.yaml'
+    ComponentReleasePayload:
+      $ref: './definition/ComponentReleasePayload.yaml'
+    ComponentReleaseRequest:
+      $ref: './definition/ComponentReleaseRequest.yaml'
+    ComponentReleaseResponse:
+      $ref: './definition/ComponentReleaseResponse.yaml'
     Component:
       $ref: './definition/Component.yaml'
     Service:
@@ -98,6 +102,8 @@ components:
       $ref: './definition/FlatComponent.yaml'
     KadInstance:
       $ref: './definition/KadInstance.yaml'
+    GitCommit:
+      $ref: './definition/GitCommit.yaml'
     ServerError:
       $ref: './definition/ServerError.yaml'
 

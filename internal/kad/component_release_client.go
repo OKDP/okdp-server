@@ -17,9 +17,15 @@
 package kad
 
 import (
+	"bytes"
+	"net/http"
+
+	"github.com/go-resty/resty/v2"
+	"github.com/goccy/go-yaml"
 	"github.com/okdp/okdp-server/internal/constants"
 	"github.com/okdp/okdp-server/internal/errors"
 	"github.com/okdp/okdp-server/internal/kad/client"
+	log "github.com/okdp/okdp-server/internal/logging"
 	"github.com/okdp/okdp-server/internal/model"
 )
 
@@ -33,7 +39,7 @@ func NewComponentReleaseClient() *ComponentReleaseClient {
 	}
 }
 
-func (c ComponentReleaseClient) Get(kadInstanceID string, name string, catalog *string) (*model.ComponentRelease, *errors.ServerError) {
+func (c ComponentReleaseClient) Get(kadInstanceID string, name string, catalog *string) (*model.ComponentReleaseResponse, *errors.ServerError) {
 	kadClient, err := c.KAD.ID(kadInstanceID)
 	if err != nil {
 		return nil, err
@@ -42,10 +48,10 @@ func (c ComponentReleaseClient) Get(kadInstanceID string, name string, catalog *
 	if catalog != nil {
 		req = req.SetQueryParam("catalog", *catalog)
 	}
-	return client.DoGet[model.ComponentRelease](req)
+	return client.DoGet[model.ComponentReleaseResponse](req)
 }
 
-func (c ComponentReleaseClient) List(kadInstanceID string, catalog *string) (*model.ComponentReleases, *errors.ServerError) {
+func (c ComponentReleaseClient) List(kadInstanceID string, catalog *string) (*model.ComponentReleasesResponse, *errors.ServerError) {
 	kadClient, err := c.KAD.ID(kadInstanceID)
 	if err != nil {
 		return nil, err
@@ -54,5 +60,41 @@ func (c ComponentReleaseClient) List(kadInstanceID string, catalog *string) (*mo
 	if catalog != nil {
 		req = req.SetQueryParam("catalog", *catalog)
 	}
-	return client.DoGet[model.ComponentReleases](req)
+	return client.DoGet[model.ComponentReleasesResponse](req)
+}
+
+func (c ComponentReleaseClient) UploadAsYaml(kadInstanceID string, name string,
+	componentReleaseRequest model.ComponentReleaseRequest,
+	commitData map[string]string) (*model.GitCommit, *errors.ServerError) {
+	kadClient, err := c.KAD.ID(kadInstanceID)
+	if err != nil {
+		return nil, err
+	}
+
+	// Convert the ComponentReleases into YAML
+	result := map[string]interface{}{
+		"componentReleases": componentReleaseRequest.ComponentReleases,
+	}
+	componentReleasesYAML, err2 := yaml.Marshal(result)
+	if err2 != nil {
+		log.Error("Error marshaling ComponentReleases to YAML: %v", err)
+		return nil, errors.OfType(errors.OkdpServer).
+			GenericError(http.StatusBadRequest, "Unable to parse json to yaml: %+v", err2)
+	}
+
+	log.Info("Uploading Component release (Name: %s, Git Path: %s): \n%s, \n Author Info: %s", name, componentReleaseRequest.GitRepoFolder,
+		string(componentReleasesYAML), commitData)
+
+	req := kadClient.NewRequest(constants.GitURL + "/" + componentReleaseRequest.GitRepoFolder + "/" + name + ".yaml").
+		SetMultipartFields(
+			&resty.MultipartField{
+				Param:       "kadfile",
+				FileName:    name + ".yaml",
+				ContentType: "application/x-yaml",
+				Reader:      bytes.NewReader(componentReleasesYAML),
+			},
+		).
+		SetFormData(commitData)
+
+	return client.DoPut[model.GitCommit](req)
 }

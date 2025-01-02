@@ -32,10 +32,14 @@ func NewComponentReleaseService() *ComponentReleaseService {
 	}
 }
 
-func (s ComponentReleaseService) Get(kadInstanceID string, name string, catalog *string) (*model.ComponentRelease, *errors.ServerError) {
+func (s ComponentReleaseService) Get(kadInstanceID string, name string, catalog *string) (*model.ComponentReleaseResponse, *errors.ServerError) {
 	return s.componentRelease.Get(kadInstanceID, name, catalog)
 }
 
-func (s ComponentReleaseService) List(kadInstanceID string, catalog *string) (*model.ComponentReleases, *errors.ServerError) {
+func (s ComponentReleaseService) List(kadInstanceID string, catalog *string) (*model.ComponentReleasesResponse, *errors.ServerError) {
 	return s.componentRelease.List(kadInstanceID, catalog)
+}
+
+func (s ComponentReleaseService) CreateOrUpdateComponentRelease(kadInstanceID string, name string, componentReleaseRequest model.ComponentReleaseRequest, commitData map[string]string) (*model.GitCommit, *errors.ServerError) {
+	return s.componentRelease.UploadAsYaml(kadInstanceID, name, componentReleaseRequest, commitData)
 }

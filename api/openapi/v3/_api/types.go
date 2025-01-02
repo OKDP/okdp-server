@@ -120,8 +120,76 @@ type Component_Spec_Values struct {
 	union json.RawMessage
 }
 
-// ComponentRelease defines model for ComponentRelease.
-type ComponentRelease struct {
+// ComponentReleasePayload defines model for ComponentReleasePayload.
+type ComponentReleasePayload struct {
+	Component struct {
+		// Config Additional configuration
+		Config         *map[string]interface{} `json:"config,omitempty"`
+		Name           string                  `json:"name"`
+		ParameterFiles *[]struct {
+			Document *string `json:"document,omitempty"`
+			File     *string `json:"file,omitempty"`
+			Unwrap   *string `json:"unwrap,omitempty"`
+			Wrap     *string `json:"wrap,omitempty"`
+		} `json:"parameterFiles,omitempty"`
+
+		// Parameters List of paramters as key/value pairs
+		Parameters *map[string]interface{} `json:"parameters,omitempty"`
+		Protected  *bool                   `json:"protected,omitempty"`
+		Source     *struct {
+			Version string `json:"version"`
+		} `json:"source,omitempty"`
+		Suspended *bool `json:"suspended,omitempty"`
+
+		// Values List of values as key/value pairs
+		Values  *map[string]interface{} `json:"values,omitempty"`
+		Version string                  `json:"version"`
+	} `json:"component"`
+	DependsOn *[]string `json:"dependsOn,omitempty"`
+	Enabled   *bool     `json:"enabled,omitempty"`
+	Name      string    `json:"name"`
+	Namespace *string   `json:"namespace,omitempty"`
+	Roles     *[]string `json:"roles,omitempty"`
+}
+
+// ComponentReleaseRequest defines model for ComponentReleaseRequest.
+type ComponentReleaseRequest struct {
+	Comment           string `json:"comment"`
+	ComponentReleases []struct {
+		Component struct {
+			// Config Additional configuration
+			Config         *map[string]interface{} `json:"config,omitempty"`
+			Name           string                  `json:"name"`
+			ParameterFiles *[]struct {
+				Document *string `json:"document,omitempty"`
+				File     *string `json:"file,omitempty"`
+				Unwrap   *string `json:"unwrap,omitempty"`
+				Wrap     *string `json:"wrap,omitempty"`
+			} `json:"parameterFiles,omitempty"`
+
+			// Parameters List of paramters as key/value pairs
+			Parameters *map[string]interface{} `json:"parameters,omitempty"`
+			Protected  *bool                   `json:"protected,omitempty"`
+			Source     *struct {
+				Version string `json:"version"`
+			} `json:"source,omitempty"`
+			Suspended *bool `json:"suspended,omitempty"`
+
+			// Values List of values as key/value pairs
+			Values  *map[string]interface{} `json:"values,omitempty"`
+			Version string                  `json:"version"`
+		} `json:"component"`
+		DependsOn *[]string `json:"dependsOn,omitempty"`
+		Enabled   *bool     `json:"enabled,omitempty"`
+		Name      string    `json:"name"`
+		Namespace *string   `json:"namespace,omitempty"`
+		Roles     *[]string `json:"roles,omitempty"`
+	} `json:"componentReleases"`
+	GitRepoFolder string `json:"gitRepoFolder"`
+}
+
+// ComponentReleaseResponse defines model for ComponentReleaseResponse.
+type ComponentReleaseResponse struct {
 	Kind string `json:"kind"`
 	Spec struct {
 		Component struct {
@@ -132,6 +200,9 @@ type ComponentRelease struct {
 			Source struct {
 				Version string `json:"version"`
 			} `json:"Source"`
+
+			// Config Additional configuration
+			Config         map[string]interface{} `json:"config"`
 			ParameterFiles []struct {
 				Document *string `json:"Document,omitempty"`
 				File     *string `json:"File,omitempty"`
@@ -181,6 +252,27 @@ type FlatComponent struct {
 	TemplateName         string   `json:"templateName"`
 	TemplateReleaseName  string   `json:"templateReleaseName"`
 	TemplateVersion      string   `json:"templateVersion"`
+}
+
+// GitCommit defines model for GitCommit.
+type GitCommit struct {
+	// Commit The hash of the commit
+	Commit *string `json:"commit,omitempty"`
+
+	// CommitMessage A commit Message
+	CommitMessage *string `json:"commitMessage,omitempty"`
+
+	// CommitterEmail Email of the committer
+	CommitterEmail *string `json:"committerEmail,omitempty"`
+
+	// CommitterName Name of the committer
+	CommitterName *string `json:"committerName,omitempty"`
+
+	// Force Whether to force commit
+	Force *bool `json:"force,omitempty"`
+
+	// TargetPath Target file path of the commit in the git repository
+	TargetPath *string `json:"targetPath,omitempty"`
 }
 
 // KadInstance defines model for KadInstance.
@@ -270,6 +362,42 @@ type GetComponentReleaseParams struct {
 	Catalog *string `form:"catalog,omitempty" json:"catalog,omitempty"`
 }
 
+// CreateOrUpdateComponentReleaseJSONBody defines parameters for CreateOrUpdateComponentRelease.
+type CreateOrUpdateComponentReleaseJSONBody struct {
+	Comment           string `json:"comment"`
+	ComponentReleases []struct {
+		Component struct {
+			// Config Additional configuration
+			Config         *map[string]interface{} `json:"config,omitempty"`
+			Name           string                  `json:"name"`
+			ParameterFiles *[]struct {
+				Document *string `json:"document,omitempty"`
+				File     *string `json:"file,omitempty"`
+				Unwrap   *string `json:"unwrap,omitempty"`
+				Wrap     *string `json:"wrap,omitempty"`
+			} `json:"parameterFiles,omitempty"`
+
+			// Parameters List of paramters as key/value pairs
+			Parameters *map[string]interface{} `json:"parameters,omitempty"`
+			Protected  *bool                   `json:"protected,omitempty"`
+			Source     *struct {
+				Version string `json:"version"`
+			} `json:"source,omitempty"`
+			Suspended *bool `json:"suspended,omitempty"`
+
+			// Values List of values as key/value pairs
+			Values  *map[string]interface{} `json:"values,omitempty"`
+			Version string                  `json:"version"`
+		} `json:"component"`
+		DependsOn *[]string `json:"dependsOn,omitempty"`
+		Enabled   *bool     `json:"enabled,omitempty"`
+		Name      string    `json:"name"`
+		Namespace *string   `json:"namespace,omitempty"`
+		Roles     *[]string `json:"roles,omitempty"`
+	} `json:"componentReleases"`
+	GitRepoFolder string `json:"gitRepoFolder"`
+}
+
 // ListComponentsParams defines parameters for ListComponents.
 type ListComponentsParams struct {
 	// Catalog Filter by catalogs (comma separated)
@@ -299,6 +427,9 @@ type GetTemplateReleaseParams struct {
 	// Catalog Filter by catalogs (comma separated)
 	Catalog *string `form:"catalog,omitempty" json:"catalog,omitempty"`
 }
+
+// CreateOrUpdateComponentReleaseJSONRequestBody defines body for CreateOrUpdateComponentRelease for application/json ContentType.
+type CreateOrUpdateComponentReleaseJSONRequestBody CreateOrUpdateComponentReleaseJSONBody
 
 // AsComponentSpecUsage0 returns the union data inside the Component_Spec_Usage as a ComponentSpecUsage0
 func (t Component_Spec_Usage) AsComponentSpecUsage0() (ComponentSpecUsage0, error) {

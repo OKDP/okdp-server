@@ -15,6 +15,7 @@ compile: lint gocompile
 test: compile gotest
 build: test gobuild
 run: test gorun
+rundev: generate gocompile gotest gobuild gorun
 
 .PHONY: tools
 tools:

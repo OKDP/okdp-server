@@ -28,6 +28,45 @@ type GetComponentReleaseParams struct {
 	Catalog *string `form:"catalog,omitempty" json:"catalog,omitempty"`
 }
 
+// CreateOrUpdateComponentReleaseJSONBody defines parameters for CreateOrUpdateComponentRelease.
+type CreateOrUpdateComponentReleaseJSONBody struct {
+	Comment           string `json:"comment"`
+	ComponentReleases []struct {
+		Component struct {
+			// Config Additional configuration
+			Config         *map[string]interface{} `json:"config,omitempty"`
+			Name           string                  `json:"name"`
+			ParameterFiles *[]struct {
+				Document *string `json:"document,omitempty"`
+				File     *string `json:"file,omitempty"`
+				Unwrap   *string `json:"unwrap,omitempty"`
+				Wrap     *string `json:"wrap,omitempty"`
+			} `json:"parameterFiles,omitempty"`
+
+			// Parameters List of paramters as key/value pairs
+			Parameters *map[string]interface{} `json:"parameters,omitempty"`
+			Protected  *bool                   `json:"protected,omitempty"`
+			Source     *struct {
+				Version string `json:"version"`
+			} `json:"source,omitempty"`
+			Suspended *bool `json:"suspended,omitempty"`
+
+			// Values List of values as key/value pairs
+			Values  *map[string]interface{} `json:"values,omitempty"`
+			Version string                  `json:"version"`
+		} `json:"component"`
+		DependsOn *[]string `json:"dependsOn,omitempty"`
+		Enabled   *bool     `json:"enabled,omitempty"`
+		Name      string    `json:"name"`
+		Namespace *string   `json:"namespace,omitempty"`
+		Roles     *[]string `json:"roles,omitempty"`
+	} `json:"componentReleases"`
+	GitRepoFolder string `json:"gitRepoFolder"`
+}
+
+// CreateOrUpdateComponentReleaseJSONRequestBody defines body for CreateOrUpdateComponentRelease for application/json ContentType.
+type CreateOrUpdateComponentReleaseJSONRequestBody CreateOrUpdateComponentReleaseJSONBody
+
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
 	// List all component releases
@@ -36,6 +75,9 @@ type ServerInterface interface {
 	// Get a component release by name
 	// (GET /kad/{kadInstanceId}/componentreleases/{name})
 	GetComponentRelease(c *gin.Context, kadInstanceId string, name string, params GetComponentReleaseParams)
+	// Create or update a component release
+	// (PUT /kad/{kadInstanceId}/componentreleases/{name})
+	CreateOrUpdateComponentRelease(c *gin.Context, kadInstanceId string, name string)
 }
 
 // ServerInterfaceWrapper converts contexts to parameters.
@@ -134,6 +176,43 @@ func (siw *ServerInterfaceWrapper) GetComponentRelease(c *gin.Context) {
 	siw.Handler.GetComponentRelease(c, kadInstanceId, name, params)
 }
 
+// CreateOrUpdateComponentRelease operation middleware
+func (siw *ServerInterfaceWrapper) CreateOrUpdateComponentRelease(c *gin.Context) {
+
+	var err error
+
+	// ------------- Path parameter "kadInstanceId" -------------
+	var kadInstanceId string
+
+	err = runtime.BindStyledParameterWithOptions("simple", "kadInstanceId", c.Param("kadInstanceId"), &kadInstanceId, runtime.BindStyledParameterOptions{Explode: false, Required: true})
+	if err != nil {
+		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter kadInstanceId: %w", err), http.StatusBadRequest)
+		return
+	}
+
+	// ------------- Path parameter "name" -------------
+	var name string
+
+	err = runtime.BindStyledParameterWithOptions("simple", "name", c.Param("name"), &name, runtime.BindStyledParameterOptions{Explode: false, Required: true})
+	if err != nil {
+		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter name: %w", err), http.StatusBadRequest)
+		return
+	}
+
+	c.Set(BasicAuthScopes, []string{})
+
+	c.Set(Oauth2Scopes, []string{"openid", "email", "profile", "roles"})
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		middleware(c)
+		if c.IsAborted() {
+			return
+		}
+	}
+
+	siw.Handler.CreateOrUpdateComponentRelease(c, kadInstanceId, name)
+}
+
 // GinServerOptions provides options for the Gin server.
 type GinServerOptions struct {
 	BaseURL      string
@@ -163,4 +242,5 @@ func RegisterHandlersWithOptions(router gin.IRouter, si ServerInterface, options
 
 	router.GET(options.BaseURL+"/kad/:kadInstanceId/componentreleases", wrapper.ListComponentReleases)
 	router.GET(options.BaseURL+"/kad/:kadInstanceId/componentreleases/:name", wrapper.GetComponentRelease)
+	router.PUT(options.BaseURL+"/kad/:kadInstanceId/componentreleases/:name", wrapper.CreateOrUpdateComponentRelease)
 }

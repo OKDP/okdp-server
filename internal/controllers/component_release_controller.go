@@ -22,7 +22,10 @@ import (
 
 	"github.com/gin-gonic/gin"
 	_component "github.com/okdp/okdp-server/api/openapi/v3/_api/componentreleases"
+	"github.com/okdp/okdp-server/internal/constants"
 	log "github.com/okdp/okdp-server/internal/logging"
+	"github.com/okdp/okdp-server/internal/model"
+	auth "github.com/okdp/okdp-server/internal/security/authc/model"
 	"github.com/okdp/okdp-server/internal/services"
 )
 
@@ -58,5 +61,32 @@ func (r IComponentReleaseController) GetComponentRelease(c *gin.Context, kadInst
 		return
 	}
 	c.JSON(http.StatusOK, component)
+
+}
+
+func (r IComponentReleaseController) CreateOrUpdateComponentRelease(c *gin.Context, kadInstanceID string, name string) {
+
+	var componentReleaseRequest model.ComponentReleaseRequest
+	if err := c.ShouldBindJSON(&componentReleaseRequest); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	maybeUserInfo, _ := c.Get(constants.OAuth2UserInfo)
+	userInfo, _ := maybeUserInfo.(*auth.UserInfo)
+	commitData := map[string]string{
+		"commit-message":  componentReleaseRequest.Comment,
+		"committer-name":  userInfo.Name,
+		"committer-email": userInfo.Email,
+	}
+
+	gitCommitReponse, err := r.componentReleaseService.CreateOrUpdateComponentRelease(kadInstanceID, name, componentReleaseRequest, commitData)
+	if err != nil {
+		log.Error("Unable to create or update component release '%s' in Git folder '%s' on kad instance %s, details: %+v", name, componentReleaseRequest.GitRepoFolder, kadInstanceID, err)
+		c.JSON(err.Status, err)
+		return
+	}
+
+	c.JSON(http.StatusOK, gitCommitReponse)
 
 }

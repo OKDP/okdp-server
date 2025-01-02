@@ -1,0 +1,21 @@
+type: object
+properties:
+  committerName:
+    type: string
+    description: Name of the committer
+  committerEmail:
+    type: string
+    description: Email of the committer
+  commitMessage:
+    type: string
+    description: A commit Message
+  force:
+    type: boolean
+    description: Whether to force commit
+    default: false
+  targetPath:
+    type: string
+    description: Target file path of the commit in the git repository
+  commit:
+    type: string
+    description: The hash of the commit

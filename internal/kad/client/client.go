@@ -98,6 +98,11 @@ func DoGet[T any](request *resty.Request) (*T, *errors.ServerError) {
 	return doExecute[T](request)
 }
 
+func DoPut[T any](request *resty.Request) (*T, *errors.ServerError) {
+	request.Method = resty.MethodPut
+	return doExecute[T](request)
+}
+
 func (c *KadClient) NewRequest(url string) *resty.Request {
 	req := c.R()
 	req.URL = url
@@ -105,6 +110,7 @@ func (c *KadClient) NewRequest(url string) *resty.Request {
 }
 
 func doExecute[T any](request *resty.Request) (*T, *errors.ServerError) {
+	log.Info("Sending %s request to KAD at the endpoint %s:", request.Method, request.URL)
 	var object T
 	// request.SetError(&KadError{})
 	resp, err := request.Send()
