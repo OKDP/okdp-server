@@ -40,6 +40,7 @@ func (r *ComponentReleasesResponse) Flatten() *FlatComponents {
 			Suspended:            c.Spec.Component.Suspended,
 			Protected:            c.Spec.Component.Protected,
 			Catalogs:             utils.ArrayNullToEmpty(c.Status.Catalogs),
+			Usage:                c.Status.Usage,
 		}
 		flatComponents = append(flatComponents, extC)
 	}

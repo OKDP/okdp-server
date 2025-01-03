@@ -252,6 +252,7 @@ type FlatComponent struct {
 	TemplateName         string   `json:"templateName"`
 	TemplateReleaseName  string   `json:"templateReleaseName"`
 	TemplateVersion      string   `json:"templateVersion"`
+	Usage                string   `json:"usage"`
 }
 
 // GitCommit defines model for GitCommit.
@@ -308,6 +309,7 @@ type Service struct {
 		TemplateName         string   `json:"templateName"`
 		TemplateReleaseName  string   `json:"templateReleaseName"`
 		TemplateVersion      string   `json:"templateVersion"`
+		Usage                string   `json:"usage"`
 	} `json:"flatComponents"`
 }
 
