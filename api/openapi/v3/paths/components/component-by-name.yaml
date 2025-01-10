@@ -1,10 +1,10 @@
 get:
-  summary: Get a component by name
+  summary: Get a components by name
   description: |
-    Get a component by name
+    Get a components by name
   tags:
     - components
-  operationId: getComponent
+  operationId: getComponentsByName
   parameters:
     - in: path
       name: kadInstanceId
@@ -26,11 +26,17 @@ get:
       description: Filter by catalogs (comma separated)
   responses:
     '200':
-      description: Component release information
+      description: List of components by name
       content:
         application/json:
           schema:
-            $ref: '../../definition/Component.yaml'
+            type: object
+            required: [components]
+            properties:
+              components:
+                type: array
+                items:
+                  $ref: '../../definition/Component.yaml'
     default:
       description: Server error
       content:

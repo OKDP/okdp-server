@@ -406,8 +406,8 @@ type ListComponentsParams struct {
 	Catalog *string `form:"catalog,omitempty" json:"catalog,omitempty"`
 }
 
-// GetComponentParams defines parameters for GetComponent.
-type GetComponentParams struct {
+// GetComponentsByNameParams defines parameters for GetComponentsByName.
+type GetComponentsByNameParams struct {
 	// Catalog Filter by catalogs (comma separated)
 	Catalog *string `form:"catalog,omitempty" json:"catalog,omitempty"`
 }

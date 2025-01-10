@@ -22,8 +22,8 @@ type ListComponentsParams struct {
 	Catalog *string `form:"catalog,omitempty" json:"catalog,omitempty"`
 }
 
-// GetComponentParams defines parameters for GetComponent.
-type GetComponentParams struct {
+// GetComponentsByNameParams defines parameters for GetComponentsByName.
+type GetComponentsByNameParams struct {
 	// Catalog Filter by catalogs (comma separated)
 	Catalog *string `form:"catalog,omitempty" json:"catalog,omitempty"`
 }
@@ -33,9 +33,9 @@ type ServerInterface interface {
 	// List all components
 	// (GET /kad/{kadInstanceId}/components)
 	ListComponents(c *gin.Context, kadInstanceId string, params ListComponentsParams)
-	// Get a component by name
+	// Get a components by name
 	// (GET /kad/{kadInstanceId}/components/{name})
-	GetComponent(c *gin.Context, kadInstanceId string, name string, params GetComponentParams)
+	GetComponentsByName(c *gin.Context, kadInstanceId string, name string, params GetComponentsByNameParams)
 }
 
 // ServerInterfaceWrapper converts contexts to parameters.
@@ -86,8 +86,8 @@ func (siw *ServerInterfaceWrapper) ListComponents(c *gin.Context) {
 	siw.Handler.ListComponents(c, kadInstanceId, params)
 }
 
-// GetComponent operation middleware
-func (siw *ServerInterfaceWrapper) GetComponent(c *gin.Context) {
+// GetComponentsByName operation middleware
+func (siw *ServerInterfaceWrapper) GetComponentsByName(c *gin.Context) {
 
 	var err error
 
@@ -114,7 +114,7 @@ func (siw *ServerInterfaceWrapper) GetComponent(c *gin.Context) {
 	c.Set(Oauth2Scopes, []string{"openid", "email", "profile", "roles"})
 
 	// Parameter object where we will unmarshal all parameters from the context
-	var params GetComponentParams
+	var params GetComponentsByNameParams
 
 	// ------------- Optional query parameter "catalog" -------------
 
@@ -131,7 +131,7 @@ func (siw *ServerInterfaceWrapper) GetComponent(c *gin.Context) {
 		}
 	}
 
-	siw.Handler.GetComponent(c, kadInstanceId, name, params)
+	siw.Handler.GetComponentsByName(c, kadInstanceId, name, params)
 }
 
 // GinServerOptions provides options for the Gin server.
@@ -162,5 +162,5 @@ func RegisterHandlersWithOptions(router gin.IRouter, si ServerInterface, options
 	}
 
 	router.GET(options.BaseURL+"/kad/:kadInstanceId/components", wrapper.ListComponents)
-	router.GET(options.BaseURL+"/kad/:kadInstanceId/components/:name", wrapper.GetComponent)
+	router.GET(options.BaseURL+"/kad/:kadInstanceId/components/:name", wrapper.GetComponentsByName)
 }

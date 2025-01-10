@@ -17,12 +17,12 @@
 package controllers
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	_component "github.com/okdp/okdp-server/api/openapi/v3/_api/components"
 	log "github.com/okdp/okdp-server/internal/logging"
+	"github.com/okdp/okdp-server/internal/model"
 	"github.com/okdp/okdp-server/internal/services"
 )
 
@@ -46,17 +46,20 @@ func (r IComponentController) ListComponents(c *gin.Context, kadInstanceID strin
 	c.JSON(http.StatusOK, components)
 }
 
-func (r IComponentController) GetComponent(c *gin.Context, kadInstanceID string, name string, params _component.GetComponentParams) {
-	component, err := r.componentService.Get(kadInstanceID, name, params.Catalog)
+func (r IComponentController) GetComponentsByName(c *gin.Context, kadInstanceID string, name string, params _component.GetComponentsByNameParams) {
+	// Workaround - Kad should return a components by name
+	log.Info("Get component by name '%s' and catalog '%s' on kad instanceId '%s'", name, params.Catalog, kadInstanceID)
+	components, err := r.componentService.List(kadInstanceID, params.Catalog)
 	if err != nil {
-		log.Error("Unable to get Component '%s' on kad instance %s, details: %+v", name, kadInstanceID, err)
+		log.Error("Unable to list Components on kad instance %s, details: %+v", kadInstanceID, err)
 		c.JSON(err.Status, err)
 		return
 	}
-	if component == nil {
-		c.JSON(http.StatusNotFound, fmt.Sprintf("Component with id %s not found", name))
-		return
+	var filtered model.Components = []*model.Component{}
+	for _, component := range *components {
+		if component.Spec.Name == name {
+			filtered = append(filtered, component)
+		}
 	}
-	c.JSON(http.StatusOK, component)
-
+	c.JSON(http.StatusOK, filtered)
 }
