@@ -20,7 +20,7 @@ package model
 type Service struct {
 	Name           string          `json:"name"`
 	IsComposition  bool            `json:"isComposition"`
-	FlatComponents []FlatComponent `json:"components"`
+	FlatComponents []FlatComponent `json:"flatComponents"`
 }
 
 type Services []*Service
