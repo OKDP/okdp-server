@@ -18,7 +18,11 @@ package authz
 
 import (
 	errr "errors"
+	"fmt"
 	"net/http"
+	"os"
+	"path/filepath"
+	"strings"
 
 	"github.com/casbin/casbin/v2"
 	"github.com/gin-gonic/gin"
@@ -35,9 +39,26 @@ type Enforcer struct {
 }
 
 func newEnforcer(authZConf config.AuthZ) (*Enforcer, error) {
-	file := authZConf.File
-	log.Info("Loading casbin configuration files, Model file: %s, Policy file: %s", file.ModelPath, file.PolicyPath)
-	e, err := casbin.NewEnforcer(file.ModelPath, file.PolicyPath)
+	var e *casbin.Enforcer
+	var err error
+	authzProvider := strings.ToLower(authZConf.Provider)
+	switch authzProvider {
+	case "inline":
+		modelFilePath, policyFilePath, er := writeFilesToTmp(authZConf.InLine.Model, authZConf.InLine.Policy)
+		if er != nil {
+			return nil, er
+		}
+		log.Info("Loading casbin configuration files, Model file: %s, Policy file: %s", modelFilePath, policyFilePath)
+		e, err = casbin.NewEnforcer(modelFilePath, policyFilePath)
+	case "file":
+		file := authZConf.File
+		log.Info("Loading casbin configuration files, Model file: %s, Policy file: %s", file.ModelPath, file.PolicyPath)
+		e, err = casbin.NewEnforcer(file.ModelPath, file.PolicyPath)
+	case "database":
+		return nil, fmt.Errorf("database provider option not implemented")
+	default:
+		return nil, fmt.Errorf("provider option '%s' not recognized, valid ones: inline or file", authZConf.Provider)
+	}
 	return &Enforcer{e}, err
 }
 
@@ -96,4 +117,24 @@ func (e *Enforcer) authorize() gin.HandlerFunc {
 
 		c.Next()
 	}
+
+}
+
+func writeFilesToTmp(modelStr, policyStr string) (modelFilePath, policyFilePath string, err error) {
+	modelFilePath = filepath.Join("/tmp", "authz-model.conf")
+	policyFilePath = filepath.Join("/tmp", "authz-policy.csv")
+
+	// Write model string to the model.conf file
+	err = os.WriteFile(modelFilePath, []byte(modelStr), 0644)
+	if err != nil {
+		return "", "", fmt.Errorf("failed to write model file: %v", err)
+	}
+
+	// Write policy string to the policy.csv file
+	err = os.WriteFile(policyFilePath, []byte(policyStr), 0644)
+	if err != nil {
+		return "", "", fmt.Errorf("failed to write policy file: %v", err)
+	}
+
+	return modelFilePath, policyFilePath, nil
 }

@@ -106,9 +106,10 @@ type BearerAuth struct {
 
 // AuthZ configuration options
 type AuthZ struct {
-	Provider string    `yaml:"provider"`
-	File     FileAuthZ `yaml:"file"`
-	Database DBAuthZ   `yaml:"database"`
+	Provider string      `yaml:"provider"`
+	File     FileAuthZ   `yaml:"file"`
+	Database DBAuthZ     `yaml:"database"`
+	InLine   InLineAuthZ `yaml:"inline"`
 }
 
 // File-based authorization
@@ -124,6 +125,12 @@ type DBAuthZ struct {
 	Username string `yaml:"username"`
 	Password string `yaml:"password"`
 	Name     string `yaml:"name"`
+}
+
+// Inline-based authorization
+type InLineAuthZ struct {
+	Policy string `yaml:"policy"`
+	Model  string `yaml:"model"`
 }
 
 type KadInstance _api.KadInstance
