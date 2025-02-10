@@ -49,3 +49,8 @@ func (g *Group) RegisterControllers() {
 func (r *Router) RegisterSwaggerAPIDoc() {
 	r.GET(constants.SwaggerAPIDocsURI, Swagger)
 }
+
+func (r *Router) RegisterHealth() {
+	r.GET(constants.HealthzURI, Healthz)
+	r.GET(constants.ReadinessURI, Readiness)
+}

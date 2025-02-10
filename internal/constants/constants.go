@@ -30,6 +30,8 @@ const (
 	CasbinRolePrefix = "role:"
 	// SwaggerAPIDocsURI is the swagger API Docs public URI
 	SwaggerAPIDocsURI = OkdpServerBaseURL + "/api-docs"
+	HealthzURI        = "/healthz"
+	ReadinessURI      = "/readiness"
 	// ComponentURL is the kad components URI
 	ComponentURL = "/api/kad/v1/mycluster/components"
 	// ComponentURL is the kad component releases URI
