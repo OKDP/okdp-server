@@ -94,3 +94,13 @@ http://localhost:8092/#/componentreleases/CreateOrUpdateComponentRelease
 ```
 
 
+# Helm
+
+```
+docker build -t quay.io/okdp/okdp-server:0.1.0-snapshot  .
+docker push quay.io/okdp/okdp-server:0.1.0-snapshot 
+helm upgrade --install okdp-server \
+     --namespace okdp-server \
+     --create-namespace helm/okdp-server \
+     --values helm/okdp-server/values.keycloak.yaml
+```

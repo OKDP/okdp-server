@@ -1,0 +1,116 @@
+configuration:
+  server:
+    # -- Specify the Server listen address.
+    listenAddress: 0.0.0.0
+    # -- Specify the Server listen port.
+    port: 8090
+    # -- Specify the Server Mode. One of `debug`, `release` or `test`.
+    mode: debug
+
+  logging:
+    # -- Specify the logging level. One of `debug`, `info`, `warn`, `error`, `fatal` or `panic`.
+    level: "debug"
+    # -- Specify the logging format. One of `console` or `json`.
+    format: "console"
+
+  security:
+    authN:
+      # -- Specify the oidc privider. One of `openid` or `bearer`.
+      provider: ["bearer"]
+      bearer:
+        # -- Specify the issuer uri.
+        issuerUri: "http://keycloak:7080/realms/master"
+        # -- Specify the jwks URL.
+        jwksURL: "http://keycloak:7080/realms/master/protocol/openid-connect/certs"
+        # -- Specify the roles attribute path from json access token.
+        rolesAttributePath: "realm_access.roles"
+        # -- Specify the groups attribute path from json access token.
+        groupsAttributePath: "realm_access.groups"
+        # -- Wether to skip issuer check.
+        skipIssuerCheck: false
+        # -- Wether to skip issuer signature check.
+        skipSignatureCheck: false
+    authZ:
+      # -- Specify the authZ storage provider. One of `inline` or `file`.
+      provider: "inline"
+      # -- The casbin policy contains the actual rules that determine who can access what.
+      # -- Specify the casbin permissions to allow to an uri based on oidc groups/roles.
+      # -- More info: https://casbin.org/docs/how-it-works/
+      # file:
+      #   modelPath: ".local/authz-model.conf"
+      #   policyPath: ".local/authz-policy.csv"
+      inline:
+        policy: |
+          p, role:viewers, /api/v1/users/myprofile, *
+          p, role:viewers, /api/v1/kad, *
+          p, role:viewers, /api/v1/kad/*/services, *
+          p, role:viewers, /api/v1/kad/*/catalog, *
+          p, role:viewers, /api/v1/kad/*/catalog/*, *
+          p, role:viewers, /api/v1/kad/*/componentreleases, *
+          p, role:viewers, /api/v1/kad/*/componentreleases/*, *
+          p, role:viewers, /api/v1/kad/*/templatereleases, *
+          p, role:viewers, /api/v1/kad/*/templatereleases/*, *
+          p, role:viewers, /api/v1/kad/*/components, *
+          p, role:viewers, /api/v1/kad/*/components/*, *
+
+          g, role:admins, role:developers
+          g, role:developers, role:viewers
+        # -- Specify the casbin model (enforcement logic).
+        # -- More info: https://casbin.org/docs/how-it-works/
+        model: |
+          [request_definition]
+          r = sub, obj, act
+
+          [policy_definition]
+          p = sub, obj, act
+
+          [role_definition]
+          g = _, _
+
+          [policy_effect]
+          e = some(where (p.eft == allow))
+
+          [matchers]
+          m = g(r.sub, p.sub) && keyMatch(r.obj, p.obj) && (r.act == p.act || p.act == "*")
+
+    cors:
+      # -- Specify the allowed origins for cross-origin requests. "*" allows all origins.
+      allowedOrigins: ["*"]
+      # -- Define the HTTP methods permitted for CORS requests.
+      allowedMethods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS", "HEAD"]
+      # -- List the headers that clients are allowed to include in requests.
+      allowedHeaders: ["Origin", "Accept", "Authorization", "Content-Length", "Content-Type"]
+      # -- Specify which response headers should be exposed to the client.
+      exposedHeaders: ["Content-Length"]
+      # -- Determine whether cookies and authentication credentials should be included in cross-origin requests.
+      allowCredentials: true 
+      # -- Define how long (in seconds) the results of a preflight request can be cached by the client.
+      maxAge: 3600
+    headers:
+      # -- Prevent the page from being embedded in an iframe, mitigating clickjacking attacks.
+      X-Frame-Options: "DENY"
+      # -- Prevent browsers from MIME-sniffing a response away from the declared content type.
+      X-Content-Type-Options: nosniff
+
+  kad:
+    # -- Specify any ID.
+    - id: sandbox
+      # -- Specify any name.
+      name: Poc Sandbox
+      # -- Specify KAD API URL.
+      apiUrl: "kad.ingress.kind.local"
+      # -- Specify KAD AUTH Bearer.
+      authBearer: "4Ys3brdqnD5LVjf6hLcQsSQbHWLh5asJ"
+      # -- Wether to skip the certificate validation.
+      insecureSkipVerify: true
+
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations: {}
+  hosts:
+    - host: okdp-server.ingress.kind.local
+      paths:
+        - path: /
+          pathType: Prefix
+

@@ -1,0 +1,7 @@
+apiVersion: v2
+name: okdp-server
+description: A Helm chart for okdp-server
+type: application
+version: 0.1.0-snapshot
+appVersion: "0.1.0-snapshot"
+
