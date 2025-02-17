@@ -52,7 +52,7 @@ func NewOKDPServer(config *config.ApplicationConfig) *http.Server {
 
 	// Register Controllers
 	apiV1.RegisterControllers()
-	r.RegisterSwaggerAPIDoc()
+	r.RegisterSwaggerAPIDoc(config.Swagger)
 	r.RegisterHealth()
 
 	server := &http.Server{

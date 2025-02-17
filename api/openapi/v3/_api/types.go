@@ -9,11 +9,6 @@ import (
 	"github.com/oapi-codegen/runtime"
 )
 
-const (
-	BasicAuthScopes = "basicAuth.Scopes"
-	Oauth2Scopes    = "oauth2.Scopes"
-)
-
 // Catalog defines model for Catalog.
 type Catalog struct {
 	Components []string `json:"components"`

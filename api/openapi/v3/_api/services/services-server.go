@@ -11,11 +11,6 @@ import (
 	"github.com/oapi-codegen/runtime"
 )
 
-const (
-	BasicAuthScopes = "basicAuth.Scopes"
-	Oauth2Scopes    = "oauth2.Scopes"
-)
-
 // ListServicesParams defines parameters for ListServices.
 type ListServicesParams struct {
 	// Catalog Filter by catalogs (comma separated)
@@ -51,10 +46,6 @@ func (siw *ServerInterfaceWrapper) ListServices(c *gin.Context) {
 		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter kadInstanceId: %w", err), http.StatusBadRequest)
 		return
 	}
-
-	c.Set(BasicAuthScopes, []string{})
-
-	c.Set(Oauth2Scopes, []string{"openid", "email", "profile", "roles"})
 
 	// Parameter object where we will unmarshal all parameters from the context
 	var params ListServicesParams

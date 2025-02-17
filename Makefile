@@ -54,7 +54,7 @@ gogenerate:
 
 .PHONY: gofmt
 gofmt:
-	goimports  -w ./internal/ ./cmd/
+	goimports  -w -local ./internal/ ./cmd/
 
 .PHONY: golint
 golint:

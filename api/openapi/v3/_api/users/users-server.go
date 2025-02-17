@@ -7,11 +7,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-const (
-	BasicAuthScopes = "basicAuth.Scopes"
-	Oauth2Scopes    = "oauth2.Scopes"
-)
-
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
 	// Get my user profile
@@ -30,10 +25,6 @@ type MiddlewareFunc func(c *gin.Context)
 
 // GetMyProfile operation middleware
 func (siw *ServerInterfaceWrapper) GetMyProfile(c *gin.Context) {
-
-	c.Set(BasicAuthScopes, []string{})
-
-	c.Set(Oauth2Scopes, []string{"openid", "email", "profile", "roles"})
 
 	for _, middleware := range siw.HandlerMiddlewares {
 		middleware(c)

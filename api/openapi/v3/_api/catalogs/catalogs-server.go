@@ -11,11 +11,6 @@ import (
 	"github.com/oapi-codegen/runtime"
 )
 
-const (
-	BasicAuthScopes = "basicAuth.Scopes"
-	Oauth2Scopes    = "oauth2.Scopes"
-)
-
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
 	// List all catalogs
@@ -49,10 +44,6 @@ func (siw *ServerInterfaceWrapper) ListCatalogs(c *gin.Context) {
 		return
 	}
 
-	c.Set(BasicAuthScopes, []string{})
-
-	c.Set(Oauth2Scopes, []string{"openid", "email", "profile", "roles"})
-
 	for _, middleware := range siw.HandlerMiddlewares {
 		middleware(c)
 		if c.IsAborted() {
@@ -85,10 +76,6 @@ func (siw *ServerInterfaceWrapper) GetCatalog(c *gin.Context) {
 		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter name: %w", err), http.StatusBadRequest)
 		return
 	}
-
-	c.Set(BasicAuthScopes, []string{})
-
-	c.Set(Oauth2Scopes, []string{"openid", "email", "profile", "roles"})
 
 	for _, middleware := range siw.HandlerMiddlewares {
 		middleware(c)

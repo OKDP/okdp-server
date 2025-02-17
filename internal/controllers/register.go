@@ -25,6 +25,7 @@ import (
 	_service "github.com/okdp/okdp-server/api/openapi/v3/_api/services"
 	_templaterelease "github.com/okdp/okdp-server/api/openapi/v3/_api/templatereleases"
 	_user "github.com/okdp/okdp-server/api/openapi/v3/_api/users"
+	"github.com/okdp/okdp-server/internal/config"
 	"github.com/okdp/okdp-server/internal/constants"
 )
 
@@ -46,8 +47,8 @@ func (g *Group) RegisterControllers() {
 	_kad.RegisterHandlers(g, KadController())
 }
 
-func (r *Router) RegisterSwaggerAPIDoc() {
-	r.GET(constants.SwaggerAPIDocsURI, Swagger)
+func (r *Router) RegisterSwaggerAPIDoc(swaggerConf config.Swagger) {
+	r.GET(constants.SwaggerAPIDocsURI, Swagger(swaggerConf))
 }
 
 func (r *Router) RegisterHealth() {

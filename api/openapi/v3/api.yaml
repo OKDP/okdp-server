@@ -107,29 +107,3 @@ components:
     ServerError:
       $ref: './definition/ServerError.yaml'
 
-  securitySchemes:
-    basicAuth:
-      type: http
-      scheme: basic
-    # openId:
-    #   type: openIdConnect
-    #   openIdConnectUrl: http://keycloak:7080/realms/master/.well-known/openid-configuration
-    oauth2:
-      type: oauth2
-      flows:
-        authorizationCode:
-          authorizationUrl: http://keycloak:7080/realms/master/protocol/openid-connect/auth
-          tokenUrl: http://keycloak:7080/realms/master/protocol/openid-connect/token
-          scopes: 
-            openid: OpenId Authentication
-            email: User Email
-            profile: User Profile
-            roles: User Roles
-    access_token:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
-security:
-  - basicAuth: []
-  - oauth2: [openid, email, profile, roles]
-

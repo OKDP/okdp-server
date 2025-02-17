@@ -17,6 +17,7 @@
 package config
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/spf13/viper"
@@ -134,6 +135,36 @@ func Test_LoadConfig_AuthZProvider_Database(t *testing.T) {
 	assert.Equal(t, 5432, autz.Database.Port, "Port")
 	assert.Equal(t, "adm", autz.Database.Username, "Username")
 	assert.Equal(t, "passDB!", autz.Database.Password, "Password")
+}
+
+func Test_LoadConfig_Swagger(t *testing.T) {
+	// Given
+	viper.Set("config", "testdata/application.yaml")
+
+	// When
+	swagger := GetAppConfig().Swagger
+
+	// Then
+	oauth2Scheme, exists := swagger.SecuritySchemes["oauth2"]
+	assert.True(t, exists, "Expected oauth2 scheme to be defined")
+	fmt.Println(oauth2Scheme)
+	assert.Equal(t, "oauth2", oauth2Scheme.Type, "Type should be oauth2")
+	assert.NotNil(t, oauth2Scheme.Flows.AuthorizationCode, "AuthorizationCode flow should not be nil")
+	assert.Equal(t, "http://keycloak:7080/realms/master/protocol/openid-connect/auth", oauth2Scheme.Flows.AuthorizationCode.AuthorizationURL)
+	assert.Equal(t, "http://keycloak:7080/realms/master/protocol/openid-connect/token", oauth2Scheme.Flows.AuthorizationCode.TokenURL)
+
+	// Check Scopes
+	scopes := oauth2Scheme.Flows.AuthorizationCode.Scopes
+	assert.Equal(t, "OpenId Authentication", scopes["openid"], "OpenId scope should be defined")
+	assert.Equal(t, "User Email", scopes["email"], "Email scope should be defined")
+	assert.Equal(t, "User Profile", scopes["profile"], "Profile scope should be defined")
+	assert.Equal(t, "User Roles", scopes["roles"], "Roles scope should be defined")
+
+	// Check Security
+	assert.Len(t, swagger.Security, 1, "Expected one security requirement")
+	assert.Contains(t, swagger.Security[0], "oauth2", "Security should include oauth2")
+	assert.Equal(t, []string{"openid", "email", "profile", "roles"}, swagger.Security[0]["oauth2"], "OAuth2 scopes should match")
+
 }
 
 func Test_LoadConfig_Kad(t *testing.T) {

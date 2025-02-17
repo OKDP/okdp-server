@@ -21,6 +21,7 @@ import (
 	"sync"
 
 	"github.com/fsnotify/fsnotify"
+	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/okdp/okdp-server/api/openapi/v3/_api"
 	"github.com/spf13/viper"
 )
@@ -30,6 +31,7 @@ type ApplicationConfig struct {
 	Server   Server        `mapstructure:"server"`
 	Security Security      `mapstructure:"security"`
 	Logging  Logging       `mapstructure:"logging"`
+	Swagger  Swagger       `mapstructure:"swagger"`
 	Kad      []KadInstance `mapstructure:"kad"`
 }
 
@@ -131,6 +133,11 @@ type DBAuthZ struct {
 type InLineAuthZ struct {
 	Policy string `yaml:"policy"`
 	Model  string `yaml:"model"`
+}
+
+type Swagger struct {
+	SecuritySchemes map[string]*openapi3.SecurityScheme `yaml:"securitySchemes,omitempty"`
+	Security        openapi3.SecurityRequirements       `yaml:"security,omitempty"`
 }
 
 type KadInstance _api.KadInstance

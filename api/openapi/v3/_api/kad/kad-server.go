@@ -11,11 +11,6 @@ import (
 	"github.com/oapi-codegen/runtime"
 )
 
-const (
-	BasicAuthScopes = "basicAuth.Scopes"
-	Oauth2Scopes    = "oauth2.Scopes"
-)
-
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
 	// List all KAD configured instances
@@ -37,10 +32,6 @@ type MiddlewareFunc func(c *gin.Context)
 
 // ListKadInstances operation middleware
 func (siw *ServerInterfaceWrapper) ListKadInstances(c *gin.Context) {
-
-	c.Set(BasicAuthScopes, []string{})
-
-	c.Set(Oauth2Scopes, []string{"openid", "email", "profile", "roles"})
 
 	for _, middleware := range siw.HandlerMiddlewares {
 		middleware(c)
@@ -65,10 +56,6 @@ func (siw *ServerInterfaceWrapper) GetKadInstance(c *gin.Context) {
 		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter kadInstanceId: %w", err), http.StatusBadRequest)
 		return
 	}
-
-	c.Set(BasicAuthScopes, []string{})
-
-	c.Set(Oauth2Scopes, []string{"openid", "email", "profile", "roles"})
 
 	for _, middleware := range siw.HandlerMiddlewares {
 		middleware(c)

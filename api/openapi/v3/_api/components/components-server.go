@@ -11,11 +11,6 @@ import (
 	"github.com/oapi-codegen/runtime"
 )
 
-const (
-	BasicAuthScopes = "basicAuth.Scopes"
-	Oauth2Scopes    = "oauth2.Scopes"
-)
-
 // ListComponentsParams defines parameters for ListComponents.
 type ListComponentsParams struct {
 	// Catalog Filter by catalogs (comma separated)
@@ -61,10 +56,6 @@ func (siw *ServerInterfaceWrapper) ListComponents(c *gin.Context) {
 		return
 	}
 
-	c.Set(BasicAuthScopes, []string{})
-
-	c.Set(Oauth2Scopes, []string{"openid", "email", "profile", "roles"})
-
 	// Parameter object where we will unmarshal all parameters from the context
 	var params ListComponentsParams
 
@@ -108,10 +99,6 @@ func (siw *ServerInterfaceWrapper) GetComponentsByName(c *gin.Context) {
 		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter name: %w", err), http.StatusBadRequest)
 		return
 	}
-
-	c.Set(BasicAuthScopes, []string{})
-
-	c.Set(Oauth2Scopes, []string{"openid", "email", "profile", "roles"})
 
 	// Parameter object where we will unmarshal all parameters from the context
 	var params GetComponentsByNameParams
