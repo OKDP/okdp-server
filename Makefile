@@ -7,6 +7,7 @@ help:
 	@echo "  test        Run the unit tests"
 	@echo "  build       Build a binary"
 	@echo "  run         Run the project locally"
+	@echo "  update      Update all the project dependencies"
 
 generate: tools gogenerate
 format: generate gofmt
@@ -16,6 +17,7 @@ test: compile gotest
 build: test gobuild
 run: test gorun
 rundev: generate gocompile gotest gobuild gorun
+update: build goupdate
 
 .PHONY: tools
 tools:
@@ -76,4 +78,9 @@ gotest:
 .PHONY: gorun
 gorun:
 	go run *.go --config=.local/application-local.yaml
+
+.PHONY: goupdate
+goupdate:
+	go get -u all
+	go mod tidy
 
