@@ -92,6 +92,29 @@ configuration:
       # -- Prevent browsers from MIME-sniffing a response away from the declared content type.
       X-Content-Type-Options: nosniff
 
+  swagger:
+    securitySchemes:
+      # openId:
+      #   type: openIdConnect
+      #   openIdConnectUrl: http://keycloak:7080/realms/master/.well-known/openid-configuration
+      # access_token:
+      #   type: http
+      #   scheme: bearer
+      #   bearerFormat: JWT
+      oauth2:
+        type: oauth2
+        flows:
+          authorizationCode:
+            authorizationUrl: http://keycloak:7080/realms/master/protocol/openid-connect/auth
+            tokenUrl: http://keycloak:7080/realms/master/protocol/openid-connect/token
+            scopes: 
+              openid: OpenId Authentication
+              email: User Email
+              profile: User Profile
+              roles: User Roles
+    security:
+      - oauth2: [openid, email, profile, roles]
+
   kad:
     # -- Specify any ID.
     - id: sandbox
@@ -103,6 +126,33 @@ configuration:
       authBearer: "4Ys3brdqnD5LVjf6hLcQsSQbHWLh5asJ"
       # -- Wether to skip the certificate validation.
       insecureSkipVerify: true
+
+swagger-ui:
+  enabled: true
+  configuration:
+    extraEnv:
+      - name: BASE_URL
+        value: /swagger
+      - name: URLS
+        value: |
+          [{ url: 'https://okdp-server.ingress.kind.local/api/v1/api-docs', name: 'OKDP Server' }]
+      - name: OAUTH_CLIENT_ID
+        value: public-oidc-client
+      - name: OAUTH_SCOPES
+        value: "openid profile email roles"
+      - name: OAUTH_USE_PKCE
+        value: "true"
+      - name: CORS_ENABLED
+        value: "true"
+        
+  ingress:
+    enabled: true
+    className: "nginx"
+    hosts:
+      - host: okdp-server.ingress.kind.local
+        paths:
+          - path: /swagger
+            pathType: Prefix
 
 ingress:
   enabled: true

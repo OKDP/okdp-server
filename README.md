@@ -98,7 +98,13 @@ http://localhost:8092/#/componentreleases/CreateOrUpdateComponentRelease
 
 ```
 docker build -t quay.io/okdp/okdp-server:0.1.0-snapshot  .
-docker push quay.io/okdp/okdp-server:0.1.0-snapshot 
+docker push quay.io/okdp/okdp-server:0.1.0-snapshot
+
+helm package ./helm/okdp-server
+helm push okdp-server-0.1.0-snapshot.tgz oci://quay.io/okdp/charts
+
+helm pull oci://quay.io/okdp/charts/swagger-ui --version 0.1.0 --destination helm/okdp-server/charts
+
 helm upgrade --install okdp-server \
      --namespace okdp-server \
      --create-namespace helm/okdp-server \

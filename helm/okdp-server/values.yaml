@@ -119,6 +119,22 @@ configuration:
       # -- Prevent browsers from MIME-sniffing a response away from the declared content type.
       X-Content-Type-Options: nosniff
 
+  swagger:
+    securitySchemes:
+      oauth2:
+        type: oauth2
+        flows:
+          authorizationCode:
+            authorizationUrl:
+            tokenUrl:
+            scopes: 
+              openid: OpenId Authentication
+              email: User Email
+              profile: User Profile
+              roles: User Roles
+    security:
+      - oauth2: [openid, email, profile, roles]
+
   kad:
     # -- Specify any ID.
     - id: sandbox
@@ -130,6 +146,30 @@ configuration:
       authBearer: ""
       # -- Wether to skip the certificate validation.
       insecureSkipVerify: true
+swagger-ui:
+  # — Whether to enable or disable swagger UI.
+  enabled: true
+  configuration:
+    # -- Specify swagger configuration with environment variables (https://swagger.io/docs/open-source-tools/swagger-ui/usage/oauth2/)
+    extraEnv:
+      # -- Specify base url.
+      - name: BASE_URL
+        value: /
+      # -- Specify the list of api servers swagger docs to serve.
+      - name: URLS
+        value:
+      # -- Specify the Oauth2 client Id. The client ID must be be public for production.
+      - name: OAUTH_CLIENT_ID
+        value:
+      # -- Specify the Oauth2 scopes.
+      - name: OAUTH_SCOPES
+        value: "openid profile email roles"
+      # — Whether to use PKCE or not. Recommended if the provider supports it.
+      - name: OAUTH_USE_PKCE
+        value: true
+      # — Whether to enable or not CORS.
+      - name: CORS_ENABLED
+        value: true
 
 serviceAccount:
   # -- Specify whether a service account should be created
@@ -198,6 +238,9 @@ livenessProbe:
   httpGet:
     path: /healthz
     port: http
+  initialDelaySeconds: 60
+  periodSeconds: 30
+  timeoutSeconds: 10
 # -- Readiness probe for the okdp-server container.
 readinessProbe:
   httpGet:
