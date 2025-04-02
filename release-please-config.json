@@ -4,7 +4,7 @@
   "packages": {
     "helm/okdp-server": {
       "component": "helm-okdp-server",
-      "initial-version": "0.1.0-snapshot",
+      "initial-version": "0.1.0",
       "extra-label": "helm",
       "tag-separator": "/",
       "changelog-path": "CHANGELOG.md",
@@ -18,7 +18,7 @@
     },
     ".": {
       "component": "okdp-server",
-      "initial-version": "0.1.0-snapshot",
+      "initial-version": "0.1.0",
       "extra-label": "docker",
       "changelog-path": "CHANGELOG.md",
       "release-type": "node",

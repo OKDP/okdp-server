@@ -1,0 +1,11 @@
+{
+    "name": "okdp-server",
+    "version": "0.1.0",
+    "description": "okdp-server docker image",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/OKDP/okdp-server"
+    },
+    "homepage": "https://okdp.io/",
+    "license": "Apache-2.0"
+}
