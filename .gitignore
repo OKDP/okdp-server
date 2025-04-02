@@ -16,3 +16,4 @@ tmp/
 .tmp/
 .go-cache/
 .bin/
+package-lock.json
