@@ -12,7 +12,7 @@ maintainers:
 sources:
   - https://github.com/OKDP/okdp-ui
 dependencies:
-- name: swagger-ui
-  version: "0.1.0"
-  repository: "oci://quay.io/okdp/charts"
-  condition: swagger-ui.enabled
+  - name: swagger-ui
+    version: "0.1.0"
+    repository: "oci://quay.io/okdp/charts"
+    condition: swagger-ui.enabled
