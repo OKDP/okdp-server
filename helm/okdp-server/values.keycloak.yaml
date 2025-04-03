@@ -19,9 +19,9 @@ configuration:
       provider: ["bearer"]
       bearer:
         # -- Specify the issuer uri.
-        issuerUri: "http://keycloak:7080/realms/master"
+        issuerUri: "http://keycloak.okdp.sandbox/realms/master"
         # -- Specify the jwks URL.
-        jwksURL: "http://keycloak:7080/realms/master/protocol/openid-connect/certs"
+        jwksURL: "http://keycloak.okdp.sandbox/realms/master/protocol/openid-connect/certs"
         # -- Specify the roles attribute path from json access token.
         rolesAttributePath: "realm_access.roles"
         # -- Specify the groups attribute path from json access token.
@@ -96,7 +96,7 @@ configuration:
     securitySchemes:
       # openId:
       #   type: openIdConnect
-      #   openIdConnectUrl: http://keycloak:7080/realms/master/.well-known/openid-configuration
+      #   openIdConnectUrl: http://keycloak.okdp.sandbox/realms/master/.well-known/openid-configuration
       # access_token:
       #   type: http
       #   scheme: bearer
@@ -105,8 +105,8 @@ configuration:
         type: oauth2
         flows:
           authorizationCode:
-            authorizationUrl: http://keycloak:7080/realms/master/protocol/openid-connect/auth
-            tokenUrl: http://keycloak:7080/realms/master/protocol/openid-connect/token
+            authorizationUrl: http://keycloak.okdp.sandbox/realms/master/protocol/openid-connect/auth
+            tokenUrl: http://keycloak.okdp.sandbox/realms/master/protocol/openid-connect/token
             scopes: 
               openid: OpenId Authentication
               email: User Email
@@ -121,7 +121,7 @@ configuration:
       # -- Specify any name.
       name: Poc Sandbox
       # -- Specify KAD API URL.
-      apiUrl: "kad.ingress.kind.local"
+      apiUrl: "kad.okdp.sandbox"
       # -- Specify KAD AUTH Bearer.
       authBearer: "4Ys3brdqnD5LVjf6hLcQsSQbHWLh5asJ"
       # -- Wether to skip the certificate validation.
@@ -135,7 +135,7 @@ swagger-ui:
         value: /swagger
       - name: URLS
         value: |
-          [{ url: 'https://okdp-server.ingress.kind.local/api/v1/api-docs', name: 'OKDP Server' }]
+          [{ url: 'https://okdp-server.okdp.sandbox/api/v1/api-docs', name: 'OKDP Server' }]
       - name: OAUTH_CLIENT_ID
         value: public-oidc-client
       - name: OAUTH_SCOPES
@@ -149,7 +149,7 @@ swagger-ui:
     enabled: true
     className: "nginx"
     hosts:
-      - host: okdp-server.ingress.kind.local
+      - host: okdp-server.okdp.sandbox
         paths:
           - path: /swagger
             pathType: Prefix
@@ -159,8 +159,7 @@ ingress:
   className: "nginx"
   annotations: {}
   hosts:
-    - host: okdp-server.ingress.kind.local
+    - host: okdp-server.okdp.sandbox
       paths:
         - path: /
           pathType: Prefix
-
