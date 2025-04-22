@@ -101,10 +101,10 @@ catalog:
     name: Auth catalog
     description: My Auth packages
     repoUrl: quay.io/kubocd/packages
-    ### private registry, credentials needed
-    credentials:
-      robotAccountName: $(OCI_USERNAME)
-      robotAccountToken: $(OCI_PASSWORD)
+    ### public registry, no credentials needed
+    #credentials:
+    #  robotAccountName: $(OCI_USERNAME)
+    #  robotAccountToken: $(OCI_PASSWORD)
     packages:
       - name: openldap
 
@@ -112,10 +112,10 @@ catalog:
     name: Infra catalog
     description: My Infra packages
     repoUrl: quay.io/kubocd/packages
-    ### Private registry, credentials needed
-    credentials:
-      robotAccountName: $(OCI_USERNAME)
-      robotAccountToken: $(OCI_PASSWORD)
+    ### public registry, no credentials needed
+    #credentials:
+    #  robotAccountName: $(OCI_USERNAME)
+    #  robotAccountToken: $(OCI_PASSWORD)
     packages:
       - name: podinfo
       - name: cert-manager
@@ -126,10 +126,10 @@ catalog:
     name: Stack catalog
     description: My Stack packages
     repoUrl: quay.io/kubocd/packages
-    ### Private registry, credentials needed
-    credentials:
-      robotAccountName: $(OCI_USERNAME)
-      robotAccountToken: $(OCI_PASSWORD)
+    ### public registry, no credentials needed
+    #credentials:
+    #  robotAccountName: $(OCI_USERNAME)
+    #  robotAccountToken: $(OCI_PASSWORD)
     packages:
       - name: stack1
 
