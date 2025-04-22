@@ -40,6 +40,7 @@ type Group struct {
 func (g *Group) RegisterControllers() {
 	_user.RegisterHandlers(g, UserProfileController())
 	_catalog.RegisterHandlers(g, CatalogController())
+
 	_componentrelease.RegisterHandlers(g, ComponentReleaseController())
 	_templaterelease.RegisterHandlers(g, TemplateReleaseController())
 	_component.RegisterHandlers(g, ComponentController())

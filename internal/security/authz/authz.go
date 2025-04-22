@@ -28,9 +28,9 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/okdp/okdp-server/internal/config"
 	"github.com/okdp/okdp-server/internal/constants"
-	"github.com/okdp/okdp-server/internal/errors"
 	log "github.com/okdp/okdp-server/internal/logging"
 	"github.com/okdp/okdp-server/internal/security/authc/model"
+	"github.com/okdp/okdp-server/internal/servererrors"
 	"github.com/okdp/okdp-server/internal/utils"
 )
 
@@ -80,7 +80,7 @@ func (e *Enforcer) authorize() gin.HandlerFunc {
 		userInfo, ok := c.Get(constants.OAuth2UserInfo)
 		if !ok {
 			log.Warn("Unable to authorize user, no user informtaion found in context")
-			c.AbortWithStatusJSON(http.StatusUnauthorized, errors.OfType(errors.OkdpServer).GenericError(http.StatusUnauthorized, "Unable to authorize user, no user informtaion found in context"))
+			c.AbortWithStatusJSON(http.StatusUnauthorized, servererrors.OfType(servererrors.OkdpServer).GenericError(http.StatusUnauthorized, "Unable to authorize user, no user informtaion found in context"))
 			return
 		}
 		email := userInfo.(*model.UserInfo).Email
@@ -106,12 +106,12 @@ func (e *Enforcer) authorize() gin.HandlerFunc {
 
 		if err != nil {
 			log.Warn("Unable to authorize user (%s/%s): %s", email, sub, err.Error())
-			c.AbortWithStatusJSON(http.StatusUnauthorized, errors.OfType(errors.OkdpServer).GenericError(http.StatusUnauthorized, err.Error()))
+			c.AbortWithStatusJSON(http.StatusUnauthorized, servererrors.OfType(servererrors.OkdpServer).GenericError(http.StatusUnauthorized, err.Error()))
 			return
 		}
 		if !allowed {
 			log.Warn("User (%s/%s) not allowed to execute the action", email, sub)
-			c.AbortWithStatusJSON(http.StatusUnauthorized, errors.OfType(errors.OkdpServer).GenericError(http.StatusUnauthorized, "Unauthorized action"))
+			c.AbortWithStatusJSON(http.StatusUnauthorized, servererrors.OfType(servererrors.OkdpServer).GenericError(http.StatusUnauthorized, "Unauthorized action"))
 			return
 		}
 

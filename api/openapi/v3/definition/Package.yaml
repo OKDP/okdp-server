@@ -1,0 +1,15 @@
+type: object
+xml:
+  name: package
+required:
+- "name"
+- "versions"
+properties:
+  name:
+    type: string
+    description: The name of the package
+  versions:
+    type: array
+    items:
+      type: string
+    description: A list of versions for the package

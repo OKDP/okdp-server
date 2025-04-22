@@ -1,5 +1,5 @@
 /*
- *    Copyright 2024 okdp.io
+ *    Copyright 2025 okdp.io
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -17,18 +17,26 @@
 package utils
 
 import (
+	"os"
 	"testing"
-
-	"github.com/stretchr/testify/assert"
 )
 
-func TestMapfunction(t *testing.T) {
+func TestGetEnv(t *testing.T) {
+	// Test the behavior when the environment variable is set
+	os.Setenv("OCI_USERNAME", "myusername")
+	defer os.Unsetenv("OCI_USERNAME")
 
-	// Given
-	numbers := []int{1, 2, 3}
-	f := func(i int) int { return i * 2 }
-	// When
-	result := Map(numbers, f)
-	// Then
-	assert.Equal(t, []int{2, 4, 6}, result)
+	if got := GetEnv("$(OCI_USERNAME)"); got != "myusername" {
+		t.Errorf("expected 'myusername', got %s", got)
+	}
+
+	// Test when the environment variable does not exist
+	if got := GetEnv("$(NON_EXISTENT_VAR)"); got != "" {
+		t.Errorf("expected '', got %s", got)
+	}
+
+	// Test non-placeholder value
+	if got := GetEnv("JustSomeOtherValue"); got != "JustSomeOtherValue" {
+		t.Errorf("expected 'JustSomeOtherValue', got %s", got)
+	}
 }

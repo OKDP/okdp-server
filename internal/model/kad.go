@@ -14,21 +14,10 @@
  *    limitations under the License.
  */
 
-package utils
+package model
 
 import (
-	"testing"
-
-	"github.com/stretchr/testify/assert"
+	"github.com/okdp/okdp-server/api/openapi/v3/_api"
 )
 
-func TestMapfunction(t *testing.T) {
-
-	// Given
-	numbers := []int{1, 2, 3}
-	f := func(i int) int { return i * 2 }
-	// When
-	result := Map(numbers, f)
-	// Then
-	assert.Equal(t, []int{2, 4, 6}, result)
-}
+type KadInstance = _api.KadInstance

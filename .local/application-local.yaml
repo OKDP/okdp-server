@@ -82,6 +82,57 @@ swagger:
   security:
     - oauth2: [openid, email, profile, roles]
 
+
+catalog:
+  - id: storage
+    name: Storage catalog
+    description: My Storage packages
+    repoUrl: quay.io/kubocd/packages
+    ### public registry, no credentials needed
+    #credentials:
+    #  robotAccountName: $(OCI_USERNAME)
+    #  robotAccountToken: $(OCI_PASSWORD)
+    packages:
+      - name: redis
+      - name: minio
+      - name: cnpg
+
+  - id: auth
+    name: Auth catalog
+    description: My Auth packages
+    repoUrl: quay.io/kubocd/packages
+    ### private registry, credentials needed
+    credentials:
+      robotAccountName: $(OCI_USERNAME)
+      robotAccountToken: $(OCI_PASSWORD)
+    packages:
+      - name: openldap
+
+  - id: infra
+    name: Infra catalog
+    description: My Infra packages
+    repoUrl: quay.io/kubocd/packages
+    ### Private registry, credentials needed
+    credentials:
+      robotAccountName: $(OCI_USERNAME)
+      robotAccountToken: $(OCI_PASSWORD)
+    packages:
+      - name: podinfo
+      - name: cert-manager
+      - name: ingress-nginx
+      - name: metallb
+
+  - id: stack
+    name: Stack catalog
+    description: My Stack packages
+    repoUrl: quay.io/kubocd/packages
+    ### Private registry, credentials needed
+    credentials:
+      robotAccountName: $(OCI_USERNAME)
+      robotAccountToken: $(OCI_PASSWORD)
+    packages:
+      - name: stack1
+
 kad:
   - id: sandbox
     name: Sandbox de idir

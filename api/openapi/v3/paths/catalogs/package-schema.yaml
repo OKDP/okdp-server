@@ -1,30 +1,37 @@
 get:
-  summary: Get a catalog info by name
+  summary: Get package schema (parameters, context, etc)
   description: |
-    Get a catalog info by name
+    Get package schema (parameters, context, etc)
   tags:
     - catalogs
-  operationId: getCatalog
+  operationId: getPackageSchema
   parameters:
     - in: path
-      name: kadInstanceId
+      name: catalogId
       schema:
         type: string
       required: true
-      description: KAD instance ID
+      description: Catalog ID
     - in: path
       name: name
       schema:
         type: string
       required: true
-      description: Catalog name
+      description: Package name
+    - in: path
+      name: version
+      schema:
+        type: string
+      required: true
+      description: Package version
   responses:
     '200':
-      description: Catalog information
+      description: Package schema
       content:
         application/json:
           schema:
-            $ref: '../../definition/Catalog.yaml'
+            type: object
+            additionalProperties: true
     default:
       description: Server error
       content:

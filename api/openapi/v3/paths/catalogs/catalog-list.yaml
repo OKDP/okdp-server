@@ -5,26 +5,15 @@ get:
   tags:
     - catalogs
   operationId: listCatalogs
-  parameters:
-    - in: path
-      name: kadInstanceId
-      schema:
-        type: string
-      required: true
-      description: KAD instance ID
   responses:
     '200':
       description: List of the catalogs
       content:
         application/json:
           schema:
-            type: object
-            required: [catalogs]
-            properties:
-              catalogs:
-                type: array
-                items:
-                  $ref: '../../definition/Catalog.yaml'
+            type: array
+            items:
+              $ref: '../../definition/Catalog.yaml'
     default:
       description: Server error
       content:

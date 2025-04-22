@@ -1,5 +1,5 @@
 /*
- *    Copyright 2024 okdp.io
+ *    Copyright 2025 okdp.io
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -14,21 +14,18 @@
  *    limitations under the License.
  */
 
-package utils
+package client
 
 import (
-	"testing"
-
-	"github.com/stretchr/testify/assert"
+	"github.com/okdp/okdp-server/internal/servererrors"
 )
 
-func TestMapfunction(t *testing.T) {
+func CatalogNotFoundError(provided string) *servererrors.ServerError {
+	return servererrors.OfType(servererrors.OkdpServer).
+		NotFoundError("The catalog with id %s not found.", provided)
+}
 
-	// Given
-	numbers := []int{1, 2, 3}
-	f := func(i int) int { return i * 2 }
-	// When
-	result := Map(numbers, f)
-	// Then
-	assert.Equal(t, []int{2, 4, 6}, result)
+func CatalogPackageNotFoundError(catalogID string, packageName string) *servererrors.ServerError {
+	return servererrors.OfType(servererrors.OkdpServer).
+		NotFoundError("The package %s not found in the catalog ID %s.", packageName, catalogID)
 }

@@ -80,4 +80,23 @@ kad:
     apiUrl: https://host.docker.internal:6553/api/kad/v1
     authBearer: JUDtoP55C2dLfeaXqSbehhKKRdmAWTfj
     insecureSkipVerify: true
-  
+
+catalog:
+  - id: infra01
+    name: infra01 catalog
+    description: My infrastructure components
+    repoUrl: quay.io/okdp/applications
+    credentials:
+      robotAccountName: $(OCI_USERNAME)
+      robotAccountToken: $(OCI_PASSWORD)
+    packages:
+      - name: redis
+      - name: podinfo
+      - name: cert-manager
+
+  - id: infra02
+    name: infra02 catalog
+    description: My infrastructure components
+    repoUrl: quay.io/okdp/applications
+    packages:
+      - name: minio

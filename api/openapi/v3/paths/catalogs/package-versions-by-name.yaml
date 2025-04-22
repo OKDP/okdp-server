@@ -1,0 +1,34 @@
+get:
+  summary: List versions for a specific package
+  description: |
+    List versions for a specific package
+  tags:
+    - catalogs
+  operationId: getPackageVersionsByName
+  parameters:
+    - in: path
+      name: catalogId
+      schema:
+        type: string
+      required: true
+      description: Catalog ID
+    - in: path
+      name: name
+      schema:
+        type: string
+      required: true
+      description: Package name
+  responses:
+    '200':
+      description: Package versions
+      content:
+        application/json:
+          schema:
+            $ref: '../../definition/Package.yaml'
+    default:
+      description: Server error
+      content:
+        application/json:
+          schema:
+            $ref: '../../definition/ServerError.yaml'
+

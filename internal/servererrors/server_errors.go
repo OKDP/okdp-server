@@ -1,4 +1,4 @@
-package errors
+package servererrors
 
 import (
 	"fmt"
@@ -11,8 +11,9 @@ type ServerError _api.ServerError
 
 const (
 	// Error types
-	Kad        = "kad"
 	OkdpServer = "okdp_server"
+	Registry   = "registry"
+	Kad        = "kad"
 )
 
 func OfType(errorType string) *ServerError {
@@ -30,6 +31,12 @@ func (s *ServerError) NotFoundError(messages ...interface{}) *ServerError {
 func (s *ServerError) Forbidden(messages ...interface{}) *ServerError {
 	s.Message = toError(messages...)
 	s.Status = http.StatusForbidden
+	return s
+}
+
+func (s *ServerError) UnprocessableEntity(messages ...interface{}) *ServerError {
+	s.Message = toError(messages...)
+	s.Status = http.StatusUnprocessableEntity
 	return s
 }
 

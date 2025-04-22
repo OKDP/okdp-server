@@ -22,16 +22,18 @@ tags:
     description: User profile
     externalDocs:
       url: https://github.com/okdp/okdp-server
+  - name: catalogs
+    description: Catalogs
+    externalDocs:
+      url: https://github.com/okdp/okdp-server
+
+
   - name: kad
     description: Kad instances configuration
     externalDocs:
       url: https://github.com/okdp/okdp-server
   - name: services
     description: Services
-    externalDocs:
-      url: https://github.com/okdp/okdp-server
-  - name: catalogs
-    description: Catalogs
     externalDocs:
       url: https://github.com/okdp/okdp-server
   - name: templatereleases
@@ -51,16 +53,28 @@ paths:
   ### Users
   /users/myprofile:
     $ref: ./paths/users/user-profile.yaml
+  ### Registry Catalogs
+  /catalogs:
+    $ref: ./paths/catalogs/catalog-list.yaml
+  /catalogs/{catalogId}:
+    $ref: ./paths/catalogs/catalog-by-id.yaml
+  /catalogs/{catalogId}/packages:
+    $ref: ./paths/catalogs/package-list.yaml
+  /catalogs/{catalogId}/packages/{name}:
+    $ref: ./paths/catalogs/package-by-name.yaml
+  /catalogs/{catalogId}/packages/{name}/versions:
+    $ref: ./paths/catalogs/package-versions-by-name.yaml
+  /catalogs/{catalogId}/packages/{name}/versions/{version}:
+    $ref: ./paths/catalogs/package-definition.yaml
+  /catalogs/{catalogId}/packages/{name}/versions/{version}/schema:
+    $ref: ./paths/catalogs/package-schema.yaml
+
+  ###### Remove all this 
   ### KAD instances
   /kad:
     $ref: ./paths/kad/kad-instance.yaml
   /kad/{kadInstanceId}:
     $ref: ./paths/kad/kad-instance-by-name.yaml
-  ### KAD Catalog API
-  /kad/{kadInstanceId}/catalogs:
-    $ref: ./paths/catalogs/catalog.yaml
-  /kad/{kadInstanceId}/catalogs/{name}:
-    $ref: ./paths/catalogs/catalog-by-name.yaml
   ### Services API
   /kad/{kadInstanceId}/services:
     $ref: ./paths/services/service.yaml
@@ -86,6 +100,12 @@ components:
       $ref: './definition/UserProfile.yaml'
     Catalog:
       $ref: './definition/Catalog.yaml'
+    Package:
+      $ref: './definition/Package.yaml'
+
+
+
+      
     TemplateRelease:
       $ref: './definition/TemplateRelease.yaml'
     ComponentReleasePayload:

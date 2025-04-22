@@ -22,6 +22,7 @@ import (
 
 	"github.com/spf13/viper"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func Test_LoadConfig_Server(t *testing.T) {
@@ -165,6 +166,34 @@ func Test_LoadConfig_Swagger(t *testing.T) {
 	assert.Contains(t, swagger.Security[0], "oauth2", "Security should include oauth2")
 	assert.Equal(t, []string{"openid", "email", "profile", "roles"}, swagger.Security[0]["oauth2"], "OAuth2 scopes should match")
 
+}
+
+func Test_LoadConfig_Catalog(t *testing.T) {
+	// Given
+	viper.Set("config", "testdata/application.yaml")
+	// When
+	catalogs := GetAppConfig().Catalogs
+	// Then
+	require.NotEmpty(t, catalogs, "Catalogs should not be empty")
+	catalog := catalogs[0]
+	assert.True(t, catalog.IsAuthenticated(), "The catalog should be authenticated")
+	assert.Equal(t, "infra01", catalog.ID, "ID")
+	assert.Equal(t, "infra01 catalog", catalog.Name, "Name")
+	assert.Equal(t, "My infrastructure components", catalog.Description, "Description")
+	assert.Equal(t, "quay.io/okdp/applications", catalog.RepoURL, "RepoURL")
+	assert.Equal(t, "$(OCI_USERNAME)", *catalog.Credentials.RobotAccountName, "Credentials.RobotAccountName")
+	assert.Equal(t, "$(OCI_PASSWORD)", *catalog.Credentials.RobotAccountToken, "Credentials.RobotAccountToken")
+	assert.Equal(t, "quay.io", catalog.RepoHost(), "RepoHost")
+
+	require.NotEmpty(t, catalog.Packages, "Packages catalogs should not be empty")
+	require.Len(t, catalog.Packages, 3, "The catalog should contain exactly 3 Packages")
+	assert.Equal(t, "redis", catalog.Packages[0].Name, "Packages")
+	assert.Equal(t, "podinfo", catalog.Packages[1].Name, "Packages")
+	assert.Equal(t, "cert-manager", catalog.Packages[2].Name, "Packages")
+
+	catalog = catalogs[1]
+	assert.Equal(t, "infra02", catalog.ID, "ID")
+	assert.False(t, catalog.IsAuthenticated(), fmt.Sprintf("The catalog '%s' should not be authenticated", catalog.ID))
 }
 
 func Test_LoadConfig_Kad(t *testing.T) {
