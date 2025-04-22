@@ -1,5 +1,5 @@
 /*
- *    Copyright 2024 okdp.io
+ *    Copyright 2025 okdp.io
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@
 package controllers
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -35,27 +34,66 @@ func CatalogController() *ICatalogController {
 	}
 }
 
-func (r ICatalogController) ListCatalogs(c *gin.Context, kadInstanceID string) {
-	catalogs, err := r.catalogService.List(kadInstanceID)
-	if err != nil {
-		log.Error("Unable to list Catalogs on kad instance %s, details: %+v", kadInstanceID, err)
-		c.JSON(err.Status, err)
-		return
-	}
+func (r ICatalogController) ListCatalogs(c *gin.Context) {
+	catalogs := r.catalogService.ListCatalogs()
 	c.JSON(http.StatusOK, catalogs)
 }
 
-func (r ICatalogController) GetCatalog(c *gin.Context, kadInstanceID string, name string) {
-	catalog, err := r.catalogService.Get(kadInstanceID, name)
+func (r ICatalogController) GetCatalog(c *gin.Context, catalogID string) {
+	catalog, err := r.catalogService.GetCatalog(catalogID)
 	if err != nil {
-		log.Error("Unable to get Catalog info '%s' on kad instance %s, details: %+v", name, kadInstanceID, err)
+		log.Error("Unable to find the Catalog with ID '%s', details: %+v", catalogID, err)
 		c.JSON(err.Status, err)
 		return
 	}
-	if catalog == nil {
-		c.JSON(http.StatusNotFound, fmt.Sprintf("Component with id %s not found", name))
+	c.JSON(http.StatusOK, catalog)
+}
+
+func (r ICatalogController) GetPackages(c *gin.Context, catalogID string) {
+	packages, err := r.catalogService.GetPackages(catalogID)
+	if err != nil {
+		log.Error("Unable to find the packages with Catalog ID '%s', details: %+v", catalogID, err)
+		c.JSON(err.Status, err)
 		return
 	}
-	c.JSON(http.StatusOK, catalog)
+	c.JSON(http.StatusOK, packages)
+}
 
+func (r ICatalogController) GetPackageByName(c *gin.Context, catalogID string, name string) {
+	result, err := r.catalogService.GetPackageByName(catalogID, name)
+	if err != nil {
+		log.Error("Unable to find the package '%s' with Catalog ID '%s', details: %+v", name, catalogID, err)
+		c.JSON(err.Status, err)
+		return
+	}
+	c.JSON(http.StatusOK, result)
+}
+
+func (r ICatalogController) GetPackageVersionsByName(c *gin.Context, catalogID string, name string) {
+	r.GetPackageByName(c, catalogID, name)
+}
+
+func (r ICatalogController) GetPackageDefinition(c *gin.Context, catalogID string, name string, version string) {
+	definition, err := r.catalogService.GetPackageDefinition(catalogID, name, version)
+	if err != nil {
+		log.Error("Unable to find the package definition for package '%s:%s' with Catalog ID '%s', details: %+v", name, version, catalogID, err)
+		c.JSON(err.Status, err)
+		return
+	}
+	c.JSON(http.StatusOK, definition)
+}
+
+func (r ICatalogController) GetPackageSchema(c *gin.Context, catalogID string, name string, version string) {
+	definition, err := r.catalogService.GetPackageDefinition(catalogID, name, version)
+	if err != nil {
+		log.Error("Unable to find the package definition for package '%s:%s' with Catalog ID '%s', details: %+v", name, version, catalogID, err)
+		c.JSON(err.Status, err)
+		return
+	}
+	schema, ok := definition["schema"]
+	if !ok {
+		c.JSON(http.StatusOK, struct{}{})
+		return
+	}
+	c.JSON(http.StatusOK, schema)
 }

@@ -1,19 +1,38 @@
 type: object
 xml:
   name: catalog
-required: 
+required:
+- "id"
 - "name"
-- "components"
-- "templates"
+- "description"
+- "repoUrl"
+- "packages"
 properties:
+  id:
+    type: string
+    x-go-name: ID
   name:
     type: string
-  components:
+  description:
+    type: string
+  repoUrl:
+    type: string
+    format: uri
+    x-go-name: repoURL
+  credentials:
+    type: object
+    properties:
+      robotAccountName:
+        type: string
+      robotAccountToken:
+        type: string
+  packages:
     type: array
     items:
-      type: string
-  templates:
-    type: array
-    items:
-      type: string
+      type: object
+      required:
+      - name
+      properties:
+        name:
+          type: string
 

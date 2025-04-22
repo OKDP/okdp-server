@@ -25,9 +25,9 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/okdp/okdp-server/internal/config"
 	"github.com/okdp/okdp-server/internal/constants"
-	"github.com/okdp/okdp-server/internal/errors"
 	log "github.com/okdp/okdp-server/internal/logging"
 	"github.com/okdp/okdp-server/internal/security/authc/model"
+	"github.com/okdp/okdp-server/internal/servererrors"
 	"golang.org/x/net/context"
 )
 
@@ -73,14 +73,14 @@ func (p *Provider) authenticate() gin.HandlerFunc {
 		err := p.verifyAccessToken(accessToken)
 		if err != nil {
 			log.Warn("Failed to verify access Token: %w", err)
-			c.AbortWithStatusJSON(http.StatusUnauthorized, errors.OfType(errors.OkdpServer).GenericError(http.StatusUnauthorized, "Failed to verify access Token: "+err.Error()))
+			c.AbortWithStatusJSON(http.StatusUnauthorized, servererrors.OfType(servererrors.OkdpServer).GenericError(http.StatusUnauthorized, "Failed to verify access Token: "+err.Error()))
 			return
 		}
 
 		userInfo, err = p.getUserInfo(accessToken)
 		if err != nil {
 			log.Warn("Unable to get user roles/groups from access token: %w", err)
-			c.AbortWithStatusJSON(http.StatusUnauthorized, errors.OfType(errors.OkdpServer).GenericError(http.StatusUnauthorized, "Unable to get user roles/groups from access token: "+err.Error()))
+			c.AbortWithStatusJSON(http.StatusUnauthorized, servererrors.OfType(servererrors.OkdpServer).GenericError(http.StatusUnauthorized, "Unable to get user roles/groups from access token: "+err.Error()))
 			return
 		}
 		log.Debug("Successfully authenticated user : %s", userInfo.AsJSONString())

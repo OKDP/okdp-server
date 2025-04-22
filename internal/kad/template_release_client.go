@@ -18,9 +18,9 @@ package kad
 
 import (
 	"github.com/okdp/okdp-server/internal/constants"
-	"github.com/okdp/okdp-server/internal/errors"
 	"github.com/okdp/okdp-server/internal/kad/client"
 	"github.com/okdp/okdp-server/internal/model"
+	"github.com/okdp/okdp-server/internal/servererrors"
 )
 
 type TemplateReleaseClient struct {
@@ -33,7 +33,7 @@ func NewTemplateReleaseClient() *TemplateReleaseClient {
 	}
 }
 
-func (c TemplateReleaseClient) Get(kadInstanceID string, name string, catalog *string) (*model.TemplateRelease, *errors.ServerError) {
+func (c TemplateReleaseClient) Get(kadInstanceID string, name string, catalog *string) (*model.TemplateRelease, *servererrors.ServerError) {
 	kadClient, err := c.KAD.ID(kadInstanceID)
 	if err != nil {
 		return nil, err
@@ -45,7 +45,7 @@ func (c TemplateReleaseClient) Get(kadInstanceID string, name string, catalog *s
 	return client.DoGet[model.TemplateRelease](req)
 }
 
-func (c TemplateReleaseClient) List(kadInstanceID string, catalog *string) (*model.TemplateReleases, *errors.ServerError) {
+func (c TemplateReleaseClient) List(kadInstanceID string, catalog *string) (*model.TemplateReleases, *servererrors.ServerError) {
 	kadClient, err := c.KAD.ID(kadInstanceID)
 	if err != nil {
 		return nil, err

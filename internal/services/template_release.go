@@ -17,9 +17,9 @@
 package services
 
 import (
-	"github.com/okdp/okdp-server/internal/errors"
 	"github.com/okdp/okdp-server/internal/kad"
 	"github.com/okdp/okdp-server/internal/model"
+	"github.com/okdp/okdp-server/internal/servererrors"
 )
 
 type TemplateReleaseService struct {
@@ -32,10 +32,10 @@ func NewTemplateReleaseService() *TemplateReleaseService {
 	}
 }
 
-func (s TemplateReleaseService) Get(kadInstanceID string, name string, catalog *string) (*model.TemplateRelease, *errors.ServerError) {
+func (s TemplateReleaseService) Get(kadInstanceID string, name string, catalog *string) (*model.TemplateRelease, *servererrors.ServerError) {
 	return s.templateRelease.Get(kadInstanceID, name, catalog)
 }
 
-func (s TemplateReleaseService) List(kadInstanceID string, catalog *string) (*model.TemplateReleases, *errors.ServerError) {
+func (s TemplateReleaseService) List(kadInstanceID string, catalog *string) (*model.TemplateReleases, *servererrors.ServerError) {
 	return s.templateRelease.List(kadInstanceID, catalog)
 }

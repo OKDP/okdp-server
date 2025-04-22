@@ -22,17 +22,18 @@ import (
 
 	"github.com/fsnotify/fsnotify"
 	"github.com/getkin/kin-openapi/openapi3"
-	"github.com/okdp/okdp-server/api/openapi/v3/_api"
+	"github.com/okdp/okdp-server/internal/model"
 	"github.com/spf13/viper"
 )
 
 // Application configuration
 type ApplicationConfig struct {
-	Server   Server        `mapstructure:"server"`
-	Security Security      `mapstructure:"security"`
-	Logging  Logging       `mapstructure:"logging"`
-	Swagger  Swagger       `mapstructure:"swagger"`
-	Kad      []KadInstance `mapstructure:"kad"`
+	Server   Server              `mapstructure:"server"`
+	Security Security            `mapstructure:"security"`
+	Logging  Logging             `mapstructure:"logging"`
+	Swagger  Swagger             `mapstructure:"swagger"`
+	Kad      []model.KadInstance `mapstructure:"kad"`
+	Catalogs []*model.Catalog    `mapstructure:"catalog"`
 }
 
 // Server configuration
@@ -139,8 +140,6 @@ type Swagger struct {
 	SecuritySchemes map[string]*openapi3.SecurityScheme `yaml:"securitySchemes,omitempty"`
 	Security        openapi3.SecurityRequirements       `yaml:"security,omitempty"`
 }
-
-type KadInstance _api.KadInstance
 
 var (
 	instance *ApplicationConfig

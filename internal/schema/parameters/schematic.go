@@ -14,29 +14,18 @@
  *    limitations under the License.
  */
 
-package model
+package schema
 
-import (
-	"strings"
-
-	"github.com/okdp/okdp-server/api/openapi/v3/_api"
-)
-
-type Catalog struct {
-	_api.Catalog `mapstructure:",squash"`
+type KuboSchema struct {
+	ParametersSchema *KuboSchemaItem `json:"parametersSchema"`
+	ContextSchema    *KuboSchemaItem `json:"contextSchema"`
 }
 
-type Package = _api.Package
-
-func (c Catalog) RepoHost() string {
-	parts := strings.SplitN(c.RepoURL, "/", 2)
-	if len(parts) > 0 {
-		return parts[0]
-	}
-	return ""
+type KuboSchemaItem struct {
+	Description string                     `json:"description,omitempty"`
+	Type        string                     `json:"type,omitempty"`
+	Properties  map[string]*KuboSchemaItem `json:"properties,omitempty"`
+	Items       *KuboSchemaItem            `json:"items,omitempty"`
+	Required    bool                       `json:"required,omitempty"`
+	Default     interface{}                `json:"default,omitempty"`
 }
-
-func (c Catalog) IsAuthenticated() bool {
-	return c.Credentials != nil
-}
-

@@ -14,11 +14,26 @@ import (
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
 	// List all catalogs
-	// (GET /kad/{kadInstanceId}/catalogs)
-	ListCatalogs(c *gin.Context, kadInstanceId string)
-	// Get a catalog info by name
-	// (GET /kad/{kadInstanceId}/catalogs/{name})
-	GetCatalog(c *gin.Context, kadInstanceId string, name string)
+	// (GET /catalogs)
+	ListCatalogs(c *gin.Context)
+	// Get a catalog by id
+	// (GET /catalogs/{catalogId})
+	GetCatalog(c *gin.Context, catalogId string)
+	// Get a list of packages by catalog id
+	// (GET /catalogs/{catalogId}/packages)
+	GetPackages(c *gin.Context, catalogId string)
+	// Get package by catalog id and package name
+	// (GET /catalogs/{catalogId}/packages/{name})
+	GetPackageByName(c *gin.Context, catalogId string, name string)
+	// List versions for a specific package
+	// (GET /catalogs/{catalogId}/packages/{name}/versions)
+	GetPackageVersionsByName(c *gin.Context, catalogId string, name string)
+	// Get package definition
+	// (GET /catalogs/{catalogId}/packages/{name}/versions/{version})
+	GetPackageDefinition(c *gin.Context, catalogId string, name string, version string)
+	// Get package schema (parameters, context, etc)
+	// (GET /catalogs/{catalogId}/packages/{name}/versions/{version}/schema)
+	GetPackageSchema(c *gin.Context, catalogId string, name string, version string)
 }
 
 // ServerInterfaceWrapper converts contexts to parameters.
@@ -33,14 +48,27 @@ type MiddlewareFunc func(c *gin.Context)
 // ListCatalogs operation middleware
 func (siw *ServerInterfaceWrapper) ListCatalogs(c *gin.Context) {
 
+	for _, middleware := range siw.HandlerMiddlewares {
+		middleware(c)
+		if c.IsAborted() {
+			return
+		}
+	}
+
+	siw.Handler.ListCatalogs(c)
+}
+
+// GetCatalog operation middleware
+func (siw *ServerInterfaceWrapper) GetCatalog(c *gin.Context) {
+
 	var err error
 
-	// ------------- Path parameter "kadInstanceId" -------------
-	var kadInstanceId string
+	// ------------- Path parameter "catalogId" -------------
+	var catalogId string
 
-	err = runtime.BindStyledParameterWithOptions("simple", "kadInstanceId", c.Param("kadInstanceId"), &kadInstanceId, runtime.BindStyledParameterOptions{Explode: false, Required: true})
+	err = runtime.BindStyledParameterWithOptions("simple", "catalogId", c.Param("catalogId"), &catalogId, runtime.BindStyledParameterOptions{Explode: false, Required: true})
 	if err != nil {
-		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter kadInstanceId: %w", err), http.StatusBadRequest)
+		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter catalogId: %w", err), http.StatusBadRequest)
 		return
 	}
 
@@ -51,20 +79,44 @@ func (siw *ServerInterfaceWrapper) ListCatalogs(c *gin.Context) {
 		}
 	}
 
-	siw.Handler.ListCatalogs(c, kadInstanceId)
+	siw.Handler.GetCatalog(c, catalogId)
 }
 
-// GetCatalog operation middleware
-func (siw *ServerInterfaceWrapper) GetCatalog(c *gin.Context) {
+// GetPackages operation middleware
+func (siw *ServerInterfaceWrapper) GetPackages(c *gin.Context) {
 
 	var err error
 
-	// ------------- Path parameter "kadInstanceId" -------------
-	var kadInstanceId string
+	// ------------- Path parameter "catalogId" -------------
+	var catalogId string
 
-	err = runtime.BindStyledParameterWithOptions("simple", "kadInstanceId", c.Param("kadInstanceId"), &kadInstanceId, runtime.BindStyledParameterOptions{Explode: false, Required: true})
+	err = runtime.BindStyledParameterWithOptions("simple", "catalogId", c.Param("catalogId"), &catalogId, runtime.BindStyledParameterOptions{Explode: false, Required: true})
 	if err != nil {
-		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter kadInstanceId: %w", err), http.StatusBadRequest)
+		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter catalogId: %w", err), http.StatusBadRequest)
+		return
+	}
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		middleware(c)
+		if c.IsAborted() {
+			return
+		}
+	}
+
+	siw.Handler.GetPackages(c, catalogId)
+}
+
+// GetPackageByName operation middleware
+func (siw *ServerInterfaceWrapper) GetPackageByName(c *gin.Context) {
+
+	var err error
+
+	// ------------- Path parameter "catalogId" -------------
+	var catalogId string
+
+	err = runtime.BindStyledParameterWithOptions("simple", "catalogId", c.Param("catalogId"), &catalogId, runtime.BindStyledParameterOptions{Explode: false, Required: true})
+	if err != nil {
+		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter catalogId: %w", err), http.StatusBadRequest)
 		return
 	}
 
@@ -84,7 +136,124 @@ func (siw *ServerInterfaceWrapper) GetCatalog(c *gin.Context) {
 		}
 	}
 
-	siw.Handler.GetCatalog(c, kadInstanceId, name)
+	siw.Handler.GetPackageByName(c, catalogId, name)
+}
+
+// GetPackageVersionsByName operation middleware
+func (siw *ServerInterfaceWrapper) GetPackageVersionsByName(c *gin.Context) {
+
+	var err error
+
+	// ------------- Path parameter "catalogId" -------------
+	var catalogId string
+
+	err = runtime.BindStyledParameterWithOptions("simple", "catalogId", c.Param("catalogId"), &catalogId, runtime.BindStyledParameterOptions{Explode: false, Required: true})
+	if err != nil {
+		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter catalogId: %w", err), http.StatusBadRequest)
+		return
+	}
+
+	// ------------- Path parameter "name" -------------
+	var name string
+
+	err = runtime.BindStyledParameterWithOptions("simple", "name", c.Param("name"), &name, runtime.BindStyledParameterOptions{Explode: false, Required: true})
+	if err != nil {
+		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter name: %w", err), http.StatusBadRequest)
+		return
+	}
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		middleware(c)
+		if c.IsAborted() {
+			return
+		}
+	}
+
+	siw.Handler.GetPackageVersionsByName(c, catalogId, name)
+}
+
+// GetPackageDefinition operation middleware
+func (siw *ServerInterfaceWrapper) GetPackageDefinition(c *gin.Context) {
+
+	var err error
+
+	// ------------- Path parameter "catalogId" -------------
+	var catalogId string
+
+	err = runtime.BindStyledParameterWithOptions("simple", "catalogId", c.Param("catalogId"), &catalogId, runtime.BindStyledParameterOptions{Explode: false, Required: true})
+	if err != nil {
+		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter catalogId: %w", err), http.StatusBadRequest)
+		return
+	}
+
+	// ------------- Path parameter "name" -------------
+	var name string
+
+	err = runtime.BindStyledParameterWithOptions("simple", "name", c.Param("name"), &name, runtime.BindStyledParameterOptions{Explode: false, Required: true})
+	if err != nil {
+		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter name: %w", err), http.StatusBadRequest)
+		return
+	}
+
+	// ------------- Path parameter "version" -------------
+	var version string
+
+	err = runtime.BindStyledParameterWithOptions("simple", "version", c.Param("version"), &version, runtime.BindStyledParameterOptions{Explode: false, Required: true})
+	if err != nil {
+		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter version: %w", err), http.StatusBadRequest)
+		return
+	}
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		middleware(c)
+		if c.IsAborted() {
+			return
+		}
+	}
+
+	siw.Handler.GetPackageDefinition(c, catalogId, name, version)
+}
+
+// GetPackageSchema operation middleware
+func (siw *ServerInterfaceWrapper) GetPackageSchema(c *gin.Context) {
+
+	var err error
+
+	// ------------- Path parameter "catalogId" -------------
+	var catalogId string
+
+	err = runtime.BindStyledParameterWithOptions("simple", "catalogId", c.Param("catalogId"), &catalogId, runtime.BindStyledParameterOptions{Explode: false, Required: true})
+	if err != nil {
+		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter catalogId: %w", err), http.StatusBadRequest)
+		return
+	}
+
+	// ------------- Path parameter "name" -------------
+	var name string
+
+	err = runtime.BindStyledParameterWithOptions("simple", "name", c.Param("name"), &name, runtime.BindStyledParameterOptions{Explode: false, Required: true})
+	if err != nil {
+		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter name: %w", err), http.StatusBadRequest)
+		return
+	}
+
+	// ------------- Path parameter "version" -------------
+	var version string
+
+	err = runtime.BindStyledParameterWithOptions("simple", "version", c.Param("version"), &version, runtime.BindStyledParameterOptions{Explode: false, Required: true})
+	if err != nil {
+		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter version: %w", err), http.StatusBadRequest)
+		return
+	}
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		middleware(c)
+		if c.IsAborted() {
+			return
+		}
+	}
+
+	siw.Handler.GetPackageSchema(c, catalogId, name, version)
 }
 
 // GinServerOptions provides options for the Gin server.
@@ -114,6 +283,11 @@ func RegisterHandlersWithOptions(router gin.IRouter, si ServerInterface, options
 		ErrorHandler:       errorHandler,
 	}
 
-	router.GET(options.BaseURL+"/kad/:kadInstanceId/catalogs", wrapper.ListCatalogs)
-	router.GET(options.BaseURL+"/kad/:kadInstanceId/catalogs/:name", wrapper.GetCatalog)
+	router.GET(options.BaseURL+"/catalogs", wrapper.ListCatalogs)
+	router.GET(options.BaseURL+"/catalogs/:catalogId", wrapper.GetCatalog)
+	router.GET(options.BaseURL+"/catalogs/:catalogId/packages", wrapper.GetPackages)
+	router.GET(options.BaseURL+"/catalogs/:catalogId/packages/:name", wrapper.GetPackageByName)
+	router.GET(options.BaseURL+"/catalogs/:catalogId/packages/:name/versions", wrapper.GetPackageVersionsByName)
+	router.GET(options.BaseURL+"/catalogs/:catalogId/packages/:name/versions/:version", wrapper.GetPackageDefinition)
+	router.GET(options.BaseURL+"/catalogs/:catalogId/packages/:name/versions/:version/schema", wrapper.GetPackageSchema)
 }

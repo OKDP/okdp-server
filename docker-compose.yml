@@ -30,6 +30,8 @@ services:
       - .go-cache/go-mod:/go/pkg
     working_dir: /workspace
     environment:
+      - OCI_USERNAME=${OCI_USERNAME}
+      - OCI_PASSWORD=${OCI_PASSWORD}
       - GOCACHE=/go-build
       - GOMODCACHE=/go/pkg
     depends_on:

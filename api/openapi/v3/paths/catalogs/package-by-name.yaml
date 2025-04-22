@@ -1,0 +1,34 @@
+get:
+  summary: Get package by catalog id and package name
+  description: |
+    Get package by catalog id and package name
+  tags:
+    - catalogs
+  operationId: getPackageByName
+  parameters:
+    - in: path
+      name: catalogId
+      schema:
+        type: string
+      required: true
+      description: Catalog ID
+    - in: path
+      name: name
+      schema:
+        type: string
+      required: true
+      description: Package name
+  responses:
+    '200':
+      description: Packages information
+      content:
+        application/json:
+          schema:
+            $ref: '../../definition/Package.yaml'
+    default:
+      description: Server error
+      content:
+        application/json:
+          schema:
+            $ref: '../../definition/ServerError.yaml'
+

@@ -11,9 +11,17 @@ import (
 
 // Catalog defines model for Catalog.
 type Catalog struct {
-	Components []string `json:"components"`
-	Name       string   `json:"name"`
-	Templates  []string `json:"templates"`
+	Credentials *struct {
+		RobotAccountName  *string `json:"robotAccountName,omitempty"`
+		RobotAccountToken *string `json:"robotAccountToken,omitempty"`
+	} `json:"credentials,omitempty"`
+	Description string `json:"description"`
+	ID          string `json:"id"`
+	Name        string `json:"name"`
+	Packages    []struct {
+		Name string `json:"name"`
+	} `json:"packages"`
+	RepoURL string `json:"repoUrl"`
 }
 
 // Component defines model for Component.
@@ -278,6 +286,15 @@ type KadInstance struct {
 	ID                 string `json:"id"`
 	InsecureSkipVerify bool   `json:"insecureSkipVerify"`
 	Name               string `json:"name"`
+}
+
+// Package defines model for Package.
+type Package struct {
+	// Name The name of the package
+	Name string `json:"name"`
+
+	// Versions A list of versions for the package
+	Versions []string `json:"versions"`
 }
 
 // ServerError defines model for ServerError.

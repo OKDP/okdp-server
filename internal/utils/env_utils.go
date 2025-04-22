@@ -1,5 +1,5 @@
 /*
- *    Copyright 2024 okdp.io
+ *    Copyright 2025 okdp.io
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -17,18 +17,22 @@
 package utils
 
 import (
-	"testing"
-
-	"github.com/stretchr/testify/assert"
+	"os"
+	"strings"
 )
 
-func TestMapfunction(t *testing.T) {
-
-	// Given
-	numbers := []int{1, 2, 3}
-	f := func(i int) int { return i * 2 }
-	// When
-	result := Map(numbers, f)
-	// Then
-	assert.Equal(t, []int{2, 4, 6}, result)
+// GetEnv reads an environment variable. If the value is a placeholder like $(VAR_NAME),
+// it will replace it with the actual value from the environment variable.
+// If the value is not a placeholder, it returns the value as is.
+func GetEnv(key string) string {
+	// Check if the key has the $(...) format
+	if strings.HasPrefix(key, "$(") && strings.HasSuffix(key, ")") {
+		varName := strings.TrimPrefix(key, "$(")
+		varName = strings.TrimSuffix(varName, ")")
+		if value, exists := os.LookupEnv(varName); exists {
+			return value
+		}
+		return ""
+	}
+	return key
 }

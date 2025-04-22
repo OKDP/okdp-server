@@ -17,9 +17,9 @@
 package services
 
 import (
-	"github.com/okdp/okdp-server/internal/errors"
 	"github.com/okdp/okdp-server/internal/kad"
 	"github.com/okdp/okdp-server/internal/model"
+	"github.com/okdp/okdp-server/internal/servererrors"
 )
 
 type ComponentReleaseService struct {
@@ -32,14 +32,14 @@ func NewComponentReleaseService() *ComponentReleaseService {
 	}
 }
 
-func (s ComponentReleaseService) Get(kadInstanceID string, name string, catalog *string) (*model.ComponentReleaseResponse, *errors.ServerError) {
+func (s ComponentReleaseService) Get(kadInstanceID string, name string, catalog *string) (*model.ComponentReleaseResponse, *servererrors.ServerError) {
 	return s.componentRelease.Get(kadInstanceID, name, catalog)
 }
 
-func (s ComponentReleaseService) List(kadInstanceID string, catalog *string) (*model.ComponentReleasesResponse, *errors.ServerError) {
+func (s ComponentReleaseService) List(kadInstanceID string, catalog *string) (*model.ComponentReleasesResponse, *servererrors.ServerError) {
 	return s.componentRelease.List(kadInstanceID, catalog)
 }
 
-func (s ComponentReleaseService) CreateOrUpdateComponentRelease(kadInstanceID string, name string, componentReleaseRequest model.ComponentReleaseRequest, commitData map[string]string) (*model.GitCommit, *errors.ServerError) {
+func (s ComponentReleaseService) CreateOrUpdateComponentRelease(kadInstanceID string, name string, componentReleaseRequest model.ComponentReleaseRequest, commitData map[string]string) (*model.GitCommit, *servererrors.ServerError) {
 	return s.componentRelease.UploadAsYaml(kadInstanceID, name, componentReleaseRequest, commitData)
 }

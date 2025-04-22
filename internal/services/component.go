@@ -17,9 +17,9 @@
 package services
 
 import (
-	"github.com/okdp/okdp-server/internal/errors"
 	"github.com/okdp/okdp-server/internal/kad"
 	"github.com/okdp/okdp-server/internal/model"
+	"github.com/okdp/okdp-server/internal/servererrors"
 )
 
 type ComponentService struct {
@@ -32,10 +32,10 @@ func NewComponentService() *ComponentService {
 	}
 }
 
-func (s ComponentService) Get(kadInstanceID string, name string, catalog *string) (*model.Component, *errors.ServerError) {
+func (s ComponentService) Get(kadInstanceID string, name string, catalog *string) (*model.Component, *servererrors.ServerError) {
 	return s.component.Get(kadInstanceID, name, catalog)
 }
 
-func (s ComponentService) List(kadInstanceID string, catalog *string) (*model.Components, *errors.ServerError) {
+func (s ComponentService) List(kadInstanceID string, catalog *string) (*model.Components, *servererrors.ServerError) {
 	return s.component.List(kadInstanceID, catalog)
 }

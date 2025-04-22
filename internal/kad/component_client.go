@@ -18,9 +18,9 @@ package kad
 
 import (
 	"github.com/okdp/okdp-server/internal/constants"
-	"github.com/okdp/okdp-server/internal/errors"
 	"github.com/okdp/okdp-server/internal/kad/client"
 	"github.com/okdp/okdp-server/internal/model"
+	"github.com/okdp/okdp-server/internal/servererrors"
 )
 
 type ComponentClient struct {
@@ -33,7 +33,7 @@ func NewComponentClient() *ComponentClient {
 	}
 }
 
-func (c ComponentClient) Get(kadInstanceID string, name string, catalog *string) (*model.Component, *errors.ServerError) {
+func (c ComponentClient) Get(kadInstanceID string, name string, catalog *string) (*model.Component, *servererrors.ServerError) {
 	kadClient, err := c.KAD.ID(kadInstanceID)
 	if err != nil {
 		return nil, err
@@ -45,7 +45,7 @@ func (c ComponentClient) Get(kadInstanceID string, name string, catalog *string)
 	return client.DoGet[model.Component](req)
 }
 
-func (c ComponentClient) List(kadInstanceID string, catalog *string) (*model.Components, *errors.ServerError) {
+func (c ComponentClient) List(kadInstanceID string, catalog *string) (*model.Components, *servererrors.ServerError) {
 	kadClient, err := c.KAD.ID(kadInstanceID)
 	if err != nil {
 		return nil, err

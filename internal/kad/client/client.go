@@ -24,8 +24,9 @@ import (
 
 	"github.com/go-resty/resty/v2"
 	"github.com/okdp/okdp-server/internal/config"
-	"github.com/okdp/okdp-server/internal/errors"
 	log "github.com/okdp/okdp-server/internal/logging"
+	"github.com/okdp/okdp-server/internal/model"
+	"github.com/okdp/okdp-server/internal/servererrors"
 	"github.com/okdp/okdp-server/internal/utils"
 )
 
@@ -70,7 +71,7 @@ func GetClients() *KadClients {
 	return instance
 }
 
-func (c *KadClients) ID(id string) (*KadClient, *errors.ServerError) {
+func (c *KadClients) ID(id string) (*KadClient, *servererrors.ServerError) {
 	client, found := c.clients[id]
 	if !found {
 		return nil, invalidInstanceError(id)
@@ -78,27 +79,27 @@ func (c *KadClients) ID(id string) (*KadClient, *errors.ServerError) {
 	return client, nil
 }
 
-func ListInstances() []config.KadInstance {
+func ListInstances() []model.KadInstance {
 	return config.GetAppConfig().Kad
 }
 
-func GetInstanceByID(id string) (config.KadInstance, *errors.ServerError) {
+func GetInstanceByID(id string) (model.KadInstance, *servererrors.ServerError) {
 	instances := ListInstances()
 	for _, i := range instances {
 		if i.ID == id {
 			return i, nil
 		}
 	}
-	return config.KadInstance{}, errors.OfType(errors.OkdpServer).
+	return model.KadInstance{}, servererrors.OfType(servererrors.OkdpServer).
 		NotFoundError("kad instance with id %s not found", id)
 }
 
-func DoGet[T any](request *resty.Request) (*T, *errors.ServerError) {
+func DoGet[T any](request *resty.Request) (*T, *servererrors.ServerError) {
 	request.Method = resty.MethodGet
 	return doExecute[T](request)
 }
 
-func DoPut[T any](request *resty.Request) (*T, *errors.ServerError) {
+func DoPut[T any](request *resty.Request) (*T, *servererrors.ServerError) {
 	request.Method = resty.MethodPut
 	return doExecute[T](request)
 }
@@ -109,34 +110,34 @@ func (c *KadClient) NewRequest(url string) *resty.Request {
 	return req
 }
 
-func doExecute[T any](request *resty.Request) (*T, *errors.ServerError) {
+func doExecute[T any](request *resty.Request) (*T, *servererrors.ServerError) {
 	log.Info("Sending %s request to KAD at the endpoint %s:", request.Method, request.URL)
 	var object T
 	// request.SetError(&KadError{})
 	resp, err := request.Send()
 
 	if err != nil {
-		return nil, errors.OfType(errors.Kad).Forbidden(err)
+		return nil, servererrors.OfType(servererrors.Kad).Forbidden(err)
 	}
 
 	if resp.IsError() {
 		// KAD errors response are plain text
-		return nil, errors.OfType(errors.Kad).
+		return nil, servererrors.OfType(servererrors.Kad).
 			GenericError(resp.StatusCode(), "Kad rejected the request, reason: %s", resp.String())
 	}
 
 	err = json.Unmarshal([]byte(resp.String()), &object)
 
 	if err != nil {
-		return &object, errors.OfType(errors.OkdpServer).
+		return &object, servererrors.OfType(servererrors.OkdpServer).
 			GenericError(http.StatusUnprocessableEntity, "Unable to process kad response, reason: %+v", err)
 	}
 
 	return &object, nil
 }
 
-func invalidInstanceError(provided string) *errors.ServerError {
-	instances := utils.Map(ListInstances(), func(k config.KadInstance) string { return k.ID })
-	return errors.OfType(errors.OkdpServer).
+func invalidInstanceError(provided string) *servererrors.ServerError {
+	instances := utils.Map(ListInstances(), func(k model.KadInstance) string { return k.ID })
+	return servererrors.OfType(servererrors.OkdpServer).
 		NotFoundError("kad instance with id %s not found, valid ones: %+v", provided, instances)
 }

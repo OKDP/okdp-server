@@ -1,0 +1,28 @@
+get:
+  summary: Get a catalog by id
+  description: |
+    Get a catalog by id
+  tags:
+    - catalogs
+  operationId: getCatalog
+  parameters:
+    - in: path
+      name: catalogId
+      schema:
+        type: string
+      required: true
+      description: Catalog ID
+  responses:
+    '200':
+      description: Catalog information
+      content:
+        application/json:
+          schema:
+            $ref: '../../definition/Catalog.yaml'
+    default:
+      description: Server error
+      content:
+        application/json:
+          schema:
+            $ref: '../../definition/ServerError.yaml'
+

@@ -24,9 +24,10 @@ kubectl port-forward svc/kad-webserver 6553:6553
 
 ### Start
 
+Start docker compose using your robot account token to access private registries:
 ```shell
 docker-compose rm -f
-docker-compose up --build
+OCI_USERNAME=okdp+okdp_quay_robot OCI_PASSWORD=****** docker-compose up --build
 ```
 
 Open swagger UI at: http://localhost:8092/

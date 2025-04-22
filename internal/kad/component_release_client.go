@@ -23,10 +23,10 @@ import (
 	"github.com/go-resty/resty/v2"
 	"github.com/goccy/go-yaml"
 	"github.com/okdp/okdp-server/internal/constants"
-	"github.com/okdp/okdp-server/internal/errors"
 	"github.com/okdp/okdp-server/internal/kad/client"
 	log "github.com/okdp/okdp-server/internal/logging"
 	"github.com/okdp/okdp-server/internal/model"
+	"github.com/okdp/okdp-server/internal/servererrors"
 )
 
 type ComponentReleaseClient struct {
@@ -39,7 +39,7 @@ func NewComponentReleaseClient() *ComponentReleaseClient {
 	}
 }
 
-func (c ComponentReleaseClient) Get(kadInstanceID string, name string, catalog *string) (*model.ComponentReleaseResponse, *errors.ServerError) {
+func (c ComponentReleaseClient) Get(kadInstanceID string, name string, catalog *string) (*model.ComponentReleaseResponse, *servererrors.ServerError) {
 	kadClient, err := c.KAD.ID(kadInstanceID)
 	if err != nil {
 		return nil, err
@@ -51,7 +51,7 @@ func (c ComponentReleaseClient) Get(kadInstanceID string, name string, catalog *
 	return client.DoGet[model.ComponentReleaseResponse](req)
 }
 
-func (c ComponentReleaseClient) List(kadInstanceID string, catalog *string) (*model.ComponentReleasesResponse, *errors.ServerError) {
+func (c ComponentReleaseClient) List(kadInstanceID string, catalog *string) (*model.ComponentReleasesResponse, *servererrors.ServerError) {
 	kadClient, err := c.KAD.ID(kadInstanceID)
 	if err != nil {
 		return nil, err
@@ -65,7 +65,7 @@ func (c ComponentReleaseClient) List(kadInstanceID string, catalog *string) (*mo
 
 func (c ComponentReleaseClient) UploadAsYaml(kadInstanceID string, name string,
 	componentReleaseRequest model.ComponentReleaseRequest,
-	commitData map[string]string) (*model.GitCommit, *errors.ServerError) {
+	commitData map[string]string) (*model.GitCommit, *servererrors.ServerError) {
 	kadClient, err := c.KAD.ID(kadInstanceID)
 	if err != nil {
 		return nil, err
@@ -78,7 +78,7 @@ func (c ComponentReleaseClient) UploadAsYaml(kadInstanceID string, name string,
 	componentReleasesYAML, err2 := yaml.Marshal(result)
 	if err2 != nil {
 		log.Error("Error marshaling ComponentReleases to YAML: %v", err)
-		return nil, errors.OfType(errors.OkdpServer).
+		return nil, servererrors.OfType(servererrors.OkdpServer).
 			GenericError(http.StatusBadRequest, "Unable to parse json to yaml: %+v", err2)
 	}
 
