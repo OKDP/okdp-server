@@ -133,25 +133,4 @@ catalog:
     packages:
       - name: stack1
 
-kad:
-  - id: sandbox
-    name: Sandbox de idir
-    apiUrl: https://host.docker.internal:6553
-    authBearer: 4Ys3brdqnD5LVjf6hLcQsSQbHWLh5asJ
-    insecureSkipVerify: true
-  - id: sandbox2
-    name: Sandbox2 de idir
-    apiUrl: https://host.docker.internal:6553
-    authBearer: 4Ys3brdqnD5LVjf6hLcQsSQbHWLh5asJ
-    insecureSkipVerify: true
-  - id: sandbox3
-    name: Sandbox3 de idir
-    apiUrl: https://host.docker.internal:6553
-    authBearer: 4Ys3brdqnD5LVjf6hLcQsSQbHWLh5asJ
-    insecureSkipVerify: true
-  - id: sandbox4
-    name: Sandbox4 de idir
-    apiUrl: https://host.docker.internal:6553
-    authBearer: 4Ys3brdqnD5LVjf6hLcQsSQbHWLh5asJ
-    insecureSkipVerify: true
 
