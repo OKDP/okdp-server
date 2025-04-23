@@ -196,19 +196,6 @@ func Test_LoadConfig_Catalog(t *testing.T) {
 	assert.False(t, catalog.IsAuthenticated(), fmt.Sprintf("The catalog '%s' should not be authenticated", catalog.ID))
 }
 
-func Test_LoadConfig_Kad(t *testing.T) {
-	// Given
-	viper.Set("config", "testdata/application.yaml")
-	// When
-	KadInstances := GetAppConfig().Kad
-	// Then
-	assert.Equal(t, "sandbox", KadInstances[0].ID, "Id")
-	assert.Equal(t, "Sandbox de idir", KadInstances[0].Name, "Name")
-	assert.Equal(t, "https://host.docker.internal:6553/api/kad/v1", KadInstances[0].APIURL, "ApiUrl")
-	assert.Equal(t, "JUDtoP55C2dLfeaXqSbehhKKRdmAWTfj", KadInstances[0].AuthBearer, "AuthBearer")
-	assert.True(t, KadInstances[0].InsecureSkipVerify, "InsecureSkipVerify should be true")
-}
-
 func Test_LoadConfig_ConfigFileNotFound(t *testing.T) {
 	defer func() {
 		if r := recover(); r != nil {

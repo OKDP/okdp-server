@@ -74,13 +74,6 @@ swagger:
   security:
     - oauth2: [openid, email, profile, roles]
 
-kad:
-  - id: sandbox
-    name: Sandbox de idir
-    apiUrl: https://host.docker.internal:6553/api/kad/v1
-    authBearer: JUDtoP55C2dLfeaXqSbehhKKRdmAWTfj
-    insecureSkipVerify: true
-
 catalog:
   - id: infra01
     name: infra01 catalog

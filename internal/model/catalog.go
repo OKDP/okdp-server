@@ -39,4 +39,3 @@ func (c Catalog) RepoHost() string {
 func (c Catalog) IsAuthenticated() bool {
 	return c.Credentials != nil
 }
-

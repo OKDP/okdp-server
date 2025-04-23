@@ -26,28 +26,6 @@ tags:
     description: Catalogs
     externalDocs:
       url: https://github.com/okdp/okdp-server
-
-
-  - name: kad
-    description: Kad instances configuration
-    externalDocs:
-      url: https://github.com/okdp/okdp-server
-  - name: services
-    description: Services
-    externalDocs:
-      url: https://github.com/okdp/okdp-server
-  - name: templatereleases
-    description: Template releases
-    externalDocs:
-      url: https://github.com/okdp/okdp-server
-  - name: componentreleases
-    description: Component releases
-    externalDocs:
-      url: https://github.com/okdp/okdp-server
-  - name: components
-    description: Components
-    externalDocs:
-      url: https://github.com/okdp/okdp-server
       
 paths:
   ### Users
@@ -69,31 +47,6 @@ paths:
   /catalogs/{catalogId}/packages/{name}/versions/{version}/schema:
     $ref: ./paths/catalogs/package-schema.yaml
 
-  ###### Remove all this 
-  ### KAD instances
-  /kad:
-    $ref: ./paths/kad/kad-instance.yaml
-  /kad/{kadInstanceId}:
-    $ref: ./paths/kad/kad-instance-by-name.yaml
-  ### Services API
-  /kad/{kadInstanceId}/services:
-    $ref: ./paths/services/service.yaml
-  ### KAD Component Releases API
-  /kad/{kadInstanceId}/componentreleases:
-    $ref: ./paths/componentreleases/component-releases.yaml
-  /kad/{kadInstanceId}/componentreleases/{name}:
-    $ref: ./paths/componentreleases/component-releases-by-name.yaml
-  ### KAD Template Releases API
-  /kad/{kadInstanceId}/templatereleases:
-    $ref: ./paths/templatereleases/template-releases.yaml
-  /kad/{kadInstanceId}/templatereleases/{name}:
-    $ref: ./paths/templatereleases/template-releases-by-name.yaml
-  ### KAD Components API
-  /kad/{kadInstanceId}/components:
-    $ref: ./paths/components/component.yaml
-  /kad/{kadInstanceId}/components/{name}:
-    $ref: ./paths/components/component-by-name.yaml
-
 components:
   schemas:
     UserProfile:
@@ -102,28 +55,7 @@ components:
       $ref: './definition/Catalog.yaml'
     Package:
       $ref: './definition/Package.yaml'
-
-
-
-      
-    TemplateRelease:
-      $ref: './definition/TemplateRelease.yaml'
-    ComponentReleasePayload:
-      $ref: './definition/ComponentReleasePayload.yaml'
-    ComponentReleaseRequest:
-      $ref: './definition/ComponentReleaseRequest.yaml'
-    ComponentReleaseResponse:
-      $ref: './definition/ComponentReleaseResponse.yaml'
-    Component:
-      $ref: './definition/Component.yaml'
-    Service:
-      $ref: './definition/Service.yaml'
-    FlatComponent:
-      $ref: './definition/FlatComponent.yaml'
-    KadInstance:
-      $ref: './definition/KadInstance.yaml'
     GitCommit:
       $ref: './definition/GitCommit.yaml'
     ServerError:
       $ref: './definition/ServerError.yaml'
-

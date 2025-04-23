@@ -28,12 +28,11 @@ import (
 
 // Application configuration
 type ApplicationConfig struct {
-	Server   Server              `mapstructure:"server"`
-	Security Security            `mapstructure:"security"`
-	Logging  Logging             `mapstructure:"logging"`
-	Swagger  Swagger             `mapstructure:"swagger"`
-	Kad      []model.KadInstance `mapstructure:"kad"`
-	Catalogs []*model.Catalog    `mapstructure:"catalog"`
+	Server   Server           `mapstructure:"server"`
+	Security Security         `mapstructure:"security"`
+	Logging  Logging          `mapstructure:"logging"`
+	Swagger  Swagger          `mapstructure:"swagger"`
+	Catalogs []*model.Catalog `mapstructure:"catalog"`
 }
 
 // Server configuration

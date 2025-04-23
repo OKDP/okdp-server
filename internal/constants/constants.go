@@ -32,14 +32,4 @@ const (
 	SwaggerAPIDocsURI = OkdpServerBaseURL + "/api-docs"
 	HealthzURI        = "/healthz"
 	ReadinessURI      = "/readiness"
-	// ComponentURL is the kad components URI
-	ComponentURL = "/api/kad/v1/mycluster/components"
-	// ComponentURL is the kad component releases URI
-	ComponentReleaseURL = "/api/kad/v1/mycluster/component-releases"
-	// ComponentURL is the kad template releases URI
-	TemplateReleaseURL = "/api/kad/v1/mycluster/template-releases"
-	// ComponentURL is the kad catalogs URI
-	CatalogURL = "/api/kad/v1/mycluster/catalogs"
-	// GitURL is the kad GIT URI
-	GitURL = "/api/git/v1/mycluster"
 )

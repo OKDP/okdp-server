@@ -2,18 +2,6 @@ p, role:viewers, /api/v1/users/myprofile, *
 p, role:viewers, /api/v1/catalogs, *
 p, role:viewers, /api/v1/catalogs/*, *
 
-
-p, role:viewers, /api/v1/kad, *
-p, role:viewers, /api/v1/kad/*/services, *
-p, role:viewers, /api/v1/kad/*/catalog, *
-p, role:viewers, /api/v1/kad/*/catalog/*, *
-p, role:viewers, /api/v1/kad/*/componentreleases, *
-p, role:viewers, /api/v1/kad/*/componentreleases/*, *
-p, role:viewers, /api/v1/kad/*/templatereleases, *
-p, role:viewers, /api/v1/kad/*/templatereleases/*, *
-p, role:viewers, /api/v1/kad/*/components, *
-p, role:viewers, /api/v1/kad/*/components/*, *
-
 g, role:admins, role:developers
 g, role:developers, role:viewers
 

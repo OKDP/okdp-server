@@ -13,7 +13,6 @@ const (
 	// Error types
 	OkdpServer = "okdp_server"
 	Registry   = "registry"
-	Kad        = "kad"
 )
 
 func OfType(errorType string) *ServerError {

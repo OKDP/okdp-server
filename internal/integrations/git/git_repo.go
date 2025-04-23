@@ -1,5 +1,5 @@
 /*
- *    Copyright 2024 okdp.io
+ *    Copyright 2025 okdp.io
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -14,10 +14,4 @@
  *    limitations under the License.
  */
 
-package model
-
-import (
-	"github.com/okdp/okdp-server/api/openapi/v3/_api"
-)
-
-type KadInstance = _api.KadInstance
+package git
