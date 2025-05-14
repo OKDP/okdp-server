@@ -19,9 +19,12 @@ package controllers
 import (
 	"github.com/gin-gonic/gin"
 	_catalog "github.com/okdp/okdp-server/api/openapi/v3/_api/catalogs"
+	_cluster "github.com/okdp/okdp-server/api/openapi/v3/_api/clusters"
+	_k8s "github.com/okdp/okdp-server/api/openapi/v3/_api/k8s"
+	_repositories "github.com/okdp/okdp-server/api/openapi/v3/_api/repositories"
 	_user "github.com/okdp/okdp-server/api/openapi/v3/_api/users"
+	"github.com/okdp/okdp-server/internal/common/constants"
 	"github.com/okdp/okdp-server/internal/config"
-	"github.com/okdp/okdp-server/internal/constants"
 )
 
 type Router struct {
@@ -34,7 +37,10 @@ type Group struct {
 
 func (g *Group) RegisterControllers() {
 	_user.RegisterHandlers(g, UserProfileController())
+	_cluster.RegisterHandlers(g, ClusterController())
 	_catalog.RegisterHandlers(g, CatalogController())
+	_repositories.RegisterHandlers(g, GitRepoController())
+	_k8s.RegisterHandlers(g, KuboCDController())
 }
 
 func (r *Router) RegisterSwaggerAPIDoc(swaggerConf config.Swagger) {

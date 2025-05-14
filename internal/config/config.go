@@ -33,6 +33,7 @@ type ApplicationConfig struct {
 	Logging  Logging          `mapstructure:"logging"`
 	Swagger  Swagger          `mapstructure:"swagger"`
 	Catalogs []*model.Catalog `mapstructure:"catalog"`
+	Clusters []*model.Cluster `yaml:"clusters"`
 }
 
 // Server configuration

@@ -20,4 +20,9 @@ import (
 	"github.com/okdp/okdp-server/api/openapi/v3/_api"
 )
 
-type GitCommit _api.GitCommit
+type Cluster _api.Cluster
+
+func ClusterNotFoundError(clusterID string) *ServerResponse {
+	return NewServerResponse(OkdpServerResponse).
+		NotFoundError("The cluster with id %s not found.", clusterID)
+}

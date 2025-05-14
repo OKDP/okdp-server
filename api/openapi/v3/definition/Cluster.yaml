@@ -1,0 +1,71 @@
+type: object
+xml:
+  name: Cluster
+required:
+  - id
+  - env
+  - k8s
+properties:
+  id:
+    type: string
+    x-go-name: ID
+  env:
+    type: string
+  auth:
+    type: object
+    oneOf:
+      - required: [kubeconfig]
+      - required: [certificate]
+      - required: [bearer]
+    properties:
+      kubeconfig:
+        type: object
+        required:
+          - apiServer
+          - path
+          - context
+          - insecureSkipTlsVerify
+        properties:
+          apiServer:
+            type: string
+            format: uri
+            x-go-name: APIServer
+          path:
+            type: string
+          context:
+            type: string
+          insecureSkipTlsVerify:
+            type: boolean
+      certificate:
+        type: object
+        required:
+          - apiServer
+          - clientKey
+          - clientCert
+          - caCert
+        properties:
+          apiServer:
+            type: string
+            format: uri
+            x-go-name: APIServer
+          clientKey:
+            type: string
+          clientCert:
+            type: string
+          caCert:
+            type: string
+            x-go-name: CACert
+      bearer:
+        type: object
+        required:
+          - apiServer
+          - bearerToken
+        properties:
+          apiServer:
+            type: string
+            format: uri
+            x-go-name: APIServer
+          bearerToken:
+            type: string
+
+

@@ -1,0 +1,28 @@
+get:
+  summary: Get a kubernetes cluster by id
+  description: |
+    Get a kubernetes cluster by id
+  tags:
+    - clusters
+  operationId: GetCluster
+  parameters:
+    - in: path
+      name: clusterId
+      schema:
+        type: string
+      required: true
+      description: Cluster ID
+  responses:
+    '200':
+      description: Cluster information
+      content:
+        application/json:
+          schema:
+            $ref: '../../definition/Cluster.yaml'
+    default:
+      description: Server error
+      content:
+        application/json:
+          schema:
+            $ref: '../../definition/ServerResponse.yaml'
+

@@ -2,6 +2,10 @@ p, role:viewers, /api/v1/users/myprofile, *
 p, role:viewers, /api/v1/catalogs, *
 p, role:viewers, /api/v1/catalogs/*, *
 
+p, role:viewers, /api/v1/clusters, *
+p, role:viewers, /api/v1/clusters/*/gitrepos, *
+p, role:viewers, /api/v1/clusters/*/gitrepos/*, *
+
 g, role:admins, role:developers
 g, role:developers, role:viewers
 

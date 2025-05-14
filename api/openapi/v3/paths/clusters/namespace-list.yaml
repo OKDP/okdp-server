@@ -1,0 +1,29 @@
+get:
+  summary: List all kubernetes namespaces
+  description: |
+    List all kubernetes namespaces
+  tags:
+    - clusters
+  operationId: ListNamespaces
+  parameters:
+    - in: path
+      name: clusterId
+      schema:
+        type: string
+      required: true
+      description: Cluster ID
+  responses:
+    '200':
+      description: List of the namespaces
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              type: string
+    default:
+      description: Server error
+      content:
+        application/json:
+          schema:
+            $ref: '../../definition/ServerResponse.yaml'

@@ -1,0 +1,23 @@
+get:
+  summary: List all kubernetes clusters
+  description: |
+    List all kubernetes clusters
+  tags:
+    - clusters
+  operationId: ListClusters
+  responses:
+    '200':
+      description: List of the clusters
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '../../definition/Cluster.yaml'
+    default:
+      description: Server error
+      content:
+        application/json:
+          schema:
+            $ref: '../../definition/ServerResponse.yaml'
+

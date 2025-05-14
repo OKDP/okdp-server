@@ -196,6 +196,31 @@ func Test_LoadConfig_Catalog(t *testing.T) {
 	assert.False(t, catalog.IsAuthenticated(), fmt.Sprintf("The catalog '%s' should not be authenticated", catalog.ID))
 }
 
+func Test_LoadConfig_Clusters(t *testing.T) {
+	// Given
+	viper.Set("config", "testdata/application.yaml")
+	// When
+	clusters := GetAppConfig().Clusters
+	// Then
+	require.NotEmpty(t, clusters, "K8S clusters should not be empty")
+	cluster := clusters[0]
+	assert.Equal(t, "kubo03dev", cluster.ID, "ID")
+	assert.Equal(t, "dev", cluster.Env, "Env")
+	assert.Equal(t, "/path/to/kubeconfig", cluster.Auth.Kubeconfig.Path, "cluster.Auth.Kubeconfig")
+	assert.Equal(t, "dev-context", cluster.Auth.Kubeconfig.Context, "cluster.Auth.Context")
+	assert.Equal(t, "https://host.docker.internal:56660", cluster.Auth.Kubeconfig.APIServer, "cluster.Auth.Kubeconfig.APIServer")
+	assert.True(t, cluster.Auth.Kubeconfig.InsecureSkipTlsVerify, "cluster.Auth.Kubeconfig.InsecureSkipTlsVerify")
+
+	assert.Equal(t, "https://k8s-api-server-url:6443", cluster.Auth.Certificate.APIServer, "cluster.Auth.Certificate.ApiServer")
+	assert.Equal(t, "/path/to/client-key.pem", cluster.Auth.Certificate.ClientKey, "cluster.Auth.Certificate.ClientKey")
+	assert.Equal(t, "/path/to/client-cert.pem", cluster.Auth.Certificate.ClientCert, "cluster.Auth.Certificate.ClientCert")
+	assert.Equal(t, "/path/to/ca-cert.pem", cluster.Auth.Certificate.CACert, "cluster.Auth.Certificate.CaCert")
+
+	assert.Equal(t, "https://k8s-api-server-url:6443", cluster.Auth.Bearer.APIServer, "cluster.Auth.Bearer.ApiServer")
+	assert.Equal(t, "$(BEARER_TOKEN)", cluster.Auth.Bearer.BearerToken, "cluster.Auth.Bearer.BearerToken")
+
+}
+
 func Test_LoadConfig_ConfigFileNotFound(t *testing.T) {
 	defer func() {
 		if r := recover(); r != nil {
