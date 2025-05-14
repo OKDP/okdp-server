@@ -1,5 +1,5 @@
 /*
- *    Copyright 2025 okdp.io
+ *    Copyright 2024 okdp.io
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,22 +16,24 @@
 
 package utils
 
-import (
-	"os"
-	"strings"
-)
-
-// ResolveEnv reads an environment variable. If the value is a placeholder like $(VAR_NAME),
-// it will replace it with the actual value from the environment variable.
-// If the value is not a placeholder, it returns the value as is.
-func ResolveEnv(key string) string {
-	if strings.HasPrefix(key, "$(") && strings.HasSuffix(key, ")") {
-		varName := strings.TrimPrefix(key, "$(")
-		varName = strings.TrimSuffix(varName, ")")
-		if value, exists := os.LookupEnv(varName); exists {
-			return value
-		}
-		return ""
+func OrFalse(b *bool) bool {
+	if b != nil {
+		return *b
 	}
-	return key
+	return false
+}
+
+// DefaultIfEmpty returns `value` if it is not an empty string,
+// otherwise it returns `defaultValue`.
+// Useful for setting defaults in configurations.
+//
+// Example:
+//
+//	DefaultIfEmpty("", "default") // returns "default"
+//	DefaultIfEmpty("foo", "default") // returns "foo"
+func DefaultIfEmpty(value, defaultValue string) string {
+	if value != "" {
+		return value
+	}
+	return defaultValue
 }

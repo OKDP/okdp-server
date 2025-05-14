@@ -17,18 +17,17 @@
 package services
 
 import (
-	"github.com/okdp/okdp-server/internal/integrations/registry"
+	"github.com/okdp/okdp-server/internal/integrations/oci"
 	"github.com/okdp/okdp-server/internal/model"
-	"github.com/okdp/okdp-server/internal/servererrors"
 )
 
 type CatalogService struct {
-	catalog *registry.RepoCatalog
+	catalog *oci.RepoCatalog
 }
 
 func NewCatalogService() *CatalogService {
 	return &CatalogService{
-		catalog: registry.NewRepoCatalog(),
+		catalog: oci.NewRepoCatalog(),
 	}
 }
 
@@ -36,26 +35,18 @@ func (s CatalogService) ListCatalogs() []*model.Catalog {
 	return s.catalog.ListCatalogs()
 }
 
-func (s CatalogService) GetCatalog(catalogID string) (*model.Catalog, *servererrors.ServerError) {
+func (s CatalogService) GetCatalog(catalogID string) (*model.Catalog, *model.ServerResponse) {
 	return s.catalog.GetCatalog(catalogID)
 }
 
-func (s CatalogService) GetPackages(catalogID string) ([]*model.Package, *servererrors.ServerError) {
+func (s CatalogService) GetPackages(catalogID string) ([]*model.Package, *model.ServerResponse) {
 	return s.catalog.GetPackages(catalogID)
 }
 
-func (s CatalogService) GetPackageByName(catalogID string, name string) (*model.Package, *servererrors.ServerError) {
-	return s.catalog.GetPackageByName(catalogID, name)
+func (s CatalogService) GetPackage(catalogID string, name string) (*model.Package, *model.ServerResponse) {
+	return s.catalog.GetPackage(catalogID, name)
 }
 
-func (s CatalogService) GetPackageDefinition(catalogID string, name string, version string) (map[string]interface{}, *servererrors.ServerError) {
+func (s CatalogService) GetPackageDefinition(catalogID string, name string, version string) (map[string]interface{}, *model.ServerResponse) {
 	return s.catalog.GetPackageDefinition(catalogID, name, version)
 }
-
-// func (s CatalogService) GetDefinition(name string) (*model.Catalog, *errors.ServerError) {
-// 	return s.catalog.GetDefinition(name)
-// }
-
-// func (s CatalogService) GetTags(name string) (*model.Catalog, *errors.ServerError) {
-// 	return s.catalog.GetTags(name)
-// }

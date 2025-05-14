@@ -20,7 +20,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	log "github.com/okdp/okdp-server/internal/logging"
+	log "github.com/okdp/okdp-server/internal/common/logging"
 	"github.com/okdp/okdp-server/internal/services"
 )
 
@@ -49,7 +49,7 @@ func (r ICatalogController) GetCatalog(c *gin.Context, catalogID string) {
 	c.JSON(http.StatusOK, catalog)
 }
 
-func (r ICatalogController) GetPackages(c *gin.Context, catalogID string) {
+func (r ICatalogController) ListPackages(c *gin.Context, catalogID string) {
 	packages, err := r.catalogService.GetPackages(catalogID)
 	if err != nil {
 		log.Error("Unable to find the packages with Catalog ID '%s', details: %+v", catalogID, err)
@@ -59,8 +59,8 @@ func (r ICatalogController) GetPackages(c *gin.Context, catalogID string) {
 	c.JSON(http.StatusOK, packages)
 }
 
-func (r ICatalogController) GetPackageByName(c *gin.Context, catalogID string, name string) {
-	result, err := r.catalogService.GetPackageByName(catalogID, name)
+func (r ICatalogController) GetPackage(c *gin.Context, catalogID string, name string) {
+	result, err := r.catalogService.GetPackage(catalogID, name)
 	if err != nil {
 		log.Error("Unable to find the package '%s' with Catalog ID '%s', details: %+v", name, catalogID, err)
 		c.JSON(err.Status, err)
@@ -69,8 +69,8 @@ func (r ICatalogController) GetPackageByName(c *gin.Context, catalogID string, n
 	c.JSON(http.StatusOK, result)
 }
 
-func (r ICatalogController) GetPackageVersionsByName(c *gin.Context, catalogID string, name string) {
-	r.GetPackageByName(c, catalogID, name)
+func (r ICatalogController) GetPackageVersions(c *gin.Context, catalogID string, name string) {
+	r.GetPackage(c, catalogID, name)
 }
 
 func (r ICatalogController) GetPackageDefinition(c *gin.Context, catalogID string, name string, version string) {

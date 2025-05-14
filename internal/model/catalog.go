@@ -39,3 +39,13 @@ func (c Catalog) RepoHost() string {
 func (c Catalog) IsAuthenticated() bool {
 	return c.Credentials != nil
 }
+
+func CatalogNotFoundError(catalogID string) *ServerResponse {
+	return NewServerResponse(OkdpServerResponse).
+		NotFoundError("The catalog with id %s not found.", catalogID)
+}
+
+func CatalogPackageNotFoundError(catalogID string, packageName string) *ServerResponse {
+	return NewServerResponse(OkdpServerResponse).
+		NotFoundError("The package %s not found in the catalog ID %s.", packageName, catalogID)
+}

@@ -4,7 +4,7 @@ get:
     Get package by catalog id and package name
   tags:
     - catalogs
-  operationId: getPackageByName
+  operationId: GetPackage
   parameters:
     - in: path
       name: catalogId
@@ -30,5 +30,5 @@ get:
       content:
         application/json:
           schema:
-            $ref: '../../definition/ServerError.yaml'
+            $ref: '../../definition/ServerResponse.yaml'
 

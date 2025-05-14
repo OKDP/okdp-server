@@ -19,9 +19,9 @@ package cmd
 import (
 	"os"
 
+	"github.com/okdp/okdp-server/internal/common/constants"
+	log "github.com/okdp/okdp-server/internal/common/logging"
 	"github.com/okdp/okdp-server/internal/config"
-	"github.com/okdp/okdp-server/internal/constants"
-	log "github.com/okdp/okdp-server/internal/logging"
 	"github.com/okdp/okdp-server/internal/server"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"

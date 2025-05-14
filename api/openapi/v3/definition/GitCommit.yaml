@@ -1,4 +1,6 @@
 type: object
+xml:
+  name: GitCommit
 properties:
   committerName:
     type: string

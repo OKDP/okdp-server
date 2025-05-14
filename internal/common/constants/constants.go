@@ -32,4 +32,6 @@ const (
 	SwaggerAPIDocsURI = OkdpServerBaseURL + "/api-docs"
 	HealthzURI        = "/healthz"
 	ReadinessURI      = "/readiness"
+	All               = "All"
+	GitRepository     = "GitRepository"
 )

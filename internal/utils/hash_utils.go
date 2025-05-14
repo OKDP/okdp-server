@@ -1,5 +1,5 @@
 /*
- *    Copyright 2025 okdp.io
+ *    Copyright 2024 okdp.io
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -17,21 +17,14 @@
 package utils
 
 import (
-	"os"
+	"crypto/sha1"
+	"encoding/hex"
 	"strings"
 )
 
-// ResolveEnv reads an environment variable. If the value is a placeholder like $(VAR_NAME),
-// it will replace it with the actual value from the environment variable.
-// If the value is not a placeholder, it returns the value as is.
-func ResolveEnv(key string) string {
-	if strings.HasPrefix(key, "$(") && strings.HasSuffix(key, ")") {
-		varName := strings.TrimPrefix(key, "$(")
-		varName = strings.TrimSuffix(varName, ")")
-		if value, exists := os.LookupEnv(varName); exists {
-			return value
-		}
-		return ""
-	}
-	return key
+// FromString generates a short deterministic ID from a string
+func FromString(input string) string {
+	normalized := strings.TrimSpace(input)
+	hash := sha1.Sum([]byte(normalized))
+	return hex.EncodeToString(hash[:6]) // 6 bytes -> 12 hex chars
 }

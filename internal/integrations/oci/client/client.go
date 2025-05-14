@@ -33,10 +33,9 @@ import (
 	"oras.land/oras-go/v2/registry/remote/errcode"
 	"oras.land/oras-go/v2/registry/remote/retry"
 
+	log "github.com/okdp/okdp-server/internal/common/logging"
 	"github.com/okdp/okdp-server/internal/config"
-	log "github.com/okdp/okdp-server/internal/logging"
 	"github.com/okdp/okdp-server/internal/model"
-	"github.com/okdp/okdp-server/internal/servererrors"
 	"github.com/okdp/okdp-server/internal/utils"
 )
 
@@ -59,41 +58,24 @@ func GetClients() *RepositoryClients {
 		catalogs := config.GetAppConfig().Catalogs
 		for _, catalog := range catalogs {
 			log.Info("Container Registry configuration: %+v", catalog)
-
-			var creds auth.CredentialFunc = func(_ context.Context, _ string) (auth.Credential, error) {
-				return auth.EmptyCredential, nil
-			}
-
-			if catalog.IsAuthenticated() {
-				log.Info("The catalog ID '%s' is authenticated", catalog.ID)
-				username := utils.GetEnv(*catalog.Credentials.RobotAccountName)
-				password := utils.GetEnv(*catalog.Credentials.RobotAccountToken)
-				if username == "" || password == "" {
-					log.Fatal("Robot account name and robot account token: %s/%s are empty for catalog %s",
-						*catalog.Credentials.RobotAccountName, *catalog.Credentials.RobotAccountToken, catalog.ID)
-				}
-
-				creds = auth.StaticCredential(catalog.RepoHost(), auth.Credential{
-					Username: username,
-					Password: password,
-				})
-			} else {
-				log.Info("The catalog ID '%s' is not authenticated", catalog.ID)
-			}
-
-			authClient := &auth.Client{
-				Client:     retry.DefaultClient,
-				Cache:      auth.NewCache(),
-				Credential: creds,
-			}
-
 			for _, p := range catalog.Packages {
 				repo, err := remote.NewRepository(strings.TrimSuffix(catalog.RepoURL, "/") + "/" + p.Name)
 				if err != nil {
 					log.Fatal("Failed to create a client to the remote repository %s: %v", catalog.RepoURL, err)
 				}
-				repo.Client = authClient
-				clients[repoClientKey(catalog.ID, p.Name)] = &RepositoryClient{repo}
+
+				creds, err := getOCIRepoCredentials(catalog)
+
+				if err != nil {
+					log.Fatal("Unable to get login and password from dockerconfigjson for the repo: %s/%s", catalog.ID, catalog.RepoURL)
+				}
+
+				repo.Client = &auth.Client{
+					Client:     retry.DefaultClient,
+					Cache:      auth.NewCache(),
+					Credential: creds,
+				}
+				clients[utils.MapKey(catalog.ID, p.Name)] = &RepositoryClient{repo}
 			}
 		}
 		instance = &RepositoryClients{clients: clients}
@@ -109,17 +91,17 @@ func ListCatalogs() []*model.Catalog {
 	return catalogs
 }
 
-func GetCatalog(catalogID string) (*model.Catalog, *servererrors.ServerError) {
+func GetCatalog(catalogID string) (*model.Catalog, *model.ServerResponse) {
 	catalogs := config.GetAppConfig().Catalogs
 	for _, catalog := range catalogs {
 		if strings.EqualFold(catalog.ID, catalogID) {
 			return catalog, nil
 		}
 	}
-	return nil, CatalogNotFoundError(catalogID)
+	return nil, model.CatalogNotFoundError(catalogID)
 }
 
-func GetPackages(catalogID string) ([]*model.Package, *servererrors.ServerError) {
+func GetPackages(catalogID string) ([]*model.Package, *model.ServerResponse) {
 	catalog, err := GetCatalog(catalogID)
 	if err != nil {
 		return nil, err
@@ -135,7 +117,7 @@ func GetPackages(catalogID string) ([]*model.Package, *servererrors.ServerError)
 	return packages, nil
 }
 
-func GetPackageByName(catalogID string, name string) (*model.Package, *servererrors.ServerError) {
+func GetPackage(catalogID string, name string) (*model.Package, *model.ServerResponse) {
 	catalog, err := GetCatalog(catalogID)
 	if err != nil {
 		return nil, err
@@ -145,10 +127,10 @@ func GetPackageByName(catalogID string, name string) (*model.Package, *servererr
 			return getPackage(catalogID, p.Name)
 		}
 	}
-	return nil, CatalogPackageNotFoundError(catalogID, name)
+	return nil, model.CatalogPackageNotFoundError(catalogID, name)
 }
 
-func GetPackageDefinition(catalogID string, name string, version string) (map[string]interface{}, *servererrors.ServerError) {
+func GetPackageDefinition(catalogID string, name string, version string) (map[string]interface{}, *model.ServerResponse) {
 	repo, err := getRepoClient(catalogID, name)
 	if err != nil {
 		return nil, err
@@ -156,7 +138,7 @@ func GetPackageDefinition(catalogID string, name string, version string) (map[st
 	return repo.fetchDefinition(version)
 }
 
-func getPackage(catalogID string, name string) (*model.Package, *servererrors.ServerError) {
+func getPackage(catalogID string, name string) (*model.Package, *model.ServerResponse) {
 	repo, err := getRepoClient(catalogID, name)
 	if err != nil {
 		return nil, err
@@ -171,11 +153,11 @@ func getPackage(catalogID string, name string) (*model.Package, *servererrors.Se
 	}, nil
 }
 
-func (r RepositoryClient) listTags() ([]string, *servererrors.ServerError) {
+func (r RepositoryClient) listTags() ([]string, *model.ServerResponse) {
 	ctx := context.Background()
 	var allTags []string
 	var last string
-	var err *servererrors.ServerError
+	var err *model.ServerResponse
 	for {
 		er := r.Tags(ctx, last, func(tags []string) error {
 			if len(tags) == 0 {
@@ -191,9 +173,11 @@ func (r RepositoryClient) listTags() ([]string, *servererrors.ServerError) {
 			if er != io.EOF {
 				var httpErr *errcode.ErrorResponse
 				if errors.As(er, &httpErr) {
-					err = servererrors.OfType(servererrors.Registry).GenericError(httpErr.StatusCode, httpErr.Error())
+					err = model.
+						NewServerResponse(model.RegistryResponse).GenericError(httpErr.StatusCode, httpErr.Error())
 				} else {
-					err = servererrors.OfType(servererrors.Registry).GenericError(statusCode, er.Error())
+					err = model.
+						NewServerResponse(model.RegistryResponse).GenericError(statusCode, er.Error())
 				}
 			}
 			break
@@ -203,53 +187,84 @@ func (r RepositoryClient) listTags() ([]string, *servererrors.ServerError) {
 	return allTags, err
 }
 
-func (r RepositoryClient) fetchDefinition(version string) (map[string]interface{}, *servererrors.ServerError) {
+func (r RepositoryClient) fetchDefinition(version string) (map[string]interface{}, *model.ServerResponse) {
 	ctx := context.Background()
 	// Pull to memory
 	memStore := memory.New()
 	desc, err := oras.Copy(ctx, r.Repository, version, memStore, version, oras.DefaultCopyOptions)
 	if err != nil {
 		log.Error("Failed to copy definition into the memstore: %v", err)
-		return nil, servererrors.OfType(servererrors.OkdpServer).UnprocessableEntity(err.Error())
+		return nil, model.
+			NewServerResponse(model.OkdpServerResponse).UnprocessableEntity(err.Error())
 	}
 
 	// Decode manifest
 	manifestReader, err := memStore.Fetch(ctx, desc)
 	if err != nil {
 		log.Error("Failed to fetch definition from the memstore: %v", err)
-		return nil, servererrors.OfType(servererrors.OkdpServer).UnprocessableEntity(err.Error())
+		return nil, model.
+			NewServerResponse(model.OkdpServerResponse).UnprocessableEntity(err.Error())
 	}
 	defer manifestReader.Close()
 
 	var manifest ocispec.Manifest
 	if err := json.NewDecoder(manifestReader).Decode(&manifest); err != nil {
 		log.Error("Failed to decode definition: %v", err)
-		return nil, servererrors.OfType(servererrors.OkdpServer).UnprocessableEntity(err.Error())
+		return nil, model.
+			NewServerResponse(model.OkdpServerResponse).UnprocessableEntity(err.Error())
 	}
 
 	configReader, err := memStore.Fetch(ctx, manifest.Config)
 	if err != nil {
 		log.Error("Failed to fetch the definition content: %v", err)
-		return nil, servererrors.OfType(servererrors.OkdpServer).UnprocessableEntity(err.Error())
+		return nil, model.
+			NewServerResponse(model.OkdpServerResponse).UnprocessableEntity(err.Error())
 	}
 	defer configReader.Close()
 
 	var definition map[string]interface{}
 	if err := json.NewDecoder(configReader).Decode(&definition); err != nil {
 		log.Error("Failed to decode the definition content: %v", err)
-		return nil, servererrors.OfType(servererrors.OkdpServer).UnprocessableEntity(err.Error())
+		return nil, model.
+			NewServerResponse(model.OkdpServerResponse).UnprocessableEntity(err.Error())
 	}
 	return definition, nil
 }
 
-func getRepoClient(catalogID string, packageName string) (*RepositoryClient, *servererrors.ServerError) {
-	instance, found := instance.clients[repoClientKey(catalogID, packageName)]
+func getRepoClient(catalogID string, packageName string) (*RepositoryClient, *model.ServerResponse) {
+	instance, found := instance.clients[utils.MapKey(catalogID, packageName)]
 	if !found {
-		return nil, CatalogPackageNotFoundError(catalogID, packageName)
+		return nil, model.CatalogPackageNotFoundError(catalogID, packageName)
 	}
 	return instance, nil
 }
 
-func repoClientKey(catalogID string, packageName string) string {
-	return catalogID + packageName
+func getOCIRepoCredentials(catalog *model.Catalog) (auth.CredentialFunc, error) {
+
+	var empty auth.CredentialFunc = func(_ context.Context, _ string) (auth.Credential, error) {
+		return auth.EmptyCredential, nil
+	}
+
+	if !catalog.IsAuthenticated() {
+		return empty, nil
+	}
+
+	login := utils.ResolveEnv(*catalog.Credentials.RobotAccountName)
+	passwd := utils.ResolveEnv(*catalog.Credentials.RobotAccountToken)
+	dockerjson := utils.ResolveEnv(*catalog.Credentials.Dockerconfigjson)
+
+	if login == "" && passwd == "" {
+		if dockerjson == "" {
+			return empty, nil
+		}
+		var err error
+		login, passwd, err = utils.ToLoginPassword(dockerjson)
+		if err != nil {
+			return nil, err
+		}
+	}
+	return auth.StaticCredential(catalog.RepoHost(), auth.Credential{
+		Username: login,
+		Password: passwd,
+	}), nil
 }

@@ -30,3 +30,45 @@ func ArrayNullToEmpty[T any](a []T) []T {
 	}
 	return []T{}
 }
+
+func MapKey(keys ...string) string {
+	var result string
+	for _, key := range keys {
+		result += key
+	}
+	return result
+}
+
+// Filter filters a slice of objects based on a predicate function.
+// It returns a new slice containing only the elements that satisfy the predicate.
+func Filter[T any](objects []T, predicate func(T) bool) []*T {
+	var filtered []*T
+	for _, obj := range objects {
+		if predicate(obj) {
+			filtered = append(filtered, &obj)
+		}
+	}
+	return filtered
+}
+
+// Filter filters a slice of objects based on a predicate function.
+// It returns a new slice containing only the elements that satisfy the predicate.
+func Filter2[T any](objects []*T, predicate func(T) bool) []*T {
+	var filtered []*T
+	for _, obj := range objects {
+		if predicate(*obj) {
+			filtered = append(filtered, obj)
+		}
+	}
+	return filtered
+}
+
+// Contains checks if a given string is in the namespaces slice.
+func Contains(values []string, value string) bool {
+	for _, ns := range values {
+		if ns == value {
+			return true
+		}
+	}
+	return false
+}

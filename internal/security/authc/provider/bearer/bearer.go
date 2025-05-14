@@ -23,11 +23,11 @@ import (
 
 	"github.com/coreos/go-oidc/v3/oidc"
 	"github.com/gin-gonic/gin"
+	"github.com/okdp/okdp-server/internal/common/constants"
+	log "github.com/okdp/okdp-server/internal/common/logging"
 	"github.com/okdp/okdp-server/internal/config"
-	"github.com/okdp/okdp-server/internal/constants"
-	log "github.com/okdp/okdp-server/internal/logging"
-	"github.com/okdp/okdp-server/internal/security/authc/model"
-	"github.com/okdp/okdp-server/internal/servererrors"
+	"github.com/okdp/okdp-server/internal/model"
+	authc "github.com/okdp/okdp-server/internal/security/authc/model"
 	"golang.org/x/net/context"
 )
 
@@ -65,7 +65,7 @@ func (p *Provider) Auth() []gin.HandlerFunc {
 func (p *Provider) authenticate() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var (
-			userInfo model.UserInfo
+			userInfo authc.UserInfo
 		)
 
 		authorization := c.Request.Header.Get("Authorization")
@@ -73,14 +73,16 @@ func (p *Provider) authenticate() gin.HandlerFunc {
 		err := p.verifyAccessToken(accessToken)
 		if err != nil {
 			log.Warn("Failed to verify access Token: %w", err)
-			c.AbortWithStatusJSON(http.StatusUnauthorized, servererrors.OfType(servererrors.OkdpServer).GenericError(http.StatusUnauthorized, "Failed to verify access Token: "+err.Error()))
+			c.AbortWithStatusJSON(http.StatusUnauthorized, model.
+				NewServerResponse(model.OkdpServerResponse).GenericError(http.StatusUnauthorized, "Failed to verify access Token: "+err.Error()))
 			return
 		}
 
 		userInfo, err = p.getUserInfo(accessToken)
 		if err != nil {
 			log.Warn("Unable to get user roles/groups from access token: %w", err)
-			c.AbortWithStatusJSON(http.StatusUnauthorized, servererrors.OfType(servererrors.OkdpServer).GenericError(http.StatusUnauthorized, "Unable to get user roles/groups from access token: "+err.Error()))
+			c.AbortWithStatusJSON(http.StatusUnauthorized, model.
+				NewServerResponse(model.OkdpServerResponse).GenericError(http.StatusUnauthorized, "Unable to get user roles/groups from access token: "+err.Error()))
 			return
 		}
 		log.Debug("Successfully authenticated user : %s", userInfo.AsJSONString())
@@ -101,7 +103,7 @@ func (p *Provider) verifyAccessToken(accessToken string) error {
 	return nil
 }
 
-func (p *Provider) getUserInfo(accessToken string) (model.UserInfo, error) {
-	token := &model.Token{AccessToken: accessToken}
+func (p *Provider) getUserInfo(accessToken string) (authc.UserInfo, error) {
+	token := &authc.Token{AccessToken: accessToken}
 	return token.GetUserInfo(rolesAttributePath, groupsAttributePath)
 }

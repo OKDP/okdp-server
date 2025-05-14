@@ -19,7 +19,11 @@ package utils
 import (
 	"crypto/rand"
 	"encoding/base64"
+	"encoding/json"
+	"errors"
+	"fmt"
 	"io"
+	"strings"
 )
 
 func RandomString() (string, error) {
@@ -28,4 +32,51 @@ func RandomString() (string, error) {
 		return "", err
 	}
 	return base64.RawURLEncoding.EncodeToString(b), nil
+}
+
+type dockerConfig struct {
+	Auths map[string]dockerAuthEntry `json:"auths"`
+}
+
+type dockerAuthEntry struct {
+	Auth string `json:"auth"` // base64("username:password")
+}
+
+// ToLoginPassword decodes a base64-encoded .dockerconfigjson value and extracts the first
+// username and password found in the `auths` section.
+// It returns the username, password, and an error if decoding or parsing fails.
+func ToLoginPassword(encodedDockerJSON string) (string, string, error) {
+	jsonBytes, err := base64.StdEncoding.DecodeString(encodedDockerJSON)
+	if err != nil {
+		return "", "", fmt.Errorf("failed to base64-decode dockerjson: %w", err)
+	}
+
+	var config dockerConfig
+	if err := json.Unmarshal(jsonBytes, &config); err != nil {
+		return "", "", fmt.Errorf("failed to unmarshal docker config json: %w", err)
+	}
+
+	if len(config.Auths) == 0 {
+		return "", "", errors.New("no auth entries found in docker config")
+	}
+
+	for registry, entry := range config.Auths {
+		if entry.Auth == "" {
+			continue
+		}
+
+		decodedAuth, err := base64.StdEncoding.DecodeString(entry.Auth)
+		if err != nil {
+			return "", "", fmt.Errorf("failed to decode auth for registry '%s': %w", registry, err)
+		}
+
+		parts := strings.SplitN(string(decodedAuth), ":", 2)
+		if len(parts) != 2 {
+			return "", "", fmt.Errorf("invalid auth format for registry '%s'", registry)
+		}
+
+		return parts[0], parts[1], nil
+	}
+
+	return "", "", errors.New("no valid auth credentials found")
 }
