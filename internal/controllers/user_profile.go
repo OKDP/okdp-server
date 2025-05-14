@@ -20,8 +20,9 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/okdp/okdp-server/internal/constants"
-	"github.com/okdp/okdp-server/internal/security/authc/model"
+	"github.com/okdp/okdp-server/internal/common/constants"
+	"github.com/okdp/okdp-server/internal/model"
+	authc "github.com/okdp/okdp-server/internal/security/authc/model"
 )
 
 type IUserProfileController struct {
@@ -34,7 +35,24 @@ func UserProfileController() *IUserProfileController {
 func (r IUserProfileController) GetMyProfile(c *gin.Context) {
 
 	if maybeUserInfo, found := c.Get(constants.OAuth2UserInfo); found {
-		c.JSON(http.StatusOK, maybeUserInfo.(*model.UserInfo))
+		c.JSON(http.StatusOK, maybeUserInfo.(*authc.UserInfo))
 	}
 
+}
+
+func GetUserInfo(c *gin.Context) (*authc.UserInfo, *model.ServerResponse) {
+	maybeUserInfo, found := c.Get(constants.OAuth2UserInfo)
+	err := model.
+		NewServerResponse(model.OkdpServerResponse).
+		Unauthorized("Unauthorized")
+	if !found {
+		return nil, err
+	}
+
+	userInfo, ok := maybeUserInfo.(*authc.UserInfo)
+	if !ok {
+		return nil, err
+	}
+
+	return userInfo, nil
 }

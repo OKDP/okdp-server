@@ -43,8 +43,8 @@ echo "Creating users, roles and clients ..."
                             -s 'webOrigins=["http://localhost:8090", "http://localhost:8092", "http://localhost:4200"]'
 
 # Update access token lifetime
-echo "Update access token lifetime to 1H"
-/opt/keycloak/bin/kcadm.sh update realms/master -s accessTokenLifespan=3600
+echo "Update access token lifetime to 8H"
+/opt/keycloak/bin/kcadm.sh update realms/master -s accessTokenLifespan=28800
 echo "Users, roles and clients created successfuly"
 exit 0
 

@@ -22,10 +22,10 @@ import (
 
 	"github.com/gin-gonic/gin"
 
+	"github.com/okdp/okdp-server/internal/common/constants"
+	log "github.com/okdp/okdp-server/internal/common/logging"
 	"github.com/okdp/okdp-server/internal/config"
-	"github.com/okdp/okdp-server/internal/constants"
 	"github.com/okdp/okdp-server/internal/controllers"
-	log "github.com/okdp/okdp-server/internal/logging"
 	"github.com/okdp/okdp-server/internal/security"
 	"github.com/okdp/okdp-server/internal/security/authc"
 	"github.com/okdp/okdp-server/internal/security/authz"

@@ -21,7 +21,7 @@ Manually add the following entry in /etc/hosts
 Start docker compose using your robot account token to access private registries:
 ```shell
 docker-compose rm -f
-OCI_USERNAME=okdp+okdp_quay_robot OCI_PASSWORD=****** docker-compose up --build
+docker-compose up --build
 ```
 
 Open swagger UI at: http://localhost:8092/

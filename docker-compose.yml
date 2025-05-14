@@ -28,10 +28,12 @@ services:
       - .local:/workspace/.local
       - .go-cache/go-build:/go-build
       - .go-cache/go-mod:/go/pkg
+      - ~/.kube/config:/tmp/.kube/config:ro
     working_dir: /workspace
     environment:
       - OCI_USERNAME=${OCI_USERNAME}
       - OCI_PASSWORD=${OCI_PASSWORD}
+      - DOCKER_CONFIG_JSON=${DOCKER_CONFIG_JSON}
       - GOCACHE=/go-build
       - GOMODCACHE=/go/pkg
     depends_on:

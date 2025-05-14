@@ -93,3 +93,24 @@ catalog:
     repoUrl: quay.io/okdp/applications
     packages:
       - name: minio
+      
+clusters:
+  - id: kubo03dev
+    env: dev
+    auth:
+      kubeconfig:
+        apiServer: https://host.docker.internal:56660
+        path: /path/to/kubeconfig
+        context: dev-context
+        insecureSkipTlsVerify: True
+      certificate:
+        apiServer: https://k8s-api-server-url:6443
+        clientKey: /path/to/client-key.pem
+        clientCert: /path/to/client-cert.pem
+        caCert: /path/to/ca-cert.pem
+      bearer:
+        apiServer: https://k8s-api-server-url:6443
+        bearerToken: $(BEARER_TOKEN)
+
+
+

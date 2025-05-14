@@ -92,6 +92,7 @@ catalog:
     #credentials:
     #  robotAccountName: $(OCI_USERNAME)
     #  robotAccountToken: $(OCI_PASSWORD)
+    #  dockerconfigjson: $(DOCKER_CONFIG_JSON)
     packages:
       - name: redis
       - name: minio
@@ -101,10 +102,6 @@ catalog:
     name: Auth catalog
     description: My Auth packages
     repoUrl: quay.io/kubocd/packages
-    ### public registry, no credentials needed
-    #credentials:
-    #  robotAccountName: $(OCI_USERNAME)
-    #  robotAccountToken: $(OCI_PASSWORD)
     packages:
       - name: openldap
 
@@ -112,10 +109,6 @@ catalog:
     name: Infra catalog
     description: My Infra packages
     repoUrl: quay.io/kubocd/packages
-    ### public registry, no credentials needed
-    #credentials:
-    #  robotAccountName: $(OCI_USERNAME)
-    #  robotAccountToken: $(OCI_PASSWORD)
     packages:
       - name: podinfo
       - name: cert-manager
@@ -126,11 +119,24 @@ catalog:
     name: Stack catalog
     description: My Stack packages
     repoUrl: quay.io/kubocd/packages
-    ### public registry, no credentials needed
-    #credentials:
-    #  robotAccountName: $(OCI_USERNAME)
-    #  robotAccountToken: $(OCI_PASSWORD)
     packages:
       - name: stack1
 
+clusters:
+  - id: kubo2
+    env: dev
+    auth:
+      kubeconfig:
+        apiServer: https://host.docker.internal:56660
+        path: /tmp/.kube/config
+        context: dev-context
+        insecureSkipTlsVerify: true
+      # certificate:
+      #   apiServer: https://k8s-api-server-url:6443
+      #   clientKey: /path/to/client-key.pem
+      #   clientCert: /path/to/client-cert.pem
+      #   caCert: /path/to/ca-cert.pem
+      # bearer:
+      #   apiServer: https://k8s-api-server-url:6443
+      #   bearerToken: $(BEARER_TOKEN)
 
