@@ -1,0 +1,153 @@
+get:
+  summary: Return list of releases in the git repo
+  description: |
+    Return list of releases in the git repo
+  tags:
+    - repositories
+  operationId: ListGitReleases
+  parameters:
+    - in: path
+      name: clusterId
+      schema:
+        type: string
+      required: true
+      description: Kubernetes cluster ID
+    - in: path
+      name: namespace
+      schema:
+        type: string
+      required: true
+      description: Kubernetes fluxcd git repo namespace
+      example: flux-system
+    - in: path
+      name: kustomizationName
+      schema:
+        type: string
+      required: true
+      description: Kubernetes fluxcd git repo name
+      example: releases-system
+  responses:
+    '200':
+      description: Release list
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '../../definition/ReleaseInfo.yaml'
+
+    default:
+      description: Server error
+      content:
+        application/json:
+          schema:
+            $ref: '../../definition/ServerResponse.yaml'
+
+
+post:
+  summary: Create a new KuboCD release in the git repo
+  description: |
+    Create a new KuboCD release in the git repo
+  tags:
+    - repositories
+  operationId: CreateGitRelease
+  parameters:
+    - in: path
+      name: clusterId
+      schema:
+        type: string
+      required: true
+      description: Kubernetes cluster ID
+    - in: path
+      name: namespace
+      schema:
+        type: string
+      required: true
+      description: Kubernetes fluxcd git repo namespace
+      example: flux-system
+    - in: path
+      name: kustomizationName
+      schema:
+        type: string
+      required: true
+      description: Kubernetes fluxcd git repo name
+      example: releases-system
+  requestBody:
+    description: Release object to be created
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../definition/Release.yaml'
+  responses:
+    '201':
+      description: Release created successfully
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '../../definition/ServerResponse.yaml'
+
+    default:
+      description: Server error
+      content:
+        application/json:
+          schema:
+            $ref: '../../definition/ServerResponse.yaml'
+
+put:
+  summary: Update an existing KuboCD release in the git repo
+  description: |
+    Update an existing KuboCD release in the git repo
+  tags:
+    - repositories
+  operationId: UpdateGitRelease
+  parameters:
+    - in: path
+      name: clusterId
+      schema:
+        type: string
+      required: true
+      description: Kubernetes cluster ID
+    - in: path
+      name: namespace
+      schema:
+        type: string
+      required: true
+      description: Kubernetes fluxcd git repo namespace
+      example: flux-system
+    - in: path
+      name: kustomizationName
+      schema:
+        type: string
+      required: true
+      description: Kubernetes fluxcd git repo name
+      example: releases-system
+  requestBody:
+    description: Release object to be updated
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../definition/Release.yaml'
+  responses:
+    '200':
+      description: Release updated successfully
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '../../definition/ServerResponse.yaml'
+
+    default:
+      description: Server error
+      content:
+        application/json:
+          schema:
+            $ref: '../../definition/ServerResponse.yaml'
+
+
+
+            

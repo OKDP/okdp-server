@@ -1,6 +1,6 @@
 type: object
 xml:
-  name: package
+  name: Package
 required:
 - "name"
 - "versions"

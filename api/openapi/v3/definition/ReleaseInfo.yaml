@@ -1,0 +1,35 @@
+type: object
+xml:
+  name: ReleaseInfo
+required:
+- "name"
+- "package"
+- "git"
+properties:
+  name:
+    type: string
+  namespace:
+    type: string
+  description:
+      type: string
+  package:
+    type: object
+    required:
+      - "repository"
+      - "tag"
+    properties:
+      repository:
+        type: string
+      tag:
+        type: string
+  git:
+    type: object
+    required:
+      - "path"
+      - "url"
+    properties:
+      path:
+        type: string
+      url:
+        type: string
+        x-go-name: URL

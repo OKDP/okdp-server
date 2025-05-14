@@ -1,0 +1,30 @@
+type: object
+xml:
+  name: GitRepository
+required:
+- "repoUrl"
+- "ref"
+- "name"
+- "namespace"
+- "path"
+- "credentials"
+properties:
+  repoUrl:
+    type: string
+    format: uri
+    x-go-name: repoURL
+  ref:
+    type: string
+  name:
+    type: string
+  namespace:
+    type: string
+  path:
+    type: string
+  credentials:
+    type: object
+    required:
+    - "secretRef"
+    properties:
+      secretRef:
+        type: string
