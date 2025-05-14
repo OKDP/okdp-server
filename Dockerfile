@@ -1,4 +1,4 @@
-ARG GO_VERSION=1.23
+ARG GO_VERSION=1.24
 
 FROM golang:${GO_VERSION} AS go-build
 
@@ -24,7 +24,7 @@ RUN --mount=type=cache,target=/root/.cache/go-build \
     LDFLAGS=${LDFLAGS##-X localbuild=true} GIT_COMMIT=$GIT_COMMIT \
     CGO_ENABLED=0 GOOS=$TARGETOS GOARCH=$TARGETARCH go build -a -o okdp-server main.go
 
-FROM alpine:3.20.3
+FROM alpine:3.21.3
 
 RUN apk --no-cache add ca-certificates && update-ca-certificates
 
