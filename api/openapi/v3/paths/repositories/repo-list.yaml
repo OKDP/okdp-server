@@ -1,0 +1,37 @@
+get:
+  summary: List all configured git repositories
+  description: |
+    List all configured git repositories
+  tags:
+    - repositories
+  operationId: ListGitRepos
+  parameters:
+    - in: path
+      name: clusterId
+      schema:
+        type: string
+      required: true
+      description: Kubernetes cluster ID
+    - in: path
+      name: namespace
+      schema:
+        type: string
+      required: true
+      description: Kubernetes fluxcd git repo namespace
+      example: flux-system
+  responses:
+    '200':
+      description: List of the git repositories
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '../../definition/GitRepository.yaml'
+    default:
+      description: Server error
+      content:
+        application/json:
+          schema:
+            $ref: '../../definition/ServerResponse.yaml'
+

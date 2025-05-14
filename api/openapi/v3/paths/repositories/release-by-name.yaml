@@ -1,0 +1,99 @@
+get:
+  summary: Return KuboCD release by name in the git repo
+  description: |
+    Return KuboCD release by name in the git repo
+  tags:
+    - repositories
+  operationId: GetGitRelease
+  parameters:
+    - in: path
+      name: clusterId
+      schema:
+        type: string
+      required: true
+      description: Kubernetes cluster ID
+    - in: path
+      name: namespace
+      schema:
+        type: string
+      required: true
+      description: Kubernetes fluxcd git repo namespace
+      example: flux-system
+    - in: path
+      name: kustomizationName
+      schema:
+        type: string
+      required: true
+      description: Kubernetes fluxcd git repo name
+      example: releases-system
+    - in: path
+      name: releaseName
+      schema:
+        type: string
+      required: true
+      description: KuboCD release name
+      example: podinfo
+  responses:
+    '200':
+      description: KuboCD Release info
+      content:
+        application/json:
+          schema:
+            $ref: '../../definition/Release.yaml'
+
+    default:
+      description: Server error
+      content:
+        application/json:
+          schema:
+            $ref: '../../definition/ServerResponse.yaml'
+
+delete:
+  summary: Delete KuboCD release by name in the git repo
+  description: |
+    Delete KuboCD release by name in the git repo
+  tags:
+    - repositories
+  operationId: DeleteGitRelease
+  parameters:
+    - in: path
+      name: clusterId
+      schema:
+        type: string
+      required: true
+      description: Kubernetes cluster ID
+    - in: path
+      name: namespace
+      schema:
+        type: string
+      required: true
+      description: Kubernetes fluxcd git repo namespace
+      example: flux-system
+    - in: path
+      name: kustomizationName
+      schema:
+        type: string
+      required: true
+      description: Kubernetes fluxcd git repo name
+      example: releases-system
+    - in: path
+      name: releaseName
+      schema:
+        type: string
+      required: true
+      description: KuboCD release name
+      example: podinfo
+  responses:
+    '200':
+      description: KuboCD Release deleted successfully
+      content:
+        application/json:
+          schema:
+            $ref: '../../definition/ServerResponse.yaml'
+
+    default:
+      description: Server error
+      content:
+        application/json:
+          schema:
+            $ref: '../../definition/ServerResponse.yaml'

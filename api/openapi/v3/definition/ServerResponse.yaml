@@ -1,0 +1,32 @@
+type: object
+xml:
+  name: ServerResponse
+required:
+  - message
+  - status
+  - type
+properties:
+  message:
+    type: string
+    description: The response message from the server
+  status:
+    type: integer
+    description: The HTTP status code
+  type:
+    type: string
+    enum:
+      - okdp_server
+      - registry
+      - git_repo
+      - k8s_cluster
+    description: The type of the server response
+ServerResponseType:
+  type: string
+  enum:
+    - okdp_server
+    - registry
+    - git_repo
+    - k8s_cluster
+  description: An enum representing different server response types
+
+

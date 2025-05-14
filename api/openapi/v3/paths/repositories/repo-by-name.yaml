@@ -1,0 +1,42 @@
+get:
+  summary: Return a git repo details
+  description: |
+    Return a git repo details
+  tags:
+    - repositories
+  operationId: GetGitRepo
+  parameters:
+    - in: path
+      name: clusterId
+      schema:
+        type: string
+      required: true
+      description: Kubernetes cluster ID
+    - in: path
+      name: namespace
+      schema:
+        type: string
+      required: true
+      description: Kubernetes fluxcd git repo namespace
+      example: flux-system
+    - in: path
+      name: kustomizationName
+      schema:
+        type: string
+      required: true
+      description: Kubernetes fluxcd git repo name
+      example: podinfo
+  responses:
+    '200':
+      description: Git repo information
+      content:
+        application/json:
+          schema:
+            $ref: '../../definition/GitRepository.yaml'
+    default:
+      description: Server error
+      content:
+        application/json:
+          schema:
+            $ref: '../../definition/ServerResponse.yaml'
+
