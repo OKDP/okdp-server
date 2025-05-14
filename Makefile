@@ -17,13 +17,13 @@ test: compile gotest
 build: test gobuild
 run: test gorun
 rundev: generate gocompile gotest gobuild gorun
-update: build goupdate
+update: build goupdate build
 
 .PHONY: tools
 tools:
 	go install github.com/oapi-codegen/oapi-codegen/v2/cmd/oapi-codegen@v2.4.1
 	go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.62.2
-	go install golang.org/x/tools/cmd/goimports@v0.28.0
+	go install golang.org/x/tools/cmd/goimports@v0.33.0
 
 .PHONY: gogenerate
 gogenerate:
@@ -81,6 +81,6 @@ gorun:
 
 .PHONY: goupdate
 goupdate:
-	go get -u all
+	go get -u ./...
 	go mod tidy
 
