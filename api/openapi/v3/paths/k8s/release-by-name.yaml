@@ -1,0 +1,82 @@
+get:
+  summary: Get the deployed release by name
+  description: |
+    Get the deployed release by name
+  tags:
+    - k8s
+  operationId: GetK8sRelease
+  parameters:
+    - in: path
+      name: clusterId
+      schema:
+        type: string
+      required: true
+      description: Kubernetes cluster ID
+    - in: path
+      name: namespace
+      schema:
+        type: string
+      required: true
+      description: Kubernetes namespace
+    - in: path
+      name: releaseName
+      schema:
+        type: string
+      required: true
+      description: KuboCD release name
+  responses:
+    '200':
+      description: KuboCD Release info
+      content:
+        application/json:
+          schema:
+            $ref: '../../definition/Release.yaml'
+
+    default:
+      description: Server error
+      content:
+        application/json:
+          schema:
+            $ref: '../../definition/ServerResponse.yaml'
+
+delete:
+  summary: Delete the KuboCD release in kubernetes
+  description: |
+    Delete the KuboCD release in kubernetes
+  tags:
+    - k8s
+  operationId: DeleteK8sRelease
+  parameters:
+    - in: path
+      name: clusterId
+      schema:
+        type: string
+      required: true
+      description: Kubernetes cluster ID
+    - in: path
+      name: namespace
+      schema:
+        type: string
+      required: true
+      description: Kubernetes namespace
+    - in: path
+      name: releaseName
+      schema:
+        type: string
+      required: true
+      description: KuboCD release name
+  responses:
+    '200':
+      description: KuboCD Release deleted successfully
+      content:
+        application/json:
+          schema:
+            $ref: '../../definition/ServerResponse.yaml'
+
+    default:
+      description: Server error
+      content:
+        application/json:
+          schema:
+            $ref: '../../definition/ServerResponse.yaml'
+

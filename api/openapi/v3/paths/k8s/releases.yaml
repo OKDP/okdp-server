@@ -1,0 +1,136 @@
+get:
+  summary: Get the list of the deployed releases
+  description: |
+    Get the list of the deployed releases
+  tags:
+    - k8s
+  operationId: ListK8sReleases
+  parameters:
+    - in: path
+      name: clusterId
+      schema:
+        type: string
+      required: true
+      description: Kubernetes cluster ID
+    - in: path
+      name: namespace
+      schema:
+        type: string
+      required: true
+      description: Kubernetes namespace
+  responses:
+    '200':
+      description: Release list
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '../../definition/ReleaseInfo.yaml'
+
+    default:
+      description: Server error
+      content:
+        application/json:
+          schema:
+            $ref: '../../definition/ServerResponse.yaml'
+
+post:
+  summary: Create KuboCD release in Kubernetes
+  description: |
+    Create KuboCD release in Kubernetes
+  tags:
+    - k8s
+  operationId: CreateK8sRelease
+  parameters:
+    - in: path
+      name: clusterId
+      schema:
+        type: string
+      required: true
+      description: Kubernetes cluster ID
+    - in: path
+      name: namespace
+      schema:
+        type: string
+      required: true
+      description: Kubernetes namespace
+    - in: query
+      name: dryRun
+      schema:
+        type: boolean
+      required: false
+      description: If true, performs a server-side dry run without persisting the resource
+  requestBody:
+    description: Release object to be created
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../definition/Release.yaml'
+  responses:
+    '201':
+      description: Release created successfully
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '../../definition/ServerResponse.yaml'
+
+    default:
+      description: Server error
+      content:
+        application/json:
+          schema:
+            $ref: '../../definition/ServerResponse.yaml'
+
+put:
+  summary: Update KuboCD release in Kubernetes
+  description: |
+    Update KuboCD release in Kubernetes
+  tags:
+    - k8s
+  operationId: UpdateK8sRelease
+  parameters:
+    - in: path
+      name: clusterId
+      schema:
+        type: string
+      required: true
+      description: Kubernetes cluster ID
+    - in: path
+      name: namespace
+      schema:
+        type: string
+      required: true
+      description: Kubernetes namespace
+    - in: query
+      name: dryRun
+      schema:
+        type: boolean
+      required: false
+      description: If true, performs a server-side dry run without persisting the resource
+  requestBody:
+    description: Release object to be updated
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../definition/Release.yaml'
+  responses:
+    '200':
+      description: Release updated successfully
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '../../definition/ServerResponse.yaml'
+
+    default:
+      description: Server error
+      content:
+        application/json:
+          schema:
+            $ref: '../../definition/ServerResponse.yaml'

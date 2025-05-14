@@ -1,0 +1,41 @@
+get:
+  summary: Get the release status
+  description: |
+    Get the release status
+  tags:
+    - k8s
+  operationId: GetK8sReleaseStatus
+  parameters:
+    - in: path
+      name: clusterId
+      schema:
+        type: string
+      required: true
+      description: Kubernetes cluster ID
+    - in: path
+      name: namespace
+      schema:
+        type: string
+      required: true
+      description: Kubernetes namespace
+    - in: path
+      name: releaseName
+      schema:
+        type: string
+      required: true
+      description: KuboCD release name
+  responses:
+    '200':
+      description: KuboCD Release info
+      content:
+        application/json:
+          schema:
+            $ref: '../../definition/ReleaseStatus.yaml'
+
+    default:
+      description: Server error
+      content:
+        application/json:
+          schema:
+            $ref: '../../definition/ServerResponse.yaml'
+
