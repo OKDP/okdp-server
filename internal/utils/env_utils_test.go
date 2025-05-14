@@ -21,22 +21,22 @@ import (
 	"testing"
 )
 
-func TestGetEnv(t *testing.T) {
+func TestResolveEnv(t *testing.T) {
 	// Test the behavior when the environment variable is set
 	os.Setenv("OCI_USERNAME", "myusername")
 	defer os.Unsetenv("OCI_USERNAME")
 
-	if got := GetEnv("$(OCI_USERNAME)"); got != "myusername" {
+	if got := ResolveEnv("$(OCI_USERNAME)"); got != "myusername" {
 		t.Errorf("expected 'myusername', got %s", got)
 	}
 
 	// Test when the environment variable does not exist
-	if got := GetEnv("$(NON_EXISTENT_VAR)"); got != "" {
+	if got := ResolveEnv("$(NON_EXISTENT_VAR)"); got != "" {
 		t.Errorf("expected '', got %s", got)
 	}
 
 	// Test non-placeholder value
-	if got := GetEnv("JustSomeOtherValue"); got != "JustSomeOtherValue" {
+	if got := ResolveEnv("JustSomeOtherValue"); got != "JustSomeOtherValue" {
 		t.Errorf("expected 'JustSomeOtherValue', got %s", got)
 	}
 }

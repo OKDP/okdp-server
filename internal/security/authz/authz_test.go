@@ -22,9 +22,9 @@ import (
 	"testing"
 
 	"github.com/gin-gonic/gin"
+	"github.com/okdp/okdp-server/internal/common/constants"
+	log "github.com/okdp/okdp-server/internal/common/logging"
 	"github.com/okdp/okdp-server/internal/config"
-	"github.com/okdp/okdp-server/internal/constants"
-	log "github.com/okdp/okdp-server/internal/logging"
 	"github.com/okdp/okdp-server/internal/security/authc/model"
 	"github.com/stretchr/testify/assert"
 )

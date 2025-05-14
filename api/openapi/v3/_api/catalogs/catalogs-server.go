@@ -21,13 +21,13 @@ type ServerInterface interface {
 	GetCatalog(c *gin.Context, catalogId string)
 	// Get a list of packages by catalog id
 	// (GET /catalogs/{catalogId}/packages)
-	GetPackages(c *gin.Context, catalogId string)
+	ListPackages(c *gin.Context, catalogId string)
 	// Get package by catalog id and package name
 	// (GET /catalogs/{catalogId}/packages/{name})
-	GetPackageByName(c *gin.Context, catalogId string, name string)
+	GetPackage(c *gin.Context, catalogId string, name string)
 	// List versions for a specific package
 	// (GET /catalogs/{catalogId}/packages/{name}/versions)
-	GetPackageVersionsByName(c *gin.Context, catalogId string, name string)
+	GetPackageVersions(c *gin.Context, catalogId string, name string)
 	// Get package definition
 	// (GET /catalogs/{catalogId}/packages/{name}/versions/{version})
 	GetPackageDefinition(c *gin.Context, catalogId string, name string, version string)
@@ -82,8 +82,8 @@ func (siw *ServerInterfaceWrapper) GetCatalog(c *gin.Context) {
 	siw.Handler.GetCatalog(c, catalogId)
 }
 
-// GetPackages operation middleware
-func (siw *ServerInterfaceWrapper) GetPackages(c *gin.Context) {
+// ListPackages operation middleware
+func (siw *ServerInterfaceWrapper) ListPackages(c *gin.Context) {
 
 	var err error
 
@@ -103,11 +103,11 @@ func (siw *ServerInterfaceWrapper) GetPackages(c *gin.Context) {
 		}
 	}
 
-	siw.Handler.GetPackages(c, catalogId)
+	siw.Handler.ListPackages(c, catalogId)
 }
 
-// GetPackageByName operation middleware
-func (siw *ServerInterfaceWrapper) GetPackageByName(c *gin.Context) {
+// GetPackage operation middleware
+func (siw *ServerInterfaceWrapper) GetPackage(c *gin.Context) {
 
 	var err error
 
@@ -136,11 +136,11 @@ func (siw *ServerInterfaceWrapper) GetPackageByName(c *gin.Context) {
 		}
 	}
 
-	siw.Handler.GetPackageByName(c, catalogId, name)
+	siw.Handler.GetPackage(c, catalogId, name)
 }
 
-// GetPackageVersionsByName operation middleware
-func (siw *ServerInterfaceWrapper) GetPackageVersionsByName(c *gin.Context) {
+// GetPackageVersions operation middleware
+func (siw *ServerInterfaceWrapper) GetPackageVersions(c *gin.Context) {
 
 	var err error
 
@@ -169,7 +169,7 @@ func (siw *ServerInterfaceWrapper) GetPackageVersionsByName(c *gin.Context) {
 		}
 	}
 
-	siw.Handler.GetPackageVersionsByName(c, catalogId, name)
+	siw.Handler.GetPackageVersions(c, catalogId, name)
 }
 
 // GetPackageDefinition operation middleware
@@ -285,9 +285,9 @@ func RegisterHandlersWithOptions(router gin.IRouter, si ServerInterface, options
 
 	router.GET(options.BaseURL+"/catalogs", wrapper.ListCatalogs)
 	router.GET(options.BaseURL+"/catalogs/:catalogId", wrapper.GetCatalog)
-	router.GET(options.BaseURL+"/catalogs/:catalogId/packages", wrapper.GetPackages)
-	router.GET(options.BaseURL+"/catalogs/:catalogId/packages/:name", wrapper.GetPackageByName)
-	router.GET(options.BaseURL+"/catalogs/:catalogId/packages/:name/versions", wrapper.GetPackageVersionsByName)
+	router.GET(options.BaseURL+"/catalogs/:catalogId/packages", wrapper.ListPackages)
+	router.GET(options.BaseURL+"/catalogs/:catalogId/packages/:name", wrapper.GetPackage)
+	router.GET(options.BaseURL+"/catalogs/:catalogId/packages/:name/versions", wrapper.GetPackageVersions)
 	router.GET(options.BaseURL+"/catalogs/:catalogId/packages/:name/versions/:version", wrapper.GetPackageDefinition)
 	router.GET(options.BaseURL+"/catalogs/:catalogId/packages/:name/versions/:version/schema", wrapper.GetPackageSchema)
 }

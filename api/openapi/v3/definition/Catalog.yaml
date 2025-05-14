@@ -1,6 +1,6 @@
 type: object
 xml:
-  name: catalog
+  name: Catalog
 required:
 - "id"
 - "name"
@@ -25,6 +25,8 @@ properties:
       robotAccountName:
         type: string
       robotAccountToken:
+        type: string
+      dockerconfigjson:
         type: string
   packages:
     type: array

@@ -14,12 +14,11 @@
  *    limitations under the License.
  */
 
-package registry
+package oci
 
 import (
-	"github.com/okdp/okdp-server/internal/integrations/registry/client"
+	"github.com/okdp/okdp-server/internal/integrations/oci/client"
 	"github.com/okdp/okdp-server/internal/model"
-	"github.com/okdp/okdp-server/internal/servererrors"
 )
 
 type RepoCatalog struct {
@@ -36,18 +35,18 @@ func (r RepoCatalog) ListCatalogs() []*model.Catalog {
 	return client.ListCatalogs()
 }
 
-func (r RepoCatalog) GetCatalog(catalogID string) (*model.Catalog, *servererrors.ServerError) {
+func (r RepoCatalog) GetCatalog(catalogID string) (*model.Catalog, *model.ServerResponse) {
 	return client.GetCatalog(catalogID)
 }
 
-func (r RepoCatalog) GetPackages(catalogID string) ([]*model.Package, *servererrors.ServerError) {
+func (r RepoCatalog) GetPackages(catalogID string) ([]*model.Package, *model.ServerResponse) {
 	return client.GetPackages(catalogID)
 }
 
-func (r RepoCatalog) GetPackageByName(catalogID string, name string) (*model.Package, *servererrors.ServerError) {
-	return client.GetPackageByName(catalogID, name)
+func (r RepoCatalog) GetPackage(catalogID string, name string) (*model.Package, *model.ServerResponse) {
+	return client.GetPackage(catalogID, name)
 }
 
-func (r RepoCatalog) GetPackageDefinition(catalogID string, name string, version string) (map[string]interface{}, *servererrors.ServerError) {
+func (r RepoCatalog) GetPackageDefinition(catalogID string, name string, version string) (map[string]interface{}, *model.ServerResponse) {
 	return client.GetPackageDefinition(catalogID, name, version)
 }

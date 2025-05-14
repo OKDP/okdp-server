@@ -1,6 +1,6 @@
 type: object
 xml:
-  name: userProfile
+  name: UserProfile
 required: 
 - sub
 - login
