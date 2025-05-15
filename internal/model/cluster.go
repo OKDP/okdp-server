@@ -18,6 +18,7 @@ package model
 
 import (
 	"github.com/okdp/okdp-server/api/openapi/v3/_api"
+	"github.com/okdp/okdp-server/internal/common/constants"
 )
 
 type Cluster _api.Cluster
@@ -25,4 +26,20 @@ type Cluster _api.Cluster
 func ClusterNotFoundError(clusterID string) *ServerResponse {
 	return NewServerResponse(OkdpServerResponse).
 		NotFoundError("The cluster with id %s not found.", clusterID)
+}
+
+func (m Cluster) AuthType() string {
+	if m.Auth.Kubeconfig != nil {
+		return constants.K8SAuthKubeConfig
+	}
+
+	if m.Auth.Certificate != nil {
+		return constants.K8SAuthCertificate
+	}
+
+	if m.Auth.Bearer != nil {
+		return constants.K8SAuthBeaer
+	}
+
+	return ""
 }

@@ -129,7 +129,8 @@ clusters:
       kubeconfig:
         apiServer: https://host.docker.internal:56660
         path: /tmp/.kube/config
-        context: dev-context
+        # When not provided, use current context
+        # context: kind-kind-okdp-sandbox
         insecureSkipTlsVerify: true
       # certificate:
       #   apiServer: https://k8s-api-server-url:6443

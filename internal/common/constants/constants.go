@@ -29,9 +29,12 @@ const (
 	// CasbinRolePrefix is used to prefix the roles/groups in the casbin policy (p, role:viewers, /api/v1/users/myprofile, *)
 	CasbinRolePrefix = "role:"
 	// SwaggerAPIDocsURI is the swagger API Docs public URI
-	SwaggerAPIDocsURI = OkdpServerBaseURL + "/api-docs"
-	HealthzURI        = "/healthz"
-	ReadinessURI      = "/readiness"
-	All               = "All"
-	GitRepository     = "GitRepository"
+	SwaggerAPIDocsURI  = OkdpServerBaseURL + "/api-docs"
+	HealthzURI         = "/healthz"
+	ReadinessURI       = "/readiness"
+	All                = "All"
+	GitRepository      = "GitRepository"
+	K8SAuthKubeConfig  = "AuthKubeconfig"
+	K8SAuthCertificate = "AuthCertificate"
+	K8SAuthBeaer       = "AuthBearer"
 )
