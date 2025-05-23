@@ -22,12 +22,12 @@ import (
 	"github.com/okdp/okdp-server/internal/model"
 )
 
-func (r K8S) ListReleases(clusterID string, namespace string) ([]*model.Release, *model.ServerResponse) {
+func (r K8S) ListReleases(clusterID string, namespaces ...string) ([]*model.Release, *model.ServerResponse) {
 	kubeClient, err := r.GetClient(clusterID)
 	if err != nil {
 		return nil, err
 	}
-	return kubeClient.ListReleases(context.Background(), namespace)
+	return kubeClient.ListReleases(context.Background(), namespaces...)
 }
 
 func (r K8S) GetRelease(clusterID string, namespace string, releaseName string) (*model.Release, *model.ServerResponse) {

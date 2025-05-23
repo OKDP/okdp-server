@@ -40,7 +40,7 @@ func (s ClusterService) GetCluster(clusterID string) (*model.Cluster, *model.Ser
 }
 
 func (s ClusterService) ListNamespaces(clusterID string) ([]string, *model.ServerResponse) {
-	return []string{"Not Implemented: " + clusterID}, nil
+	return s.cluster.ListNamespaces(clusterID)
 }
 
 func (s ClusterService) GetNamespaceByName(clusterID string, namespace string) (string, *model.ServerResponse) {

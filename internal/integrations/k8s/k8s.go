@@ -17,7 +17,10 @@
 package k8s
 
 import (
+	"context"
+
 	"github.com/okdp/okdp-server/internal/integrations/k8s/client"
+	"github.com/okdp/okdp-server/internal/model"
 )
 
 type K8S struct {
@@ -28,4 +31,12 @@ func NewK8S() *K8S {
 	return &K8S{
 		client.GetClients(),
 	}
+}
+
+func (s K8S) ListNamespaces(clusterID string) ([]string, *model.ServerResponse) {
+	kubeClient, err := s.GetClient(clusterID)
+	if err != nil {
+		return nil, err
+	}
+	return kubeClient.ListNamespaces(context.Background())
 }

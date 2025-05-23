@@ -205,6 +205,7 @@ func Test_LoadConfig_Clusters(t *testing.T) {
 	require.NotEmpty(t, clusters, "K8S clusters should not be empty")
 	cluster := clusters[0]
 	assert.Equal(t, "kubo03dev", cluster.ID, "ID")
+	assert.Equal(t, "k8s infra dev", cluster.Name, "Name")
 	assert.Equal(t, "dev", cluster.Env, "Env")
 	assert.Equal(t, "/path/to/kubeconfig", cluster.Auth.Kubeconfig.Path, "cluster.Auth.Kubeconfig")
 	assert.Equal(t, "dev-context", cluster.Auth.Kubeconfig.Context, "cluster.Auth.Context")

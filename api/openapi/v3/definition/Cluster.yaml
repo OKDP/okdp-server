@@ -3,12 +3,15 @@ xml:
   name: Cluster
 required:
   - id
+  - name
   - env
   - k8s
 properties:
   id:
     type: string
     x-go-name: ID
+  name:
+    type: string
   env:
     type: string
   auth:

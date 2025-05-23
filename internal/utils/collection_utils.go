@@ -42,10 +42,10 @@ func MapKey(keys ...string) string {
 // Filter filters a slice of objects based on a predicate function.
 // It returns a new slice containing only the elements that satisfy the predicate.
 func Filter[T any](objects []T, predicate func(T) bool) []*T {
-	var filtered []*T
-	for _, obj := range objects {
-		if predicate(obj) {
-			filtered = append(filtered, &obj)
+	filtered := make([]*T, 0, len(objects))
+	for i := range objects {
+		if predicate(objects[i]) {
+			filtered = append(filtered, &objects[i])
 		}
 	}
 	return filtered
@@ -54,7 +54,7 @@ func Filter[T any](objects []T, predicate func(T) bool) []*T {
 // Filter filters a slice of objects based on a predicate function.
 // It returns a new slice containing only the elements that satisfy the predicate.
 func Filter2[T any](objects []*T, predicate func(T) bool) []*T {
-	var filtered []*T
+	filtered := make([]*T, 0, len(objects))
 	for _, obj := range objects {
 		if predicate(*obj) {
 			filtered = append(filtered, obj)

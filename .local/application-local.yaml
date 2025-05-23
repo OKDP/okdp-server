@@ -83,6 +83,17 @@ swagger:
     - oauth2: [openid, email, profile, roles]
 
 
+# packages:
+#   - repo: quay.io/kubocd/packages
+#     name: redis
+#     versions: [""]
+#   - repo: quay.io/kubocd/packages
+#     name: minio
+#     versions: [""]
+#   - repo: quay.io/kubocd/packages
+#     name: cnpg
+#     versions: [""]
+
 catalog:
   - id: storage
     name: Storage catalog
@@ -110,7 +121,6 @@ catalog:
     description: My Infra packages
     repoUrl: quay.io/kubocd/packages
     packages:
-      - name: podinfo
       - name: cert-manager
       - name: ingress-nginx
       - name: metallb
@@ -120,10 +130,11 @@ catalog:
     description: My Stack packages
     repoUrl: quay.io/kubocd/packages
     packages:
-      - name: stack1
+      - name: podinfo
 
 clusters:
   - id: kubo2
+    name: My k8s cluster 1
     env: dev
     auth:
       kubeconfig:
@@ -140,4 +151,5 @@ clusters:
       # bearer:
       #   apiServer: https://k8s-api-server-url:6443
       #   bearerToken: $(BEARER_TOKEN)
+
 

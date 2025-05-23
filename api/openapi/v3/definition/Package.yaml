@@ -4,6 +4,7 @@ xml:
 required:
 - "name"
 - "versions"
+- "repoUrl"
 properties:
   name:
     type: string
@@ -13,3 +14,7 @@ properties:
     items:
       type: string
     description: A list of versions for the package
+  repoUrl:
+    type: string
+    description: The URL of OCR registry
+    x-go-name: repoURL

@@ -6,6 +6,7 @@ package _api
 import (
 	"encoding/json"
 	"fmt"
+	"time"
 
 	"github.com/oapi-codegen/runtime"
 )
@@ -109,6 +110,7 @@ type Cluster struct {
 	Auth *Cluster_Auth `json:"auth,omitempty"`
 	Env  string        `json:"env"`
 	ID   string        `json:"id"`
+	Name string        `json:"name"`
 }
 
 // ClusterAuth0 defines model for .
@@ -179,6 +181,9 @@ type Package struct {
 	// Name The name of the package
 	Name string `json:"name"`
 
+	// RepoURL The URL of OCR registry
+	RepoURL string `json:"repoUrl"`
+
 	// Versions A list of versions for the package
 	Versions []string `json:"versions"`
 }
@@ -189,18 +194,70 @@ type Release struct {
 	// Servers should convert recognized schemas to the latest internal value, and
 	// may reject unrecognized values.
 	// More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
-	ApiVersion *string `json:"apiVersion,omitempty"`
+	ApiVersion string `json:"apiVersion"`
 
 	// Kind Kind is a string value representing the REST resource this object represents.
 	// Servers may infer this from the endpoint the client submits requests to.
 	// Cannot be updated.
 	// In CamelCase.
 	// More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
-	Kind     *string                 `json:"kind,omitempty"`
-	Metadata *map[string]interface{} `json:"metadata,omitempty"`
+	Kind string `json:"kind"`
+
+	// Metadata Standard object metadata.
+	Metadata struct {
+		// Annotations Arbitrary metadata.
+		Annotations *map[string]string `json:"annotations,omitempty"`
+
+		// CreationTimestamp Creation timestamp.
+		CreationTimestamp *time.Time `json:"creationTimestamp,omitempty"`
+
+		// DeletionGracePeriodSeconds Seconds allowed for graceful termination.
+		DeletionGracePeriodSeconds *int64 `json:"deletionGracePeriodSeconds,omitempty"`
+
+		// DeletionTimestamp Deletion timestamp.
+		DeletionTimestamp *time.Time `json:"deletionTimestamp,omitempty"`
+
+		// Finalizers List of finalizers.
+		Finalizers *[]string `json:"finalizers,omitempty"`
+
+		// GenerateName Prefix for generating a unique name.
+		GenerateName *string `json:"generateName,omitempty"`
+
+		// Generation Sequence number representing generation of desired state.
+		Generation *int64 `json:"generation,omitempty"`
+
+		// Labels Key-value pairs to categorize resources.
+		Labels *map[string]string `json:"labels,omitempty"`
+
+		// ManagedFields Managed fields tracking info (complex object).
+		ManagedFields *map[string]interface{} `json:"managedFields,omitempty"`
+
+		// Name Name of the resource.
+		Name *string `json:"name,omitempty"`
+
+		// Namespace Namespace of the resource.
+		Namespace *string `json:"namespace,omitempty"`
+
+		// OwnerReferences References to owning resources.
+		OwnerReferences *[]struct {
+			ApiVersion *string `json:"apiVersion,omitempty"`
+			Kind       *string `json:"kind,omitempty"`
+			Name       *string `json:"name,omitempty"`
+			Uid        *string `json:"uid,omitempty"`
+		} `json:"ownerReferences,omitempty"`
+
+		// ResourceVersion Resource version for concurrency control.
+		ResourceVersion *string `json:"resourceVersion,omitempty"`
+
+		// SelfLink Deprecated self-link URL.
+		SelfLink *string `json:"selfLink,omitempty"`
+
+		// Uid Unique ID assigned by Kubernetes.
+		Uid *string `json:"uid,omitempty"`
+	} `json:"metadata"`
 
 	// Spec ReleaseSpec defines the desired state of Release.
-	Spec *struct {
+	Spec struct {
 		// Contexts To provide contextual variables
 		// Refer to Context resource description for some explanation
 		// Contexts are merged in the following order:
@@ -370,57 +427,54 @@ type Release struct {
 		// (i.e. the package has a fixed namespace, or several ones).
 		// Default: Release.metadata.namespace
 		TargetNamespace *string `json:"targetNamespace,omitempty"`
-	} `json:"spec,omitempty"`
+	} `json:"spec"`
 
-	// Status Release is the Schema for the releases API.
+	// Status ReleaseStatus defines the observed state of Release.
+	// As we want Status to be explicit about provided information, we don't use 'omitempty' in its definition.
+	// (Except for 'context', as controlled by a debug flag)
 	Status *struct {
-		// Status ReleaseStatus defines the observed state of Release.
-		// As we want Status to be explicit about provided information, we don't use 'omitempty' in its definition.
-		// (Except for 'context', as controlled by a debug flag)
-		Status *struct {
-			// Context Context is the resulting context, if requested in debug options
-			Context *interface{} `json:"context,omitempty"`
+		// Context Context is the resulting context, if requested in debug options
+		Context *interface{} `json:"context,omitempty"`
 
-			// Dependencies The result of the package template and release value
-			Dependencies []string `json:"dependencies"`
+		// Dependencies The result of the package template and release value
+		Dependencies *[]string `json:"dependencies,omitempty"`
 
-			// HelmReleaseStates HelmReleaseState describe the observed state of child HelmReleases by name
-			HelmReleaseStates *map[string]struct {
-				Ready  string  `json:"ready"`
-				Status *string `json:"status,omitempty"`
-			} `json:"helmReleaseStates,omitempty"`
-			MissingDependency string `json:"missingDependency"`
+		// HelmReleaseStates HelmReleaseState describe the observed state of child HelmReleases by name
+		HelmReleaseStates *map[string]struct {
+			Ready  string  `json:"ready"`
+			Status *string `json:"status,omitempty"`
+		} `json:"helmReleaseStates,omitempty"`
+		MissingDependency *string `json:"missingDependency,omitempty"`
 
-			// Parameters Parameters is the resulting parameters set, if requested in debug options
-			Parameters *interface{} `json:"parameters,omitempty"`
-			Phase      string       `json:"phase"`
+		// Parameters Parameters is the resulting parameters set, if requested in debug options
+		Parameters *interface{} `json:"parameters,omitempty"`
+		Phase      *string      `json:"phase,omitempty"`
 
-			// PrintContexts PrintContextsContexts is a string to list our context. Not technically used, but intended to be displayed
-			// as printcolumn
-			PrintContexts *string `json:"printContexts,omitempty"`
+		// PrintContexts PrintContextsContexts is a string to list our context. Not technically used, but intended to be displayed
+		// as printcolumn
+		PrintContexts *string `json:"printContexts,omitempty"`
 
-			// PrintDescription PrintDescription
-			// Copy of the release description, or, if empty the (templated) package one
-			PrintDescription *string `json:"printDescription,omitempty"`
+		// PrintDescription PrintDescription
+		// Copy of the release description, or, if empty the (templated) package one
+		PrintDescription *string `json:"printDescription,omitempty"`
 
-			// PrintProtected PrintProtected is a copy of Protected, with a Y/n flag. To be used in display
-			PrintProtected string `json:"printProtected"`
+		// PrintProtected PrintProtected is a copy of Protected, with a Y/n flag. To be used in display
+		PrintProtected *string `json:"printProtected,omitempty"`
 
-			// Protected Protected result of Release.spec.protected defaulted to package.spec.protected
-			// It is the value checked by the webhook
-			Protected bool `json:"protected"`
+		// Protected Protected result of Release.spec.protected defaulted to package.spec.protected
+		// It is the value checked by the webhook
+		Protected *bool `json:"protected,omitempty"`
 
-			// ReadyReleases ReadyReleases is a string to display X/Y helmRelease ready. Not technically used, but intended to be displayed
-			// as printcolumn
-			ReadyReleases string `json:"readyReleases"`
+		// ReadyReleases ReadyReleases is a string to display X/Y helmRelease ready. Not technically used, but intended to be displayed
+		// as printcolumn
+		ReadyReleases *string `json:"readyReleases,omitempty"`
 
-			// Roles The result of the package template and release value
-			Roles []string `json:"roles"`
+		// Roles The result of the package template and release value
+		Roles *[]string `json:"roles,omitempty"`
 
-			// Usage Usage is the rendering of the Package.spec.usage[key]. Aimed to provide user information.
-			// Key could 'html', 'text', some language id, etc...
-			Usage *map[string]string `json:"usage,omitempty"`
-		} `json:"status,omitempty"`
+		// Usage Usage is the rendering of the Package.spec.usage[key]. Aimed to provide user information.
+		// Key could 'html', 'text', some language id, etc...
+		Usage *map[string]string `json:"usage,omitempty"`
 	} `json:"status,omitempty"`
 }
 
@@ -449,55 +503,52 @@ type ReleaseInfo struct {
 	} `json:"package"`
 }
 
-// ReleaseStatus Release is the Schema for the releases API.
+// ReleaseStatus ReleaseStatus defines the observed state of Release.
+// As we want Status to be explicit about provided information, we don't use 'omitempty' in its definition.
+// (Except for 'context', as controlled by a debug flag)
 type ReleaseStatus struct {
-	// Status ReleaseStatus defines the observed state of Release.
-	// As we want Status to be explicit about provided information, we don't use 'omitempty' in its definition.
-	// (Except for 'context', as controlled by a debug flag)
-	Status *struct {
-		// Context Context is the resulting context, if requested in debug options
-		Context *interface{} `json:"context,omitempty"`
+	// Context Context is the resulting context, if requested in debug options
+	Context *interface{} `json:"context,omitempty"`
 
-		// Dependencies The result of the package template and release value
-		Dependencies []string `json:"dependencies"`
+	// Dependencies The result of the package template and release value
+	Dependencies *[]string `json:"dependencies,omitempty"`
 
-		// HelmReleaseStates HelmReleaseState describe the observed state of child HelmReleases by name
-		HelmReleaseStates *map[string]struct {
-			Ready  string  `json:"ready"`
-			Status *string `json:"status,omitempty"`
-		} `json:"helmReleaseStates,omitempty"`
-		MissingDependency string `json:"missingDependency"`
+	// HelmReleaseStates HelmReleaseState describe the observed state of child HelmReleases by name
+	HelmReleaseStates *map[string]struct {
+		Ready  string  `json:"ready"`
+		Status *string `json:"status,omitempty"`
+	} `json:"helmReleaseStates,omitempty"`
+	MissingDependency *string `json:"missingDependency,omitempty"`
 
-		// Parameters Parameters is the resulting parameters set, if requested in debug options
-		Parameters *interface{} `json:"parameters,omitempty"`
-		Phase      string       `json:"phase"`
+	// Parameters Parameters is the resulting parameters set, if requested in debug options
+	Parameters *interface{} `json:"parameters,omitempty"`
+	Phase      *string      `json:"phase,omitempty"`
 
-		// PrintContexts PrintContextsContexts is a string to list our context. Not technically used, but intended to be displayed
-		// as printcolumn
-		PrintContexts *string `json:"printContexts,omitempty"`
+	// PrintContexts PrintContextsContexts is a string to list our context. Not technically used, but intended to be displayed
+	// as printcolumn
+	PrintContexts *string `json:"printContexts,omitempty"`
 
-		// PrintDescription PrintDescription
-		// Copy of the release description, or, if empty the (templated) package one
-		PrintDescription *string `json:"printDescription,omitempty"`
+	// PrintDescription PrintDescription
+	// Copy of the release description, or, if empty the (templated) package one
+	PrintDescription *string `json:"printDescription,omitempty"`
 
-		// PrintProtected PrintProtected is a copy of Protected, with a Y/n flag. To be used in display
-		PrintProtected string `json:"printProtected"`
+	// PrintProtected PrintProtected is a copy of Protected, with a Y/n flag. To be used in display
+	PrintProtected *string `json:"printProtected,omitempty"`
 
-		// Protected Protected result of Release.spec.protected defaulted to package.spec.protected
-		// It is the value checked by the webhook
-		Protected bool `json:"protected"`
+	// Protected Protected result of Release.spec.protected defaulted to package.spec.protected
+	// It is the value checked by the webhook
+	Protected *bool `json:"protected,omitempty"`
 
-		// ReadyReleases ReadyReleases is a string to display X/Y helmRelease ready. Not technically used, but intended to be displayed
-		// as printcolumn
-		ReadyReleases string `json:"readyReleases"`
+	// ReadyReleases ReadyReleases is a string to display X/Y helmRelease ready. Not technically used, but intended to be displayed
+	// as printcolumn
+	ReadyReleases *string `json:"readyReleases,omitempty"`
 
-		// Roles The result of the package template and release value
-		Roles []string `json:"roles"`
+	// Roles The result of the package template and release value
+	Roles *[]string `json:"roles,omitempty"`
 
-		// Usage Usage is the rendering of the Package.spec.usage[key]. Aimed to provide user information.
-		// Key could 'html', 'text', some language id, etc...
-		Usage *map[string]string `json:"usage,omitempty"`
-	} `json:"status,omitempty"`
+	// Usage Usage is the rendering of the Package.spec.usage[key]. Aimed to provide user information.
+	// Key could 'html', 'text', some language id, etc...
+	Usage *map[string]string `json:"usage,omitempty"`
 }
 
 // ServerResponse defines model for ServerResponse.
@@ -531,18 +582,70 @@ type CreateGitReleaseJSONBody struct {
 	// Servers should convert recognized schemas to the latest internal value, and
 	// may reject unrecognized values.
 	// More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
-	ApiVersion *string `json:"apiVersion,omitempty"`
+	ApiVersion string `json:"apiVersion"`
 
 	// Kind Kind is a string value representing the REST resource this object represents.
 	// Servers may infer this from the endpoint the client submits requests to.
 	// Cannot be updated.
 	// In CamelCase.
 	// More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
-	Kind     *string                 `json:"kind,omitempty"`
-	Metadata *map[string]interface{} `json:"metadata,omitempty"`
+	Kind string `json:"kind"`
+
+	// Metadata Standard object metadata.
+	Metadata struct {
+		// Annotations Arbitrary metadata.
+		Annotations *map[string]string `json:"annotations,omitempty"`
+
+		// CreationTimestamp Creation timestamp.
+		CreationTimestamp *time.Time `json:"creationTimestamp,omitempty"`
+
+		// DeletionGracePeriodSeconds Seconds allowed for graceful termination.
+		DeletionGracePeriodSeconds *int64 `json:"deletionGracePeriodSeconds,omitempty"`
+
+		// DeletionTimestamp Deletion timestamp.
+		DeletionTimestamp *time.Time `json:"deletionTimestamp,omitempty"`
+
+		// Finalizers List of finalizers.
+		Finalizers *[]string `json:"finalizers,omitempty"`
+
+		// GenerateName Prefix for generating a unique name.
+		GenerateName *string `json:"generateName,omitempty"`
+
+		// Generation Sequence number representing generation of desired state.
+		Generation *int64 `json:"generation,omitempty"`
+
+		// Labels Key-value pairs to categorize resources.
+		Labels *map[string]string `json:"labels,omitempty"`
+
+		// ManagedFields Managed fields tracking info (complex object).
+		ManagedFields *map[string]interface{} `json:"managedFields,omitempty"`
+
+		// Name Name of the resource.
+		Name *string `json:"name,omitempty"`
+
+		// Namespace Namespace of the resource.
+		Namespace *string `json:"namespace,omitempty"`
+
+		// OwnerReferences References to owning resources.
+		OwnerReferences *[]struct {
+			ApiVersion *string `json:"apiVersion,omitempty"`
+			Kind       *string `json:"kind,omitempty"`
+			Name       *string `json:"name,omitempty"`
+			Uid        *string `json:"uid,omitempty"`
+		} `json:"ownerReferences,omitempty"`
+
+		// ResourceVersion Resource version for concurrency control.
+		ResourceVersion *string `json:"resourceVersion,omitempty"`
+
+		// SelfLink Deprecated self-link URL.
+		SelfLink *string `json:"selfLink,omitempty"`
+
+		// Uid Unique ID assigned by Kubernetes.
+		Uid *string `json:"uid,omitempty"`
+	} `json:"metadata"`
 
 	// Spec ReleaseSpec defines the desired state of Release.
-	Spec *struct {
+	Spec struct {
 		// Contexts To provide contextual variables
 		// Refer to Context resource description for some explanation
 		// Contexts are merged in the following order:
@@ -712,57 +815,54 @@ type CreateGitReleaseJSONBody struct {
 		// (i.e. the package has a fixed namespace, or several ones).
 		// Default: Release.metadata.namespace
 		TargetNamespace *string `json:"targetNamespace,omitempty"`
-	} `json:"spec,omitempty"`
+	} `json:"spec"`
 
-	// Status Release is the Schema for the releases API.
+	// Status ReleaseStatus defines the observed state of Release.
+	// As we want Status to be explicit about provided information, we don't use 'omitempty' in its definition.
+	// (Except for 'context', as controlled by a debug flag)
 	Status *struct {
-		// Status ReleaseStatus defines the observed state of Release.
-		// As we want Status to be explicit about provided information, we don't use 'omitempty' in its definition.
-		// (Except for 'context', as controlled by a debug flag)
-		Status *struct {
-			// Context Context is the resulting context, if requested in debug options
-			Context *interface{} `json:"context,omitempty"`
+		// Context Context is the resulting context, if requested in debug options
+		Context *interface{} `json:"context,omitempty"`
 
-			// Dependencies The result of the package template and release value
-			Dependencies []string `json:"dependencies"`
+		// Dependencies The result of the package template and release value
+		Dependencies *[]string `json:"dependencies,omitempty"`
 
-			// HelmReleaseStates HelmReleaseState describe the observed state of child HelmReleases by name
-			HelmReleaseStates *map[string]struct {
-				Ready  string  `json:"ready"`
-				Status *string `json:"status,omitempty"`
-			} `json:"helmReleaseStates,omitempty"`
-			MissingDependency string `json:"missingDependency"`
+		// HelmReleaseStates HelmReleaseState describe the observed state of child HelmReleases by name
+		HelmReleaseStates *map[string]struct {
+			Ready  string  `json:"ready"`
+			Status *string `json:"status,omitempty"`
+		} `json:"helmReleaseStates,omitempty"`
+		MissingDependency *string `json:"missingDependency,omitempty"`
 
-			// Parameters Parameters is the resulting parameters set, if requested in debug options
-			Parameters *interface{} `json:"parameters,omitempty"`
-			Phase      string       `json:"phase"`
+		// Parameters Parameters is the resulting parameters set, if requested in debug options
+		Parameters *interface{} `json:"parameters,omitempty"`
+		Phase      *string      `json:"phase,omitempty"`
 
-			// PrintContexts PrintContextsContexts is a string to list our context. Not technically used, but intended to be displayed
-			// as printcolumn
-			PrintContexts *string `json:"printContexts,omitempty"`
+		// PrintContexts PrintContextsContexts is a string to list our context. Not technically used, but intended to be displayed
+		// as printcolumn
+		PrintContexts *string `json:"printContexts,omitempty"`
 
-			// PrintDescription PrintDescription
-			// Copy of the release description, or, if empty the (templated) package one
-			PrintDescription *string `json:"printDescription,omitempty"`
+		// PrintDescription PrintDescription
+		// Copy of the release description, or, if empty the (templated) package one
+		PrintDescription *string `json:"printDescription,omitempty"`
 
-			// PrintProtected PrintProtected is a copy of Protected, with a Y/n flag. To be used in display
-			PrintProtected string `json:"printProtected"`
+		// PrintProtected PrintProtected is a copy of Protected, with a Y/n flag. To be used in display
+		PrintProtected *string `json:"printProtected,omitempty"`
 
-			// Protected Protected result of Release.spec.protected defaulted to package.spec.protected
-			// It is the value checked by the webhook
-			Protected bool `json:"protected"`
+		// Protected Protected result of Release.spec.protected defaulted to package.spec.protected
+		// It is the value checked by the webhook
+		Protected *bool `json:"protected,omitempty"`
 
-			// ReadyReleases ReadyReleases is a string to display X/Y helmRelease ready. Not technically used, but intended to be displayed
-			// as printcolumn
-			ReadyReleases string `json:"readyReleases"`
+		// ReadyReleases ReadyReleases is a string to display X/Y helmRelease ready. Not technically used, but intended to be displayed
+		// as printcolumn
+		ReadyReleases *string `json:"readyReleases,omitempty"`
 
-			// Roles The result of the package template and release value
-			Roles []string `json:"roles"`
+		// Roles The result of the package template and release value
+		Roles *[]string `json:"roles,omitempty"`
 
-			// Usage Usage is the rendering of the Package.spec.usage[key]. Aimed to provide user information.
-			// Key could 'html', 'text', some language id, etc...
-			Usage *map[string]string `json:"usage,omitempty"`
-		} `json:"status,omitempty"`
+		// Usage Usage is the rendering of the Package.spec.usage[key]. Aimed to provide user information.
+		// Key could 'html', 'text', some language id, etc...
+		Usage *map[string]string `json:"usage,omitempty"`
 	} `json:"status,omitempty"`
 }
 
@@ -778,18 +878,70 @@ type UpdateGitReleaseJSONBody struct {
 	// Servers should convert recognized schemas to the latest internal value, and
 	// may reject unrecognized values.
 	// More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
-	ApiVersion *string `json:"apiVersion,omitempty"`
+	ApiVersion string `json:"apiVersion"`
 
 	// Kind Kind is a string value representing the REST resource this object represents.
 	// Servers may infer this from the endpoint the client submits requests to.
 	// Cannot be updated.
 	// In CamelCase.
 	// More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
-	Kind     *string                 `json:"kind,omitempty"`
-	Metadata *map[string]interface{} `json:"metadata,omitempty"`
+	Kind string `json:"kind"`
+
+	// Metadata Standard object metadata.
+	Metadata struct {
+		// Annotations Arbitrary metadata.
+		Annotations *map[string]string `json:"annotations,omitempty"`
+
+		// CreationTimestamp Creation timestamp.
+		CreationTimestamp *time.Time `json:"creationTimestamp,omitempty"`
+
+		// DeletionGracePeriodSeconds Seconds allowed for graceful termination.
+		DeletionGracePeriodSeconds *int64 `json:"deletionGracePeriodSeconds,omitempty"`
+
+		// DeletionTimestamp Deletion timestamp.
+		DeletionTimestamp *time.Time `json:"deletionTimestamp,omitempty"`
+
+		// Finalizers List of finalizers.
+		Finalizers *[]string `json:"finalizers,omitempty"`
+
+		// GenerateName Prefix for generating a unique name.
+		GenerateName *string `json:"generateName,omitempty"`
+
+		// Generation Sequence number representing generation of desired state.
+		Generation *int64 `json:"generation,omitempty"`
+
+		// Labels Key-value pairs to categorize resources.
+		Labels *map[string]string `json:"labels,omitempty"`
+
+		// ManagedFields Managed fields tracking info (complex object).
+		ManagedFields *map[string]interface{} `json:"managedFields,omitempty"`
+
+		// Name Name of the resource.
+		Name *string `json:"name,omitempty"`
+
+		// Namespace Namespace of the resource.
+		Namespace *string `json:"namespace,omitempty"`
+
+		// OwnerReferences References to owning resources.
+		OwnerReferences *[]struct {
+			ApiVersion *string `json:"apiVersion,omitempty"`
+			Kind       *string `json:"kind,omitempty"`
+			Name       *string `json:"name,omitempty"`
+			Uid        *string `json:"uid,omitempty"`
+		} `json:"ownerReferences,omitempty"`
+
+		// ResourceVersion Resource version for concurrency control.
+		ResourceVersion *string `json:"resourceVersion,omitempty"`
+
+		// SelfLink Deprecated self-link URL.
+		SelfLink *string `json:"selfLink,omitempty"`
+
+		// Uid Unique ID assigned by Kubernetes.
+		Uid *string `json:"uid,omitempty"`
+	} `json:"metadata"`
 
 	// Spec ReleaseSpec defines the desired state of Release.
-	Spec *struct {
+	Spec struct {
 		// Contexts To provide contextual variables
 		// Refer to Context resource description for some explanation
 		// Contexts are merged in the following order:
@@ -959,57 +1111,54 @@ type UpdateGitReleaseJSONBody struct {
 		// (i.e. the package has a fixed namespace, or several ones).
 		// Default: Release.metadata.namespace
 		TargetNamespace *string `json:"targetNamespace,omitempty"`
-	} `json:"spec,omitempty"`
+	} `json:"spec"`
 
-	// Status Release is the Schema for the releases API.
+	// Status ReleaseStatus defines the observed state of Release.
+	// As we want Status to be explicit about provided information, we don't use 'omitempty' in its definition.
+	// (Except for 'context', as controlled by a debug flag)
 	Status *struct {
-		// Status ReleaseStatus defines the observed state of Release.
-		// As we want Status to be explicit about provided information, we don't use 'omitempty' in its definition.
-		// (Except for 'context', as controlled by a debug flag)
-		Status *struct {
-			// Context Context is the resulting context, if requested in debug options
-			Context *interface{} `json:"context,omitempty"`
+		// Context Context is the resulting context, if requested in debug options
+		Context *interface{} `json:"context,omitempty"`
 
-			// Dependencies The result of the package template and release value
-			Dependencies []string `json:"dependencies"`
+		// Dependencies The result of the package template and release value
+		Dependencies *[]string `json:"dependencies,omitempty"`
 
-			// HelmReleaseStates HelmReleaseState describe the observed state of child HelmReleases by name
-			HelmReleaseStates *map[string]struct {
-				Ready  string  `json:"ready"`
-				Status *string `json:"status,omitempty"`
-			} `json:"helmReleaseStates,omitempty"`
-			MissingDependency string `json:"missingDependency"`
+		// HelmReleaseStates HelmReleaseState describe the observed state of child HelmReleases by name
+		HelmReleaseStates *map[string]struct {
+			Ready  string  `json:"ready"`
+			Status *string `json:"status,omitempty"`
+		} `json:"helmReleaseStates,omitempty"`
+		MissingDependency *string `json:"missingDependency,omitempty"`
 
-			// Parameters Parameters is the resulting parameters set, if requested in debug options
-			Parameters *interface{} `json:"parameters,omitempty"`
-			Phase      string       `json:"phase"`
+		// Parameters Parameters is the resulting parameters set, if requested in debug options
+		Parameters *interface{} `json:"parameters,omitempty"`
+		Phase      *string      `json:"phase,omitempty"`
 
-			// PrintContexts PrintContextsContexts is a string to list our context. Not technically used, but intended to be displayed
-			// as printcolumn
-			PrintContexts *string `json:"printContexts,omitempty"`
+		// PrintContexts PrintContextsContexts is a string to list our context. Not technically used, but intended to be displayed
+		// as printcolumn
+		PrintContexts *string `json:"printContexts,omitempty"`
 
-			// PrintDescription PrintDescription
-			// Copy of the release description, or, if empty the (templated) package one
-			PrintDescription *string `json:"printDescription,omitempty"`
+		// PrintDescription PrintDescription
+		// Copy of the release description, or, if empty the (templated) package one
+		PrintDescription *string `json:"printDescription,omitempty"`
 
-			// PrintProtected PrintProtected is a copy of Protected, with a Y/n flag. To be used in display
-			PrintProtected string `json:"printProtected"`
+		// PrintProtected PrintProtected is a copy of Protected, with a Y/n flag. To be used in display
+		PrintProtected *string `json:"printProtected,omitempty"`
 
-			// Protected Protected result of Release.spec.protected defaulted to package.spec.protected
-			// It is the value checked by the webhook
-			Protected bool `json:"protected"`
+		// Protected Protected result of Release.spec.protected defaulted to package.spec.protected
+		// It is the value checked by the webhook
+		Protected *bool `json:"protected,omitempty"`
 
-			// ReadyReleases ReadyReleases is a string to display X/Y helmRelease ready. Not technically used, but intended to be displayed
-			// as printcolumn
-			ReadyReleases string `json:"readyReleases"`
+		// ReadyReleases ReadyReleases is a string to display X/Y helmRelease ready. Not technically used, but intended to be displayed
+		// as printcolumn
+		ReadyReleases *string `json:"readyReleases,omitempty"`
 
-			// Roles The result of the package template and release value
-			Roles []string `json:"roles"`
+		// Roles The result of the package template and release value
+		Roles *[]string `json:"roles,omitempty"`
 
-			// Usage Usage is the rendering of the Package.spec.usage[key]. Aimed to provide user information.
-			// Key could 'html', 'text', some language id, etc...
-			Usage *map[string]string `json:"usage,omitempty"`
-		} `json:"status,omitempty"`
+		// Usage Usage is the rendering of the Package.spec.usage[key]. Aimed to provide user information.
+		// Key could 'html', 'text', some language id, etc...
+		Usage *map[string]string `json:"usage,omitempty"`
 	} `json:"status,omitempty"`
 }
 
@@ -1025,18 +1174,70 @@ type CreateK8sReleaseJSONBody struct {
 	// Servers should convert recognized schemas to the latest internal value, and
 	// may reject unrecognized values.
 	// More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
-	ApiVersion *string `json:"apiVersion,omitempty"`
+	ApiVersion string `json:"apiVersion"`
 
 	// Kind Kind is a string value representing the REST resource this object represents.
 	// Servers may infer this from the endpoint the client submits requests to.
 	// Cannot be updated.
 	// In CamelCase.
 	// More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
-	Kind     *string                 `json:"kind,omitempty"`
-	Metadata *map[string]interface{} `json:"metadata,omitempty"`
+	Kind string `json:"kind"`
+
+	// Metadata Standard object metadata.
+	Metadata struct {
+		// Annotations Arbitrary metadata.
+		Annotations *map[string]string `json:"annotations,omitempty"`
+
+		// CreationTimestamp Creation timestamp.
+		CreationTimestamp *time.Time `json:"creationTimestamp,omitempty"`
+
+		// DeletionGracePeriodSeconds Seconds allowed for graceful termination.
+		DeletionGracePeriodSeconds *int64 `json:"deletionGracePeriodSeconds,omitempty"`
+
+		// DeletionTimestamp Deletion timestamp.
+		DeletionTimestamp *time.Time `json:"deletionTimestamp,omitempty"`
+
+		// Finalizers List of finalizers.
+		Finalizers *[]string `json:"finalizers,omitempty"`
+
+		// GenerateName Prefix for generating a unique name.
+		GenerateName *string `json:"generateName,omitempty"`
+
+		// Generation Sequence number representing generation of desired state.
+		Generation *int64 `json:"generation,omitempty"`
+
+		// Labels Key-value pairs to categorize resources.
+		Labels *map[string]string `json:"labels,omitempty"`
+
+		// ManagedFields Managed fields tracking info (complex object).
+		ManagedFields *map[string]interface{} `json:"managedFields,omitempty"`
+
+		// Name Name of the resource.
+		Name *string `json:"name,omitempty"`
+
+		// Namespace Namespace of the resource.
+		Namespace *string `json:"namespace,omitempty"`
+
+		// OwnerReferences References to owning resources.
+		OwnerReferences *[]struct {
+			ApiVersion *string `json:"apiVersion,omitempty"`
+			Kind       *string `json:"kind,omitempty"`
+			Name       *string `json:"name,omitempty"`
+			Uid        *string `json:"uid,omitempty"`
+		} `json:"ownerReferences,omitempty"`
+
+		// ResourceVersion Resource version for concurrency control.
+		ResourceVersion *string `json:"resourceVersion,omitempty"`
+
+		// SelfLink Deprecated self-link URL.
+		SelfLink *string `json:"selfLink,omitempty"`
+
+		// Uid Unique ID assigned by Kubernetes.
+		Uid *string `json:"uid,omitempty"`
+	} `json:"metadata"`
 
 	// Spec ReleaseSpec defines the desired state of Release.
-	Spec *struct {
+	Spec struct {
 		// Contexts To provide contextual variables
 		// Refer to Context resource description for some explanation
 		// Contexts are merged in the following order:
@@ -1206,57 +1407,54 @@ type CreateK8sReleaseJSONBody struct {
 		// (i.e. the package has a fixed namespace, or several ones).
 		// Default: Release.metadata.namespace
 		TargetNamespace *string `json:"targetNamespace,omitempty"`
-	} `json:"spec,omitempty"`
+	} `json:"spec"`
 
-	// Status Release is the Schema for the releases API.
+	// Status ReleaseStatus defines the observed state of Release.
+	// As we want Status to be explicit about provided information, we don't use 'omitempty' in its definition.
+	// (Except for 'context', as controlled by a debug flag)
 	Status *struct {
-		// Status ReleaseStatus defines the observed state of Release.
-		// As we want Status to be explicit about provided information, we don't use 'omitempty' in its definition.
-		// (Except for 'context', as controlled by a debug flag)
-		Status *struct {
-			// Context Context is the resulting context, if requested in debug options
-			Context *interface{} `json:"context,omitempty"`
+		// Context Context is the resulting context, if requested in debug options
+		Context *interface{} `json:"context,omitempty"`
 
-			// Dependencies The result of the package template and release value
-			Dependencies []string `json:"dependencies"`
+		// Dependencies The result of the package template and release value
+		Dependencies *[]string `json:"dependencies,omitempty"`
 
-			// HelmReleaseStates HelmReleaseState describe the observed state of child HelmReleases by name
-			HelmReleaseStates *map[string]struct {
-				Ready  string  `json:"ready"`
-				Status *string `json:"status,omitempty"`
-			} `json:"helmReleaseStates,omitempty"`
-			MissingDependency string `json:"missingDependency"`
+		// HelmReleaseStates HelmReleaseState describe the observed state of child HelmReleases by name
+		HelmReleaseStates *map[string]struct {
+			Ready  string  `json:"ready"`
+			Status *string `json:"status,omitempty"`
+		} `json:"helmReleaseStates,omitempty"`
+		MissingDependency *string `json:"missingDependency,omitempty"`
 
-			// Parameters Parameters is the resulting parameters set, if requested in debug options
-			Parameters *interface{} `json:"parameters,omitempty"`
-			Phase      string       `json:"phase"`
+		// Parameters Parameters is the resulting parameters set, if requested in debug options
+		Parameters *interface{} `json:"parameters,omitempty"`
+		Phase      *string      `json:"phase,omitempty"`
 
-			// PrintContexts PrintContextsContexts is a string to list our context. Not technically used, but intended to be displayed
-			// as printcolumn
-			PrintContexts *string `json:"printContexts,omitempty"`
+		// PrintContexts PrintContextsContexts is a string to list our context. Not technically used, but intended to be displayed
+		// as printcolumn
+		PrintContexts *string `json:"printContexts,omitempty"`
 
-			// PrintDescription PrintDescription
-			// Copy of the release description, or, if empty the (templated) package one
-			PrintDescription *string `json:"printDescription,omitempty"`
+		// PrintDescription PrintDescription
+		// Copy of the release description, or, if empty the (templated) package one
+		PrintDescription *string `json:"printDescription,omitempty"`
 
-			// PrintProtected PrintProtected is a copy of Protected, with a Y/n flag. To be used in display
-			PrintProtected string `json:"printProtected"`
+		// PrintProtected PrintProtected is a copy of Protected, with a Y/n flag. To be used in display
+		PrintProtected *string `json:"printProtected,omitempty"`
 
-			// Protected Protected result of Release.spec.protected defaulted to package.spec.protected
-			// It is the value checked by the webhook
-			Protected bool `json:"protected"`
+		// Protected Protected result of Release.spec.protected defaulted to package.spec.protected
+		// It is the value checked by the webhook
+		Protected *bool `json:"protected,omitempty"`
 
-			// ReadyReleases ReadyReleases is a string to display X/Y helmRelease ready. Not technically used, but intended to be displayed
-			// as printcolumn
-			ReadyReleases string `json:"readyReleases"`
+		// ReadyReleases ReadyReleases is a string to display X/Y helmRelease ready. Not technically used, but intended to be displayed
+		// as printcolumn
+		ReadyReleases *string `json:"readyReleases,omitempty"`
 
-			// Roles The result of the package template and release value
-			Roles []string `json:"roles"`
+		// Roles The result of the package template and release value
+		Roles *[]string `json:"roles,omitempty"`
 
-			// Usage Usage is the rendering of the Package.spec.usage[key]. Aimed to provide user information.
-			// Key could 'html', 'text', some language id, etc...
-			Usage *map[string]string `json:"usage,omitempty"`
-		} `json:"status,omitempty"`
+		// Usage Usage is the rendering of the Package.spec.usage[key]. Aimed to provide user information.
+		// Key could 'html', 'text', some language id, etc...
+		Usage *map[string]string `json:"usage,omitempty"`
 	} `json:"status,omitempty"`
 }
 
@@ -1278,18 +1476,70 @@ type UpdateK8sReleaseJSONBody struct {
 	// Servers should convert recognized schemas to the latest internal value, and
 	// may reject unrecognized values.
 	// More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
-	ApiVersion *string `json:"apiVersion,omitempty"`
+	ApiVersion string `json:"apiVersion"`
 
 	// Kind Kind is a string value representing the REST resource this object represents.
 	// Servers may infer this from the endpoint the client submits requests to.
 	// Cannot be updated.
 	// In CamelCase.
 	// More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
-	Kind     *string                 `json:"kind,omitempty"`
-	Metadata *map[string]interface{} `json:"metadata,omitempty"`
+	Kind string `json:"kind"`
+
+	// Metadata Standard object metadata.
+	Metadata struct {
+		// Annotations Arbitrary metadata.
+		Annotations *map[string]string `json:"annotations,omitempty"`
+
+		// CreationTimestamp Creation timestamp.
+		CreationTimestamp *time.Time `json:"creationTimestamp,omitempty"`
+
+		// DeletionGracePeriodSeconds Seconds allowed for graceful termination.
+		DeletionGracePeriodSeconds *int64 `json:"deletionGracePeriodSeconds,omitempty"`
+
+		// DeletionTimestamp Deletion timestamp.
+		DeletionTimestamp *time.Time `json:"deletionTimestamp,omitempty"`
+
+		// Finalizers List of finalizers.
+		Finalizers *[]string `json:"finalizers,omitempty"`
+
+		// GenerateName Prefix for generating a unique name.
+		GenerateName *string `json:"generateName,omitempty"`
+
+		// Generation Sequence number representing generation of desired state.
+		Generation *int64 `json:"generation,omitempty"`
+
+		// Labels Key-value pairs to categorize resources.
+		Labels *map[string]string `json:"labels,omitempty"`
+
+		// ManagedFields Managed fields tracking info (complex object).
+		ManagedFields *map[string]interface{} `json:"managedFields,omitempty"`
+
+		// Name Name of the resource.
+		Name *string `json:"name,omitempty"`
+
+		// Namespace Namespace of the resource.
+		Namespace *string `json:"namespace,omitempty"`
+
+		// OwnerReferences References to owning resources.
+		OwnerReferences *[]struct {
+			ApiVersion *string `json:"apiVersion,omitempty"`
+			Kind       *string `json:"kind,omitempty"`
+			Name       *string `json:"name,omitempty"`
+			Uid        *string `json:"uid,omitempty"`
+		} `json:"ownerReferences,omitempty"`
+
+		// ResourceVersion Resource version for concurrency control.
+		ResourceVersion *string `json:"resourceVersion,omitempty"`
+
+		// SelfLink Deprecated self-link URL.
+		SelfLink *string `json:"selfLink,omitempty"`
+
+		// Uid Unique ID assigned by Kubernetes.
+		Uid *string `json:"uid,omitempty"`
+	} `json:"metadata"`
 
 	// Spec ReleaseSpec defines the desired state of Release.
-	Spec *struct {
+	Spec struct {
 		// Contexts To provide contextual variables
 		// Refer to Context resource description for some explanation
 		// Contexts are merged in the following order:
@@ -1459,57 +1709,54 @@ type UpdateK8sReleaseJSONBody struct {
 		// (i.e. the package has a fixed namespace, or several ones).
 		// Default: Release.metadata.namespace
 		TargetNamespace *string `json:"targetNamespace,omitempty"`
-	} `json:"spec,omitempty"`
+	} `json:"spec"`
 
-	// Status Release is the Schema for the releases API.
+	// Status ReleaseStatus defines the observed state of Release.
+	// As we want Status to be explicit about provided information, we don't use 'omitempty' in its definition.
+	// (Except for 'context', as controlled by a debug flag)
 	Status *struct {
-		// Status ReleaseStatus defines the observed state of Release.
-		// As we want Status to be explicit about provided information, we don't use 'omitempty' in its definition.
-		// (Except for 'context', as controlled by a debug flag)
-		Status *struct {
-			// Context Context is the resulting context, if requested in debug options
-			Context *interface{} `json:"context,omitempty"`
+		// Context Context is the resulting context, if requested in debug options
+		Context *interface{} `json:"context,omitempty"`
 
-			// Dependencies The result of the package template and release value
-			Dependencies []string `json:"dependencies"`
+		// Dependencies The result of the package template and release value
+		Dependencies *[]string `json:"dependencies,omitempty"`
 
-			// HelmReleaseStates HelmReleaseState describe the observed state of child HelmReleases by name
-			HelmReleaseStates *map[string]struct {
-				Ready  string  `json:"ready"`
-				Status *string `json:"status,omitempty"`
-			} `json:"helmReleaseStates,omitempty"`
-			MissingDependency string `json:"missingDependency"`
+		// HelmReleaseStates HelmReleaseState describe the observed state of child HelmReleases by name
+		HelmReleaseStates *map[string]struct {
+			Ready  string  `json:"ready"`
+			Status *string `json:"status,omitempty"`
+		} `json:"helmReleaseStates,omitempty"`
+		MissingDependency *string `json:"missingDependency,omitempty"`
 
-			// Parameters Parameters is the resulting parameters set, if requested in debug options
-			Parameters *interface{} `json:"parameters,omitempty"`
-			Phase      string       `json:"phase"`
+		// Parameters Parameters is the resulting parameters set, if requested in debug options
+		Parameters *interface{} `json:"parameters,omitempty"`
+		Phase      *string      `json:"phase,omitempty"`
 
-			// PrintContexts PrintContextsContexts is a string to list our context. Not technically used, but intended to be displayed
-			// as printcolumn
-			PrintContexts *string `json:"printContexts,omitempty"`
+		// PrintContexts PrintContextsContexts is a string to list our context. Not technically used, but intended to be displayed
+		// as printcolumn
+		PrintContexts *string `json:"printContexts,omitempty"`
 
-			// PrintDescription PrintDescription
-			// Copy of the release description, or, if empty the (templated) package one
-			PrintDescription *string `json:"printDescription,omitempty"`
+		// PrintDescription PrintDescription
+		// Copy of the release description, or, if empty the (templated) package one
+		PrintDescription *string `json:"printDescription,omitempty"`
 
-			// PrintProtected PrintProtected is a copy of Protected, with a Y/n flag. To be used in display
-			PrintProtected string `json:"printProtected"`
+		// PrintProtected PrintProtected is a copy of Protected, with a Y/n flag. To be used in display
+		PrintProtected *string `json:"printProtected,omitempty"`
 
-			// Protected Protected result of Release.spec.protected defaulted to package.spec.protected
-			// It is the value checked by the webhook
-			Protected bool `json:"protected"`
+		// Protected Protected result of Release.spec.protected defaulted to package.spec.protected
+		// It is the value checked by the webhook
+		Protected *bool `json:"protected,omitempty"`
 
-			// ReadyReleases ReadyReleases is a string to display X/Y helmRelease ready. Not technically used, but intended to be displayed
-			// as printcolumn
-			ReadyReleases string `json:"readyReleases"`
+		// ReadyReleases ReadyReleases is a string to display X/Y helmRelease ready. Not technically used, but intended to be displayed
+		// as printcolumn
+		ReadyReleases *string `json:"readyReleases,omitempty"`
 
-			// Roles The result of the package template and release value
-			Roles []string `json:"roles"`
+		// Roles The result of the package template and release value
+		Roles *[]string `json:"roles,omitempty"`
 
-			// Usage Usage is the rendering of the Package.spec.usage[key]. Aimed to provide user information.
-			// Key could 'html', 'text', some language id, etc...
-			Usage *map[string]string `json:"usage,omitempty"`
-		} `json:"status,omitempty"`
+		// Usage Usage is the rendering of the Package.spec.usage[key]. Aimed to provide user information.
+		// Key could 'html', 'text', some language id, etc...
+		Usage *map[string]string `json:"usage,omitempty"`
 	} `json:"status,omitempty"`
 }
 
