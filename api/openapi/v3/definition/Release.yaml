@@ -1,5 +1,13 @@
 # controller-gen crd paths=./api/v1alpha1 output:crd:dir=./api/schema
 description: Release is the Schema for the releases API.
+type: object
+xml:
+  name: Release
+required:
+- "apiVersion"
+- "kind"
+- "metadata"
+- "spec"
 properties:
   apiVersion:
     description: |-
@@ -18,6 +26,74 @@ properties:
     type: string
   metadata:
     type: object
+    description: Standard object metadata.
+    properties:
+      name:
+        type: string
+        description: Name of the resource.
+      namespace:
+        type: string
+        description: Namespace of the resource.
+      labels:
+        type: object
+        additionalProperties:
+          type: string
+        description: Key-value pairs to categorize resources.
+      annotations:
+        type: object
+        additionalProperties:
+          type: string
+        description: Arbitrary metadata.
+      finalizers:
+        type: array
+        items:
+          type: string
+        description: List of finalizers.
+      ownerReferences:
+        type: array
+        items:
+          type: object
+          properties:
+            apiVersion:
+              type: string
+            kind:
+              type: string
+            name:
+              type: string
+            uid:
+              type: string
+        description: References to owning resources.
+      generation:
+        type: integer
+        format: int64
+        description: Sequence number representing generation of desired state.
+      creationTimestamp:
+        type: string
+        format: date-time
+        description: Creation timestamp.
+      deletionTimestamp:
+        type: string
+        format: date-time
+        description: Deletion timestamp.
+      uid:
+        type: string
+        description: Unique ID assigned by Kubernetes.
+      generateName:
+        type: string
+        description: Prefix for generating a unique name.
+      selfLink:
+        type: string
+        description: Deprecated self-link URL.
+      resourceVersion:
+        type: string
+        description: Resource version for concurrency control.
+      deletionGracePeriodSeconds:
+        type: integer
+        format: int64
+        description: Seconds allowed for graceful termination.
+      managedFields:
+        type: object
+        description: Managed fields tracking info (complex object).
   spec:
     description: ReleaseSpec defines the desired state of Release.
     properties:
@@ -278,4 +354,4 @@ properties:
     type: object
   status:
     $ref: './ReleaseStatus.yaml'
-type: object
+

@@ -41,7 +41,7 @@ func (c KubeClient) ListReleases(ctx context.Context, namespaces ...string) ([]*
 	converted := model.ReleaseList(releaseList)
 
 	filtered := utils.Filter2(converted.ToReleases(), func(k model.Release) bool {
-		return utils.Contains(namespaces, k.Namespace)
+		return len(namespaces) == 0 || utils.Contains(namespaces, k.Namespace)
 	})
 
 	return filtered, nil

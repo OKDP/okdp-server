@@ -96,6 +96,7 @@ catalog:
       
 clusters:
   - id: kubo03dev
+    name: k8s infra dev
     env: dev
     auth:
       kubeconfig:

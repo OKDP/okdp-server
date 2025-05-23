@@ -38,6 +38,10 @@ tags:
     description: KuboCD K8S Releases
     externalDocs:
       url: https://github.com/okdp/okdp-server
+  - name: admin
+    description: KuboCD K8S Releases
+    externalDocs:
+      url: https://github.com/okdp/okdp-server
 
 paths:
   ### Users

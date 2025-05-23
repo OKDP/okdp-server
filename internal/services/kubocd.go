@@ -31,8 +31,8 @@ func NewKuboCDService() *KuboCDService {
 	}
 }
 
-func (s KuboCDService) ListReleases(clusterID string, namespace string) ([]*model.Release, *model.ServerResponse) {
-	return s.kubocd.ListReleases(clusterID, namespace)
+func (s KuboCDService) ListReleases(clusterID string, namespaces ...string) ([]*model.Release, *model.ServerResponse) {
+	return s.kubocd.ListReleases(clusterID, namespaces...)
 
 }
 

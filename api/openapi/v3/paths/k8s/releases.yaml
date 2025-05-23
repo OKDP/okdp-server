@@ -26,7 +26,7 @@ get:
           schema:
             type: array
             items:
-              $ref: '../../definition/ReleaseInfo.yaml'
+              $ref: '../../definition/Release.yaml'
 
     default:
       description: Server error

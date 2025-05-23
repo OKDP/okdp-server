@@ -108,7 +108,7 @@ func GetPackages(catalogID string) ([]*model.Package, *model.ServerResponse) {
 	}
 	packages := make([]*model.Package, 0, len(catalog.Packages))
 	for _, p := range catalog.Packages {
-		result, err := getPackage(catalogID, p.Name)
+		result, err := getPackage(catalogID, p.Name, catalog.RepoURL)
 		if err != nil {
 			return nil, err
 		}
@@ -124,7 +124,7 @@ func GetPackage(catalogID string, name string) (*model.Package, *model.ServerRes
 	}
 	for _, p := range catalog.Packages {
 		if strings.EqualFold(p.Name, name) {
-			return getPackage(catalogID, p.Name)
+			return getPackage(catalogID, p.Name, catalog.RepoURL)
 		}
 	}
 	return nil, model.CatalogPackageNotFoundError(catalogID, name)
@@ -138,7 +138,7 @@ func GetPackageDefinition(catalogID string, name string, version string) (map[st
 	return repo.fetchDefinition(version)
 }
 
-func getPackage(catalogID string, name string) (*model.Package, *model.ServerResponse) {
+func getPackage(catalogID string, name string, repoURL string) (*model.Package, *model.ServerResponse) {
 	repo, err := getRepoClient(catalogID, name)
 	if err != nil {
 		return nil, err
@@ -150,6 +150,7 @@ func getPackage(catalogID string, name string) (*model.Package, *model.ServerRes
 	return &model.Package{
 		Name:     name,
 		Versions: utils.SortVersions(versions),
+		RepoURL:  repoURL,
 	}, nil
 }
 
