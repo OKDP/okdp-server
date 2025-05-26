@@ -1,4 +1,74 @@
 configuration:
+  # -- List of Kubernetes clusters this chart will interact with
+  clusters:
+    - id: kubo2 # -- Unique identifier for the cluster
+      name: "My k8s cluster 1" # -- Human-readable name for the cluster
+      env: dev # -- Environment tag (e.g., dev, staging, prod)
+
+      auth:
+        # -- Use in-cluster authentication
+        inCluster: true
+
+        # kubeconfig:
+        #   apiServer: https://host.docker.internal:56660 # -- Kubernetes API server address
+        #   path: /tmp/.kube/config # -- Path to the kubeconfig file
+        #   # context: kind-kind-okdp-sandbox # -- Optional: specify kubeconfig context to use
+        #   insecureSkipTlsVerify: true # -- Skip TLS verification (not recommended in production)
+
+        # -- Optional certificate-based authentication
+        # certificate:
+        #   apiServer: https://k8s-api-server-url:6443 # -- API server for certificate auth
+        #   clientKey: /path/to/client-key.pem # -- Path to client key
+        #   clientCert: /path/to/client-cert.pem # -- Path to client certificate
+        #   caCert: /path/to/ca-cert.pem # -- Path to CA certificate
+
+        # -- Optional bearer token authentication
+        # bearer:
+        #   apiServer: https://k8s-api-server-url:6443 # -- API server for bearer token auth
+        #   bearerToken: $(BEARER_TOKEN) # -- Bearer token used to authenticate
+  
+  # -- List of catalogs available to this chart
+  catalog:
+    - id: storage # -- Unique identifier for the catalog
+      name: "Storage catalog" # -- Human-readable name of the catalog
+      description: "My Storage packages" # -- Description of the catalog's purpose
+      repoUrl: quay.io/kubocd/packages # -- OCI registry URL to pull packages from
+
+      # -- Credentials for private registries (optional)
+      #credentials:
+      #  robotAccountName: $(OCI_USERNAME) # -- Robot account username for private registry
+      #  robotAccountToken: $(OCI_PASSWORD) # -- Robot account token for private registry
+      #  dockerconfigjson: $(DOCKER_CONFIG_JSON) # -- Base64-encoded Docker config JSON
+
+      # -- List of packages under this catalog
+      packages:
+        - name: redis # -- Name of the package
+        - name: minio
+        - name: cnpg
+
+    - id: auth
+      name: "Auth catalog"
+      description: "My Auth packages"
+      repoUrl: quay.io/kubocd/packages
+      packages:
+        - name: openldap
+
+    - id: infra
+      name: "Infra catalog"
+      description: "My Infra packages"
+      repoUrl: quay.io/kubocd/packages
+      packages:
+        - name: cert-manager
+        - name: ingress-nginx
+        - name: metallb
+
+    - id: stack
+      name: "Stack catalog"
+      description: "My Stack packages"
+      repoUrl: quay.io/kubocd/packages
+      packages:
+        - name: podinfo
+
   server:
     # -- Specify the Server listen address.
     listenAddress: 0.0.0.0
@@ -19,9 +89,9 @@ configuration:
       provider: ["bearer"]
       bearer:
         # -- Specify the issuer uri.
-        issuerUri: "http://keycloak.okdp.sandbox/realms/master"
+        issuerUri: "http://keycloak:7080/realms/master"
         # -- Specify the jwks URL.
-        jwksURL: "http://keycloak.okdp.sandbox/realms/master/protocol/openid-connect/certs"
+        jwksURL: "http://keycloak:7080/realms/master/protocol/openid-connect/certs"
         # -- Specify the roles attribute path from json access token.
         rolesAttributePath: "realm_access.roles"
         # -- Specify the groups attribute path from json access token.
@@ -105,8 +175,8 @@ configuration:
         type: oauth2
         flows:
           authorizationCode:
-            authorizationUrl: http://keycloak.okdp.sandbox/realms/master/protocol/openid-connect/auth
-            tokenUrl: http://keycloak.okdp.sandbox/realms/master/protocol/openid-connect/token
+            authorizationUrl: http://keycloak:7080/realms/master/protocol/openid-connect/auth
+            tokenUrl: http://keycloak:7080/realms/master/protocol/openid-connect/token
             scopes: 
               openid: OpenId Authentication
               email: User Email
@@ -114,18 +184,6 @@ configuration:
               roles: User Roles
     security:
       - oauth2: [openid, email, profile, roles]
-
-  kad:
-    # -- Specify any ID.
-    - id: sandbox
-      # -- Specify any name.
-      name: Poc Sandbox
-      # -- Specify KAD API URL.
-      apiUrl: "kad.okdp.sandbox"
-      # -- Specify KAD AUTH Bearer.
-      authBearer: "4Ys3brdqnD5LVjf6hLcQsSQbHWLh5asJ"
-      # -- Wether to skip the certificate validation.
-      insecureSkipVerify: true
 
 swagger-ui:
   enabled: true

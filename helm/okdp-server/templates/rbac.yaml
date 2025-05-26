@@ -1,0 +1,43 @@
+{{- if .Values.rbac.create -}}
+# Refine later
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ include "okdp-server.fullname" . }}
+  {{- with .Values.rbac.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  labels:
+    {{- include "okdp-server.labels" . | nindent 4 }}
+rules:
+- apiGroups:
+  - '*'
+  resources:
+  - '*'
+  verbs:
+  - '*'
+- nonResourceURLs:
+  - '*'
+  verbs:
+  - '*'
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ include "okdp-server.fullname" . }}
+  {{- with .Values.rbac.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  labels:
+    {{- include "okdp-server.labels" . | nindent 4 }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ include "okdp-server.serviceAccountName" $ }}
+    namespace: {{ .Release.Namespace }}
+roleRef:
+  kind: ClusterRole
+  name: {{ include "okdp-server.fullname" $ }}
+  apiGroup: rbac.authorization.k8s.io
+{{- end }}
