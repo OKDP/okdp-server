@@ -2,8 +2,8 @@ apiVersion: v2
 name: okdp-server
 description: A Helm chart for okdp-server
 type: application
-version: 0.1.0
-appVersion: "0.1.0"
+version: 0.2.0-snapshot
+appVersion: "0.2.0-snapshot"
 home: https://okdp.io
 maintainers:
   - email: idir.izitounene@kubotal.io

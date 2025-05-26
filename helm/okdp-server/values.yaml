@@ -7,7 +7,7 @@ image:
   # -- Image pull policy.
   pullPolicy: Always
   # -- Image tag.
-  tag: "0.1.0"
+  tag: "0.2.0"
 
 # -- Secrets to be used for pulling images from private Docker registries.
 imagePullSecrets: []
@@ -17,6 +17,85 @@ nameOverride: ""
 fullnameOverride: ""
 
 configuration:
+  # -- List of Kubernetes clusters this chart will interact with
+  clusters:
+    # -- Unique identifier for the cluster
+    - id: kubo2
+      # -- Human-readable name for the cluster
+      name: "My k8s cluster 1"
+      # -- Environment tag (e.g., dev, staging, prod)
+      env: dev
+      auth:
+        # -- Use in-cluster authentication
+        inCluster: true
+        # kubeconfig:
+        #   apiServer: https://host.docker.internal:56660 # -- Kubernetes API server address
+        #   path: /tmp/.kube/config # -- Path to the kubeconfig file
+        #   # context: kind-kind-okdp-sandbox # -- Optional: specify kubeconfig context to use
+        #   insecureSkipTlsVerify: true # -- Skip TLS verification (not recommended in production)
+
+        # -- Optional certificate-based authentication
+        # certificate:
+        #   apiServer: https://k8s-api-server-url:6443 # -- API server for certificate auth
+        #   clientKey: /path/to/client-key.pem # -- Path to client key
+        #   clientCert: /path/to/client-cert.pem # -- Path to client certificate
+        #   caCert: /path/to/ca-cert.pem # -- Path to CA certificate
+
+        # -- Optional bearer token authentication
+        # bearer:
+        #   apiServer: https://k8s-api-server-url:6443 # -- API server for bearer token auth
+        #   bearerToken: $(BEARER_TOKEN) # -- Bearer token used to authenticate
+  
+  # -- List of catalogs available to this chart
+  catalog:
+    # -- Unique identifier for the catalog
+    - id: storage
+      # -- Human-readable name of the catalog
+      name: "Storage catalog"
+      # -- Description of the catalog's purpose
+      description: "My Storage packages"
+      # -- OCI registry URL to pull packages from
+      repoUrl: quay.io/kubocd/packages
+
+      # -- Credentials for private registries (optional)
+      # credentials:
+      #   -- Robot account username for private registry
+      #   robotAccountName: $(OCI_USERNAME)
+      #   -- Robot account token for private registry
+      #   robotAccountToken: $(OCI_PASSWORD)
+      #   -- Base64-encoded Docker config JSON
+      #   dockerconfigjson: $(DOCKER_CONFIG_JSON)
+
+      # -- List of packages under this catalog
+      packages:
+        # -- Name of the package
+        - name: redis
+        - name: minio
+        - name: cnpg
+
+    - id: auth
+      name: "Auth catalog"
+      description: "My Auth packages"
+      repoUrl: quay.io/kubocd/packages
+      packages:
+        - name: openldap
+
+    - id: infra
+      name: "Infra catalog"
+      description: "My Infra packages"
+      repoUrl: quay.io/kubocd/packages
+      packages:
+        - name: cert-manager
+        - name: ingress-nginx
+        - name: metallb
+
+    - id: stack
+      name: "Stack catalog"
+      description: "My Stack packages"
+      repoUrl: quay.io/kubocd/packages
+      packages:
+        - name: podinfo
+        
   server:
     # -- Specify the Server listen address.
     listenAddress: 0.0.0.0
@@ -69,16 +148,12 @@ configuration:
       inline:
         policy: |
           p, role:viewers, /api/v1/users/myprofile, *
-          p, role:viewers, /api/v1/kad, *
-          p, role:viewers, /api/v1/kad/*/services, *
-          p, role:viewers, /api/v1/kad/*/catalog, *
-          p, role:viewers, /api/v1/kad/*/catalog/*, *
-          p, role:viewers, /api/v1/kad/*/componentreleases, *
-          p, role:viewers, /api/v1/kad/*/componentreleases/*, *
-          p, role:viewers, /api/v1/kad/*/templatereleases, *
-          p, role:viewers, /api/v1/kad/*/templatereleases/*, *
-          p, role:viewers, /api/v1/kad/*/components, *
-          p, role:viewers, /api/v1/kad/*/components/*, *
+          p, role:viewers, /api/v1/catalogs, *
+          p, role:viewers, /api/v1/catalogs/*, *
+
+          p, role:viewers, /api/v1/clusters, *
+          p, role:viewers, /api/v1/clusters/*/gitrepos, *
+          p, role:viewers, /api/v1/clusters/*/gitrepos/*, *
 
           g, role:admins, role:developers
           g, role:developers, role:viewers
@@ -135,17 +210,6 @@ configuration:
     security:
       - oauth2: [openid, email, profile, roles]
 
-  kad:
-    # -- Specify any ID.
-    - id: sandbox
-      # -- Specify any name.
-      name: Poc Sandbox
-      # -- Specify KAD API URL.
-      apiUrl: ""
-      # -- Specify KAD AUTH Bearer.
-      authBearer: ""
-      # -- Wether to skip the certificate validation.
-      insecureSkipVerify: true
 swagger-ui:
   # — Whether to enable or disable swagger UI.
   enabled: true
@@ -173,14 +237,20 @@ swagger-ui:
 
 serviceAccount:
   # -- Specify whether a service account should be created
-  create: false
+  create: true
   # -- Automatically mount a ServiceAccount's API credentials?
-  automount: false
+  automount: true
   # -- Annotations to add to the service account
   annotations: {}
   # -- The name of the service account to use.
   # -- If not set and create is true, a name is generated using the fullname template
   name: ""
+
+rbac:
+  # -- Specify whether a RBAC should be created
+  create: true
+  # -- Specify annotations for the proxy.
+  annotations: {}
 
 # -- Additional annotations for the okdp-server pod.
 podAnnotations: {}
