@@ -137,6 +137,7 @@ clusters:
     name: My k8s cluster 1
     env: dev
     auth:
+      # inCluster: true
       kubeconfig:
         apiServer: https://host.docker.internal:56660
         path: /tmp/.kube/config

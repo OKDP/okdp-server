@@ -17,10 +17,13 @@ properties:
   auth:
     type: object
     oneOf:
+      - required: [inCluster]
       - required: [kubeconfig]
       - required: [certificate]
       - required: [bearer]
     properties:
+      inCluster:
+        type: boolean
       kubeconfig:
         type: object
         required:

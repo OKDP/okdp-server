@@ -37,4 +37,5 @@ const (
 	K8SAuthKubeConfig  = "AuthKubeconfig"
 	K8SAuthCertificate = "AuthCertificate"
 	K8SAuthBeaer       = "AuthBearer"
+	K8SInCluster       = "InCluster"
 )

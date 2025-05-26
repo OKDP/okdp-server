@@ -99,6 +99,7 @@ clusters:
     name: k8s infra dev
     env: dev
     auth:
+      inCluster: true
       kubeconfig:
         apiServer: https://host.docker.internal:56660
         path: /path/to/kubeconfig

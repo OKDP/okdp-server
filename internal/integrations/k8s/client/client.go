@@ -17,12 +17,14 @@
 package client
 
 import (
+	"fmt"
 	"sync"
 
 	kustomizev1 "github.com/fluxcd/kustomize-controller/api/v1"
 	sourcev1 "github.com/fluxcd/source-controller/api/v1"
 	corev1 "k8s.io/api/core/v1"
 	apiruntime "k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/client-go/rest"
 	restclient "k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/clientcmd"
 	clientcmdapi "k8s.io/client-go/tools/clientcmd/api"
@@ -55,47 +57,28 @@ func GetClients() *KubeClients {
 	once.Do(func() {
 		clients := make(map[string]*KubeClient)
 		clusters := config.GetAppConfig().Clusters
+
 		for _, cluster := range clusters {
 			log.Info("K8S Cluster configuration: %+v", cluster)
-			var config *restclient.Config
-			switch cluster.AuthType() {
-			case constants.K8SAuthKubeConfig:
-				var err error
-				config, err = buildConfig(cluster.Auth.Kubeconfig.APIServer, cluster.Auth.Kubeconfig.Context, cluster.Auth.Kubeconfig.Path)
-				if err != nil {
-					log.Fatal("Failed to build kubeconfig for cluster ID %s and kubeconfig path: %s, details: %v",
-						cluster.ID, cluster.Auth.Kubeconfig.Path, err)
-				}
-				if cluster.Auth.Kubeconfig.InsecureSkipTlsVerify {
-					log.Warn("TLS verification is disabled for cluster ID: %s (%s).", cluster.ID, cluster.Env)
-					config.Insecure = true
-					config.CAFile = ""
-					config.CAData = nil
-				}
 
-				if err != nil {
-					log.Fatal("Error building kubeconfig for cluster ID '%s (%s)': %s", cluster.ID, cluster.Env, err.Error())
-				}
-			case constants.K8SAuthCertificate:
-				log.Fatal("Authentication method %s not supported for cluster ID %s", constants.K8SAuthCertificate, cluster.ID)
-			case constants.K8SAuthBeaer:
-				log.Fatal("Authentication method %s not supported for cluster ID %s", constants.K8SAuthBeaer, cluster.ID)
-			default:
-				log.Fatal("Unable to find authentication credentials for cluster ID %s", cluster.ID)
+			config, err := buildConfig(cluster)
+			if err != nil {
+				log.Fatal("Failed to get config for cluster ID '%s (%s)': %v", cluster.ID, cluster.Env, err)
 			}
 
 			kubeClient, err := k8s.New(config, k8s.Options{
 				Scheme: newScheme(),
 			})
-
 			if err != nil {
-				log.Fatal("Error creating new k8s client for cluster ID '%s (%s)': %s", cluster.ID, cluster.Env, err.Error())
+				log.Fatal("Error creating new k8s client for cluster ID '%s (%s)': %v", cluster.ID, cluster.Env, err)
 			}
 
 			clients[utils.MapKey(cluster.ID)] = &KubeClient{kubeClient, cluster.ID}
 		}
+
 		instance = &KubeClients{clients: clients}
 	})
+
 	return instance
 }
 
@@ -117,10 +100,54 @@ func newScheme() *apiruntime.Scheme {
 	return scheme
 }
 
-// buildConfig builds Kubernetes client config using optional apiServer URL,
+// buildConfig constructs a Kubernetes REST config based on the cluster's authentication method.
+// Supported auth types:
+// - K8SAuthKubeConfig: uses a kubeconfig file and context.
+// - K8SInCluster: uses in-cluster service account credentials.
+// Unsupported auth types will return an error.
+//
+// Params:
+//
+//	cluster - pointer to the cluster configuration model.
+//
+// Returns:
+//
+//	*restclient.Config - Kubernetes REST configuration.
+//	error              - any error encountered during config building.
+func buildConfig(cluster *model.Cluster) (*restclient.Config, error) {
+	switch cluster.AuthType() {
+	case constants.K8SAuthKubeConfig:
+		config, err := buildKubeConfig(
+			cluster.Auth.Kubeconfig.APIServer,
+			cluster.Auth.Kubeconfig.Context,
+			cluster.Auth.Kubeconfig.Path,
+		)
+		if err != nil {
+			return nil, err
+		}
+		if cluster.Auth.Kubeconfig.InsecureSkipTlsVerify {
+			log.Warn("TLS verification is disabled for cluster ID: %s (%s).", cluster.ID, cluster.Env)
+			config.Insecure = true
+			config.CAFile = ""
+			config.CAData = nil
+		}
+		return config, nil
+
+	case constants.K8SInCluster:
+		return rest.InClusterConfig()
+
+	case constants.K8SAuthCertificate, constants.K8SAuthBeaer:
+		return nil, fmt.Errorf("authentication method %s not supported", cluster.AuthType())
+
+	default:
+		return nil, fmt.Errorf("no authentication credentials found")
+	}
+}
+
+// buildKubeConfig builds Kubernetes client config using optional apiServer URL,
 // optional context (defaults to current context if empty),
 // and explicit kubeconfig path.
-func buildConfig(masterURL, context, kubeconfigPath string) (*restclient.Config, error) {
+func buildKubeConfig(masterURL, context, kubeconfigPath string) (*restclient.Config, error) {
 	loadingRules := &clientcmd.ClientConfigLoadingRules{
 		ExplicitPath: kubeconfigPath,
 	}
