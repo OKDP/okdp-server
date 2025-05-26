@@ -41,5 +41,9 @@ func (m Cluster) AuthType() string {
 		return constants.K8SAuthBeaer
 	}
 
+	if *m.Auth.InCluster {
+		return constants.K8SInCluster
+	}
+
 	return ""
 }

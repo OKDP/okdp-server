@@ -220,6 +220,8 @@ func Test_LoadConfig_Clusters(t *testing.T) {
 	assert.Equal(t, "https://k8s-api-server-url:6443", cluster.Auth.Bearer.APIServer, "cluster.Auth.Bearer.ApiServer")
 	assert.Equal(t, "$(BEARER_TOKEN)", cluster.Auth.Bearer.BearerToken, "cluster.Auth.Bearer.BearerToken")
 
+	assert.True(t, *cluster.Auth.InCluster, "cluster.Auth.InCluster")
+
 }
 
 func Test_LoadConfig_ConfigFileNotFound(t *testing.T) {

@@ -122,6 +122,9 @@ type ClusterAuth1 = interface{}
 // ClusterAuth2 defines model for .
 type ClusterAuth2 = interface{}
 
+// ClusterAuth3 defines model for .
+type ClusterAuth3 = interface{}
+
 // Cluster_Auth defines model for Cluster.Auth.
 type Cluster_Auth struct {
 	Bearer *struct {
@@ -134,6 +137,7 @@ type Cluster_Auth struct {
 		ClientCert string `json:"clientCert"`
 		ClientKey  string `json:"clientKey"`
 	} `json:"certificate,omitempty"`
+	InCluster  *bool `json:"inCluster,omitempty"`
 	Kubeconfig *struct {
 		APIServer             string `json:"apiServer"`
 		Context               string `json:"context"`
@@ -1862,6 +1866,32 @@ func (t *Cluster_Auth) MergeClusterAuth2(v ClusterAuth2) error {
 	return err
 }
 
+// AsClusterAuth3 returns the union data inside the Cluster_Auth as a ClusterAuth3
+func (t Cluster_Auth) AsClusterAuth3() (ClusterAuth3, error) {
+	var body ClusterAuth3
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromClusterAuth3 overwrites any union data inside the Cluster_Auth as the provided ClusterAuth3
+func (t *Cluster_Auth) FromClusterAuth3(v ClusterAuth3) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeClusterAuth3 performs a merge with any union data inside the Cluster_Auth, using the provided ClusterAuth3
+func (t *Cluster_Auth) MergeClusterAuth3(v ClusterAuth3) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
 func (t Cluster_Auth) MarshalJSON() ([]byte, error) {
 	b, err := t.union.MarshalJSON()
 	if err != nil {
@@ -1886,6 +1916,13 @@ func (t Cluster_Auth) MarshalJSON() ([]byte, error) {
 		object["certificate"], err = json.Marshal(t.Certificate)
 		if err != nil {
 			return nil, fmt.Errorf("error marshaling 'certificate': %w", err)
+		}
+	}
+
+	if t.InCluster != nil {
+		object["inCluster"], err = json.Marshal(t.InCluster)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'inCluster': %w", err)
 		}
 	}
 
@@ -1921,6 +1958,13 @@ func (t *Cluster_Auth) UnmarshalJSON(b []byte) error {
 		err = json.Unmarshal(raw, &t.Certificate)
 		if err != nil {
 			return fmt.Errorf("error reading 'certificate': %w", err)
+		}
+	}
+
+	if raw, found := object["inCluster"]; found {
+		err = json.Unmarshal(raw, &t.InCluster)
+		if err != nil {
+			return fmt.Errorf("error reading 'inCluster': %w", err)
 		}
 	}
 
