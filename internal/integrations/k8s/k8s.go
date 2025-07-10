@@ -33,10 +33,42 @@ func NewK8S() *K8S {
 	}
 }
 
-func (s K8S) ListNamespaces(clusterID string) ([]string, *model.ServerResponse) {
+func (s K8S) GetNamespaceByName(clusterID string, namespace string) (*model.Namespace, *model.ServerResponse) {
+	kubeClient, err := s.GetClient(clusterID)
+	if err != nil {
+		return nil, err
+	}
+	return kubeClient.GetNamespaceByName(context.Background(), clusterID, namespace)
+}
+
+func (s K8S) ListNamespaces(clusterID string) ([]*model.Namespace, *model.ServerResponse) {
 	kubeClient, err := s.GetClient(clusterID)
 	if err != nil {
 		return nil, err
 	}
 	return kubeClient.ListNamespaces(context.Background())
+}
+
+func (s K8S) CreateNamespace(clusterID string, namespace *model.Namespace) *model.ServerResponse {
+	kubeClient, err := s.GetClient(clusterID)
+	if err != nil {
+		return err
+	}
+	return kubeClient.CreateNamespace(context.Background(), namespace)
+}
+
+func (s K8S) UpdateNamespace(clusterID string, namespace *model.Namespace) *model.ServerResponse {
+	kubeClient, err := s.GetClient(clusterID)
+	if err != nil {
+		return err
+	}
+	return kubeClient.UpdateNamespace(context.Background(), namespace)
+}
+
+func (s K8S) DeleteNamespace(clusterID string, namespace string) *model.ServerResponse {
+	kubeClient, err := s.GetClient(clusterID)
+	if err != nil {
+		return err
+	}
+	return kubeClient.DeleteNamespace(context.Background(), namespace)
 }

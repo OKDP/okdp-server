@@ -6,10 +6,81 @@ package _clusters
 import (
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/oapi-codegen/runtime"
 )
+
+// Defines values for CreateNamespaceJSONBodyKind.
+const (
+	CreateNamespaceJSONBodyKindNamespace CreateNamespaceJSONBodyKind = "Namespace"
+)
+
+// Defines values for CreateNamespaceJSONBodyStatusPhase.
+const (
+	CreateNamespaceJSONBodyStatusPhaseActive      CreateNamespaceJSONBodyStatusPhase = "Active"
+	CreateNamespaceJSONBodyStatusPhaseTerminating CreateNamespaceJSONBodyStatusPhase = "Terminating"
+)
+
+// Defines values for UpdateNamespaceJSONBodyKind.
+const (
+	UpdateNamespaceJSONBodyKindNamespace UpdateNamespaceJSONBodyKind = "Namespace"
+)
+
+// Defines values for UpdateNamespaceJSONBodyStatusPhase.
+const (
+	UpdateNamespaceJSONBodyStatusPhaseActive      UpdateNamespaceJSONBodyStatusPhase = "Active"
+	UpdateNamespaceJSONBodyStatusPhaseTerminating UpdateNamespaceJSONBodyStatusPhase = "Terminating"
+)
+
+// CreateNamespaceJSONBody defines parameters for CreateNamespace.
+type CreateNamespaceJSONBody struct {
+	ApiVersion string                      `json:"apiVersion"`
+	Kind       CreateNamespaceJSONBodyKind `json:"kind"`
+	Metadata   struct {
+		Annotations       *map[string]string `json:"annotations,omitempty"`
+		CreationTimestamp *time.Time         `json:"creationTimestamp,omitempty"`
+		Labels            *map[string]string `json:"labels,omitempty"`
+		Name              string             `json:"name"`
+	} `json:"metadata"`
+	Status *struct {
+		Phase *CreateNamespaceJSONBodyStatusPhase `json:"phase,omitempty"`
+	} `json:"status,omitempty"`
+}
+
+// CreateNamespaceJSONBodyKind defines parameters for CreateNamespace.
+type CreateNamespaceJSONBodyKind string
+
+// CreateNamespaceJSONBodyStatusPhase defines parameters for CreateNamespace.
+type CreateNamespaceJSONBodyStatusPhase string
+
+// UpdateNamespaceJSONBody defines parameters for UpdateNamespace.
+type UpdateNamespaceJSONBody struct {
+	ApiVersion string                      `json:"apiVersion"`
+	Kind       UpdateNamespaceJSONBodyKind `json:"kind"`
+	Metadata   struct {
+		Annotations       *map[string]string `json:"annotations,omitempty"`
+		CreationTimestamp *time.Time         `json:"creationTimestamp,omitempty"`
+		Labels            *map[string]string `json:"labels,omitempty"`
+		Name              string             `json:"name"`
+	} `json:"metadata"`
+	Status *struct {
+		Phase *UpdateNamespaceJSONBodyStatusPhase `json:"phase,omitempty"`
+	} `json:"status,omitempty"`
+}
+
+// UpdateNamespaceJSONBodyKind defines parameters for UpdateNamespace.
+type UpdateNamespaceJSONBodyKind string
+
+// UpdateNamespaceJSONBodyStatusPhase defines parameters for UpdateNamespace.
+type UpdateNamespaceJSONBodyStatusPhase string
+
+// CreateNamespaceJSONRequestBody defines body for CreateNamespace for application/json ContentType.
+type CreateNamespaceJSONRequestBody CreateNamespaceJSONBody
+
+// UpdateNamespaceJSONRequestBody defines body for UpdateNamespace for application/json ContentType.
+type UpdateNamespaceJSONRequestBody UpdateNamespaceJSONBody
 
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
@@ -22,6 +93,15 @@ type ServerInterface interface {
 	// List all kubernetes namespaces
 	// (GET /clusters/{clusterId}/namespaces)
 	ListNamespaces(c *gin.Context, clusterId string)
+	// Create k8s namespace
+	// (POST /clusters/{clusterId}/namespaces)
+	CreateNamespace(c *gin.Context, clusterId string)
+	// Update k8s namespace
+	// (PUT /clusters/{clusterId}/namespaces)
+	UpdateNamespace(c *gin.Context, clusterId string)
+	// Delete k8s namespace by name
+	// (DELETE /clusters/{clusterId}/namespaces/{namespace})
+	DeleteNamespace(c *gin.Context, clusterId string, namespace string)
 	// Get a kubernetes namespace by name
 	// (GET /clusters/{clusterId}/namespaces/{namespace})
 	GetNamespace(c *gin.Context, clusterId string, namespace string)
@@ -97,6 +177,87 @@ func (siw *ServerInterfaceWrapper) ListNamespaces(c *gin.Context) {
 	siw.Handler.ListNamespaces(c, clusterId)
 }
 
+// CreateNamespace operation middleware
+func (siw *ServerInterfaceWrapper) CreateNamespace(c *gin.Context) {
+
+	var err error
+
+	// ------------- Path parameter "clusterId" -------------
+	var clusterId string
+
+	err = runtime.BindStyledParameterWithOptions("simple", "clusterId", c.Param("clusterId"), &clusterId, runtime.BindStyledParameterOptions{Explode: false, Required: true})
+	if err != nil {
+		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter clusterId: %w", err), http.StatusBadRequest)
+		return
+	}
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		middleware(c)
+		if c.IsAborted() {
+			return
+		}
+	}
+
+	siw.Handler.CreateNamespace(c, clusterId)
+}
+
+// UpdateNamespace operation middleware
+func (siw *ServerInterfaceWrapper) UpdateNamespace(c *gin.Context) {
+
+	var err error
+
+	// ------------- Path parameter "clusterId" -------------
+	var clusterId string
+
+	err = runtime.BindStyledParameterWithOptions("simple", "clusterId", c.Param("clusterId"), &clusterId, runtime.BindStyledParameterOptions{Explode: false, Required: true})
+	if err != nil {
+		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter clusterId: %w", err), http.StatusBadRequest)
+		return
+	}
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		middleware(c)
+		if c.IsAborted() {
+			return
+		}
+	}
+
+	siw.Handler.UpdateNamespace(c, clusterId)
+}
+
+// DeleteNamespace operation middleware
+func (siw *ServerInterfaceWrapper) DeleteNamespace(c *gin.Context) {
+
+	var err error
+
+	// ------------- Path parameter "clusterId" -------------
+	var clusterId string
+
+	err = runtime.BindStyledParameterWithOptions("simple", "clusterId", c.Param("clusterId"), &clusterId, runtime.BindStyledParameterOptions{Explode: false, Required: true})
+	if err != nil {
+		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter clusterId: %w", err), http.StatusBadRequest)
+		return
+	}
+
+	// ------------- Path parameter "namespace" -------------
+	var namespace string
+
+	err = runtime.BindStyledParameterWithOptions("simple", "namespace", c.Param("namespace"), &namespace, runtime.BindStyledParameterOptions{Explode: false, Required: true})
+	if err != nil {
+		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter namespace: %w", err), http.StatusBadRequest)
+		return
+	}
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		middleware(c)
+		if c.IsAborted() {
+			return
+		}
+	}
+
+	siw.Handler.DeleteNamespace(c, clusterId, namespace)
+}
+
 // GetNamespace operation middleware
 func (siw *ServerInterfaceWrapper) GetNamespace(c *gin.Context) {
 
@@ -160,5 +321,8 @@ func RegisterHandlersWithOptions(router gin.IRouter, si ServerInterface, options
 	router.GET(options.BaseURL+"/clusters", wrapper.ListClusters)
 	router.GET(options.BaseURL+"/clusters/:clusterId", wrapper.GetCluster)
 	router.GET(options.BaseURL+"/clusters/:clusterId/namespaces", wrapper.ListNamespaces)
+	router.POST(options.BaseURL+"/clusters/:clusterId/namespaces", wrapper.CreateNamespace)
+	router.PUT(options.BaseURL+"/clusters/:clusterId/namespaces", wrapper.UpdateNamespace)
+	router.DELETE(options.BaseURL+"/clusters/:clusterId/namespaces/:namespace", wrapper.DeleteNamespace)
 	router.GET(options.BaseURL+"/clusters/:clusterId/namespaces/:namespace", wrapper.GetNamespace)
 }

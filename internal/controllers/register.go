@@ -21,6 +21,7 @@ import (
 	_catalog "github.com/okdp/okdp-server/api/openapi/v3/_api/catalogs"
 	_cluster "github.com/okdp/okdp-server/api/openapi/v3/_api/clusters"
 	_k8s "github.com/okdp/okdp-server/api/openapi/v3/_api/k8s"
+	_project "github.com/okdp/okdp-server/api/openapi/v3/_api/projects"
 	_repositories "github.com/okdp/okdp-server/api/openapi/v3/_api/repositories"
 	_user "github.com/okdp/okdp-server/api/openapi/v3/_api/users"
 	"github.com/okdp/okdp-server/internal/common/constants"
@@ -37,8 +38,9 @@ type Group struct {
 
 func (g *Group) RegisterControllers() {
 	_user.RegisterHandlers(g, UserProfileController())
-	_cluster.RegisterHandlers(g, ClusterController())
 	_catalog.RegisterHandlers(g, CatalogController())
+	_project.RegisterHandlers(g, ProjectController())
+	_cluster.RegisterHandlers(g, ClusterController())
 	_repositories.RegisterHandlers(g, GitRepoController())
 	_k8s.RegisterHandlers(g, KuboCDController())
 }

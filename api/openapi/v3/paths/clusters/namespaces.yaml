@@ -1,0 +1,102 @@
+get:
+  summary: List all kubernetes namespaces
+  description: |
+    List all kubernetes namespaces
+  tags:
+    - clusters
+  operationId: ListNamespaces
+  parameters:
+    - in: path
+      name: clusterId
+      schema:
+        type: string
+      required: true
+      description: Cluster ID
+  responses:
+    '200':
+      description: List of the namespaces
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '../../definition/Namespace.yaml'
+    default:
+      description: Server error
+      content:
+        application/json:
+          schema:
+            $ref: '../../definition/ServerResponse.yaml'
+
+post:
+  summary: Create k8s namespace
+  description: |
+    Create k8s namespace
+  tags:
+    - clusters
+  operationId: CreateNamespace
+  parameters:
+    - in: path
+      name: clusterId
+      schema:
+        type: string
+      required: true
+      description: Cluster ID
+  requestBody:
+    description: Namespace object to be created
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../definition/Namespace.yaml'
+  responses:
+    '201':
+      description: Namespace created successfully
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '../../definition/ServerResponse.yaml'
+    default:
+      description: Server error
+      content:
+        application/json:
+          schema:
+            $ref: '../../definition/ServerResponse.yaml'
+
+put:
+  summary: Update k8s namespace
+  description: |
+    Update k8s namespace
+  tags:
+    - clusters
+  operationId: UpdateNamespace
+  parameters:
+    - in: path
+      name: clusterId
+      schema:
+        type: string
+      required: true
+      description: Cluster ID
+  requestBody:
+    description: Namespace object to be created
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../definition/Namespace.yaml'
+  responses:
+    '200':
+      description: Namespace updated successfully
+      content:
+        application/json:
+          schema:
+            $ref: '../../definition/ServerResponse.yaml'
+    default:
+      description: Server error
+      content:
+        application/json:
+          schema:
+            $ref: '../../definition/ServerResponse.yaml'
+            

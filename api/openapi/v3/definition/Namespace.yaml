@@ -1,0 +1,47 @@
+type: object
+xml:
+  name: Namespace
+required:
+  - apiVersion
+  - kind
+  - metadata
+properties:
+  apiVersion:
+    type: string
+    example: "v1"
+  kind:
+    type: string
+    enum: ["Namespace"]
+    example: "Namespace"
+  metadata:
+    type: object
+    required:
+      - name
+    properties:
+      name:
+        type: string
+        example: "my-namespace"
+      labels:
+        type: object
+        additionalProperties:
+          type: string
+        example:
+          environment: "dev"
+      annotations:
+        type: object
+        additionalProperties:
+          type: string
+        example:
+          owner: "team-a"
+      creationTimestamp:
+        type: string
+        format: date-time
+        readOnly: true
+        example: "2025-06-12T14:00:00Z"
+  status:
+    type: object
+    properties:
+      phase:
+        type: string
+        enum: ["Active", "Terminating"]
+        example: "Active"

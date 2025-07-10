@@ -11,6 +11,23 @@ import (
 	"github.com/oapi-codegen/runtime"
 )
 
+// Defines values for NamespaceKind.
+const (
+	NamespaceKindNamespace NamespaceKind = "Namespace"
+)
+
+// Defines values for NamespaceStatusPhase.
+const (
+	NamespaceStatusPhaseActive      NamespaceStatusPhase = "Active"
+	NamespaceStatusPhaseTerminating NamespaceStatusPhase = "Terminating"
+)
+
+// Defines values for ProjectStatus.
+const (
+	ProjectStatusActive      ProjectStatus = "Active"
+	ProjectStatusTerminating ProjectStatus = "Terminating"
+)
+
 // Defines values for ReleaseSpecPackageProvider.
 const (
 	ReleaseSpecPackageProviderAws     ReleaseSpecPackageProvider = "aws"
@@ -31,6 +48,28 @@ const (
 	K8sCluster ServerResponseType = "k8s_cluster"
 	OkdpServer ServerResponseType = "okdp_server"
 	Registry   ServerResponseType = "registry"
+)
+
+// Defines values for CreateNamespaceJSONBodyKind.
+const (
+	CreateNamespaceJSONBodyKindNamespace CreateNamespaceJSONBodyKind = "Namespace"
+)
+
+// Defines values for CreateNamespaceJSONBodyStatusPhase.
+const (
+	CreateNamespaceJSONBodyStatusPhaseActive      CreateNamespaceJSONBodyStatusPhase = "Active"
+	CreateNamespaceJSONBodyStatusPhaseTerminating CreateNamespaceJSONBodyStatusPhase = "Terminating"
+)
+
+// Defines values for UpdateNamespaceJSONBodyKind.
+const (
+	UpdateNamespaceJSONBodyKindNamespace UpdateNamespaceJSONBodyKind = "Namespace"
+)
+
+// Defines values for UpdateNamespaceJSONBodyStatusPhase.
+const (
+	UpdateNamespaceJSONBodyStatusPhaseActive      UpdateNamespaceJSONBodyStatusPhase = "Active"
+	UpdateNamespaceJSONBodyStatusPhaseTerminating UpdateNamespaceJSONBodyStatusPhase = "Terminating"
 )
 
 // Defines values for CreateGitReleaseJSONBodySpecPackageProvider.
@@ -87,6 +126,18 @@ const (
 const (
 	Cosign   UpdateK8sReleaseJSONBodySpecPackageVerifyProvider = "cosign"
 	Notation UpdateK8sReleaseJSONBodySpecPackageVerifyProvider = "notation"
+)
+
+// Defines values for CreateProjectJSONBodyStatus.
+const (
+	CreateProjectJSONBodyStatusActive      CreateProjectJSONBodyStatus = "Active"
+	CreateProjectJSONBodyStatusTerminating CreateProjectJSONBodyStatus = "Terminating"
+)
+
+// Defines values for UpdateProjectJSONBodyStatus.
+const (
+	UpdateProjectJSONBodyStatusActive      UpdateProjectJSONBodyStatus = "Active"
+	UpdateProjectJSONBodyStatusTerminating UpdateProjectJSONBodyStatus = "Terminating"
 )
 
 // Catalog defines model for Catalog.
@@ -180,6 +231,27 @@ type GitRepository struct {
 	RepoURL   string `json:"repoUrl"`
 }
 
+// Namespace defines model for Namespace.
+type Namespace struct {
+	ApiVersion string        `json:"apiVersion"`
+	Kind       NamespaceKind `json:"kind"`
+	Metadata   struct {
+		Annotations       *map[string]string `json:"annotations,omitempty"`
+		CreationTimestamp *time.Time         `json:"creationTimestamp,omitempty"`
+		Labels            *map[string]string `json:"labels,omitempty"`
+		Name              string             `json:"name"`
+	} `json:"metadata"`
+	Status *struct {
+		Phase *NamespaceStatusPhase `json:"phase,omitempty"`
+	} `json:"status,omitempty"`
+}
+
+// NamespaceKind defines model for Namespace.Kind.
+type NamespaceKind string
+
+// NamespaceStatusPhase defines model for Namespace.Status.Phase.
+type NamespaceStatusPhase string
+
 // Package defines model for Package.
 type Package struct {
 	// Name The name of the package
@@ -191,6 +263,19 @@ type Package struct {
 	// Versions A list of versions for the package
 	Versions []string `json:"versions"`
 }
+
+// Project defines model for Project.
+type Project struct {
+	CreationTimestamp *time.Time     `json:"creationTimestamp,omitempty"`
+	Description       *string        `json:"description,omitempty"`
+	DisplayName       *string        `json:"displayName,omitempty"`
+	Environment       *string        `json:"environment,omitempty"`
+	Name              string         `json:"name"`
+	Status            *ProjectStatus `json:"status,omitempty"`
+}
+
+// ProjectStatus defines model for Project.Status.
+type ProjectStatus string
 
 // Release Release is the Schema for the releases API.
 type Release struct {
@@ -579,6 +664,48 @@ type UserProfile struct {
 	Roles   []string `json:"roles"`
 	Subject string   `json:"sub"`
 }
+
+// CreateNamespaceJSONBody defines parameters for CreateNamespace.
+type CreateNamespaceJSONBody struct {
+	ApiVersion string                      `json:"apiVersion"`
+	Kind       CreateNamespaceJSONBodyKind `json:"kind"`
+	Metadata   struct {
+		Annotations       *map[string]string `json:"annotations,omitempty"`
+		CreationTimestamp *time.Time         `json:"creationTimestamp,omitempty"`
+		Labels            *map[string]string `json:"labels,omitempty"`
+		Name              string             `json:"name"`
+	} `json:"metadata"`
+	Status *struct {
+		Phase *CreateNamespaceJSONBodyStatusPhase `json:"phase,omitempty"`
+	} `json:"status,omitempty"`
+}
+
+// CreateNamespaceJSONBodyKind defines parameters for CreateNamespace.
+type CreateNamespaceJSONBodyKind string
+
+// CreateNamespaceJSONBodyStatusPhase defines parameters for CreateNamespace.
+type CreateNamespaceJSONBodyStatusPhase string
+
+// UpdateNamespaceJSONBody defines parameters for UpdateNamespace.
+type UpdateNamespaceJSONBody struct {
+	ApiVersion string                      `json:"apiVersion"`
+	Kind       UpdateNamespaceJSONBodyKind `json:"kind"`
+	Metadata   struct {
+		Annotations       *map[string]string `json:"annotations,omitempty"`
+		CreationTimestamp *time.Time         `json:"creationTimestamp,omitempty"`
+		Labels            *map[string]string `json:"labels,omitempty"`
+		Name              string             `json:"name"`
+	} `json:"metadata"`
+	Status *struct {
+		Phase *UpdateNamespaceJSONBodyStatusPhase `json:"phase,omitempty"`
+	} `json:"status,omitempty"`
+}
+
+// UpdateNamespaceJSONBodyKind defines parameters for UpdateNamespace.
+type UpdateNamespaceJSONBodyKind string
+
+// UpdateNamespaceJSONBodyStatusPhase defines parameters for UpdateNamespace.
+type UpdateNamespaceJSONBodyStatusPhase string
 
 // CreateGitReleaseJSONBody defines parameters for CreateGitRelease.
 type CreateGitReleaseJSONBody struct {
@@ -1776,6 +1903,38 @@ type UpdateK8sReleaseJSONBodySpecPackageProvider string
 // UpdateK8sReleaseJSONBodySpecPackageVerifyProvider defines parameters for UpdateK8sRelease.
 type UpdateK8sReleaseJSONBodySpecPackageVerifyProvider string
 
+// CreateProjectJSONBody defines parameters for CreateProject.
+type CreateProjectJSONBody struct {
+	CreationTimestamp *time.Time                   `json:"creationTimestamp,omitempty"`
+	Description       *string                      `json:"description,omitempty"`
+	DisplayName       *string                      `json:"displayName,omitempty"`
+	Environment       *string                      `json:"environment,omitempty"`
+	Name              string                       `json:"name"`
+	Status            *CreateProjectJSONBodyStatus `json:"status,omitempty"`
+}
+
+// CreateProjectJSONBodyStatus defines parameters for CreateProject.
+type CreateProjectJSONBodyStatus string
+
+// UpdateProjectJSONBody defines parameters for UpdateProject.
+type UpdateProjectJSONBody struct {
+	CreationTimestamp *time.Time                   `json:"creationTimestamp,omitempty"`
+	Description       *string                      `json:"description,omitempty"`
+	DisplayName       *string                      `json:"displayName,omitempty"`
+	Environment       *string                      `json:"environment,omitempty"`
+	Name              string                       `json:"name"`
+	Status            *UpdateProjectJSONBodyStatus `json:"status,omitempty"`
+}
+
+// UpdateProjectJSONBodyStatus defines parameters for UpdateProject.
+type UpdateProjectJSONBodyStatus string
+
+// CreateNamespaceJSONRequestBody defines body for CreateNamespace for application/json ContentType.
+type CreateNamespaceJSONRequestBody CreateNamespaceJSONBody
+
+// UpdateNamespaceJSONRequestBody defines body for UpdateNamespace for application/json ContentType.
+type UpdateNamespaceJSONRequestBody UpdateNamespaceJSONBody
+
 // CreateGitReleaseJSONRequestBody defines body for CreateGitRelease for application/json ContentType.
 type CreateGitReleaseJSONRequestBody CreateGitReleaseJSONBody
 
@@ -1787,6 +1946,12 @@ type CreateK8sReleaseJSONRequestBody CreateK8sReleaseJSONBody
 
 // UpdateK8sReleaseJSONRequestBody defines body for UpdateK8sRelease for application/json ContentType.
 type UpdateK8sReleaseJSONRequestBody UpdateK8sReleaseJSONBody
+
+// CreateProjectJSONRequestBody defines body for CreateProject for application/json ContentType.
+type CreateProjectJSONRequestBody CreateProjectJSONBody
+
+// UpdateProjectJSONRequestBody defines body for UpdateProject for application/json ContentType.
+type UpdateProjectJSONRequestBody UpdateProjectJSONBody
 
 // AsClusterAuth0 returns the union data inside the Cluster_Auth as a ClusterAuth0
 func (t Cluster_Auth) AsClusterAuth0() (ClusterAuth0, error) {
