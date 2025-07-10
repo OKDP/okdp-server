@@ -1,6 +1,6 @@
 # okdp-server
 
-![Version: 0.2.0-snapshot](https://img.shields.io/badge/Version-0.2.0--snapshot-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.2.0-snapshot](https://img.shields.io/badge/AppVersion-0.2.0--snapshot-informational?style=flat-square)
+![Version: 0.3.0](https://img.shields.io/badge/Version-0.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.0](https://img.shields.io/badge/AppVersion-0.3.0-informational?style=flat-square)
 
 A Helm chart for okdp-server
 
@@ -80,7 +80,7 @@ A Helm chart for okdp-server
 | fullnameOverride | string | `""` | Overrides the release name. |
 | image.pullPolicy | string | `"Always"` | Image pull policy. |
 | image.repository | string | `"quay.io/okdp/okdp-server"` | Docker image registry. |
-| image.tag | string | `"0.2.0"` | Image tag. |
+| image.tag | string | `"0.3.0"` | Image tag. |
 | imagePullSecrets | list | `[]` | Secrets to be used for pulling images from private Docker registries. |
 | ingress.annotations | object | `{}` |  |
 | ingress.className | string | `""` | Specify the ingress class (Kubernetes >= 1.18). |
