@@ -39,10 +39,22 @@ func (s ClusterService) GetCluster(clusterID string) (*model.Cluster, *model.Ser
 	return s.cluster.GetCluster(clusterID)
 }
 
-func (s ClusterService) ListNamespaces(clusterID string) ([]string, *model.ServerResponse) {
+func (s ClusterService) ListNamespaces(clusterID string) ([]*model.Namespace, *model.ServerResponse) {
 	return s.cluster.ListNamespaces(clusterID)
 }
 
-func (s ClusterService) GetNamespaceByName(clusterID string, namespace string) (string, *model.ServerResponse) {
-	return "Not Implemented: " + clusterID + "/" + namespace, nil
+func (s ClusterService) GetNamespaceByName(clusterID string, namespace string) (*model.Namespace, *model.ServerResponse) {
+	return s.cluster.GetNamespaceByName(clusterID, namespace)
+}
+
+func (s ClusterService) CreateNamespace(clusterID string, namespace *model.Namespace) *model.ServerResponse {
+	return s.cluster.CreateNamespace(clusterID, namespace)
+}
+
+func (s ClusterService) UpdateNamespace(clusterID string, namespace *model.Namespace) *model.ServerResponse {
+	return s.cluster.UpdateNamespace(clusterID, namespace)
+}
+
+func (s ClusterService) DeleteNamespace(clusterID string, namespace string) *model.ServerResponse {
+	return s.cluster.DeleteNamespace(clusterID, namespace)
 }

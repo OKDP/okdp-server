@@ -23,83 +23,69 @@ import (
 	log "github.com/okdp/okdp-server/internal/common/logging"
 	"github.com/okdp/okdp-server/internal/model"
 	"github.com/okdp/okdp-server/internal/services"
+	"github.com/okdp/okdp-server/internal/utils"
 )
 
-type IClusterController struct {
+type IProjectController struct {
 	clusterService *services.ClusterService
 }
 
-func ClusterController() *IClusterController {
-	return &IClusterController{
+func ProjectController() *IProjectController {
+	return &IProjectController{
 		clusterService: services.NewClusterService(),
 	}
 }
 
-func (r IClusterController) ListClusters(c *gin.Context) {
-	clusters := r.clusterService.ListClusters()
-	c.JSON(http.StatusOK, clusters)
-}
-
-func (r IClusterController) GetCluster(c *gin.Context, clusterID string) {
-	cluster, err := r.clusterService.GetCluster(clusterID)
-	if err != nil {
-		log.Error("%+v", clusterID, err)
-		c.JSON(err.Status, err)
-		return
-	}
-	c.JSON(http.StatusOK, cluster)
-}
-
-func (r IClusterController) ListNamespaces(c *gin.Context, clusterID string) {
+func (r IProjectController) ListProjects(c *gin.Context, clusterID string) {
 	namespaces, err := r.clusterService.ListNamespaces(clusterID)
 	if err != nil {
 		log.Error("%+v", clusterID, err)
 		c.JSON(err.Status, err)
 		return
 	}
-	c.JSON(http.StatusOK, namespaces)
+
+	projects := utils.Map(namespaces, func(ns *model.Namespace) *model.Project {
+		return ns.ToProject()
+	})
+
+	c.JSON(http.StatusOK, projects)
 }
 
-func (r IClusterController) GetNamespace(c *gin.Context, clusterID string, namespace string) {
-	ns, err := r.clusterService.GetNamespaceByName(clusterID, namespace)
+func (r IProjectController) GetProject(c *gin.Context, clusterID string, projectName string) {
+	ns, err := r.clusterService.GetNamespaceByName(clusterID, projectName)
 	if err != nil {
 		log.Error("%+v", clusterID, err)
 		c.JSON(err.Status, err)
 		return
 	}
-	c.JSON(http.StatusOK, ns)
+	c.JSON(http.StatusOK, ns.ToProject())
 }
 
-func (r IClusterController) CreateNamespace(c *gin.Context, clusterID string) {
-	var namespace model.Namespace
-
-	if err := c.ShouldBindJSON(&namespace); err != nil {
+func (r IProjectController) CreateProject(c *gin.Context, clusterID string) {
+	var project model.Project
+	if err := c.ShouldBindJSON(&project); err != nil {
 		resp := model.NewServerResponse(model.OkdpServerResponse).BadRequest("%+v", err.Error())
 		c.JSON(resp.Status, resp)
 		return
 	}
-
-	response := r.clusterService.CreateNamespace(clusterID, &namespace)
-
+	response := r.clusterService.CreateNamespace(clusterID, project.ToNamespace())
 	c.JSON(response.Status, response)
 
 }
 
-func (r IClusterController) UpdateNamespace(c *gin.Context, clusterID string) {
-	var namespace model.Namespace
-
-	if err := c.ShouldBindJSON(&namespace); err != nil {
+func (r IProjectController) UpdateProject(c *gin.Context, clusterID string) {
+	var project model.Project
+	if err := c.ShouldBindJSON(&project); err != nil {
 		resp := model.NewServerResponse(model.OkdpServerResponse).BadRequest("%+v", err.Error())
 		c.JSON(resp.Status, resp)
 		return
 	}
-
-	response := r.clusterService.UpdateNamespace(clusterID, &namespace)
-
+	response := r.clusterService.UpdateNamespace(clusterID, project.ToNamespace())
 	c.JSON(response.Status, response)
+
 }
 
-func (r IClusterController) DeleteNamespace(c *gin.Context, clusterID string, namespace string) {
-	response := r.clusterService.DeleteNamespace(clusterID, namespace)
+func (r IProjectController) DeleteProject(c *gin.Context, clusterID string, projectName string) {
+	response := r.clusterService.DeleteNamespace(clusterID, projectName)
 	c.JSON(response.Status, response)
 }

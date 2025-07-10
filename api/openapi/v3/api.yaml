@@ -30,16 +30,16 @@ tags:
     description: Kubernetes Clusters
     externalDocs:
       url: https://github.com/okdp/okdp-server
-  - name: repositories
-    description: KuboCD Git Releases
+  - name: projects
+    description: Projects
     externalDocs:
       url: https://github.com/okdp/okdp-server
   - name: k8s
     description: KuboCD K8S Releases
     externalDocs:
       url: https://github.com/okdp/okdp-server
-  - name: admin
-    description: KuboCD K8S Releases
+  - name: repositories
+    description: KuboCD Git Releases
     externalDocs:
       url: https://github.com/okdp/okdp-server
 
@@ -50,11 +50,11 @@ paths:
 
   ### Registry Catalogs
   /catalogs:
-    $ref: ./paths/catalogs/catalog-list.yaml
+    $ref: ./paths/catalogs/catalogs.yaml
   /catalogs/{catalogId}:
     $ref: ./paths/catalogs/catalog-by-id.yaml
   /catalogs/{catalogId}/packages:
-    $ref: ./paths/catalogs/package-list.yaml
+    $ref: ./paths/catalogs/packages.yaml
   /catalogs/{catalogId}/packages/{name}:
     $ref: ./paths/catalogs/package-by-name.yaml
   /catalogs/{catalogId}/packages/{name}/versions:
@@ -63,20 +63,26 @@ paths:
     $ref: ./paths/catalogs/package-definition.yaml
   /catalogs/{catalogId}/packages/{name}/versions/{version}/schema:
     $ref: ./paths/catalogs/package-schema.yaml
+
+  ### Projects
+  /clusters/{clusterId}/projects:
+    $ref: ./paths/projects/projects.yaml
+  /clusters/{clusterId}/projects/{projectName}:
+    $ref: ./paths/projects/project-by-name.yaml
   
   ### Clusters
   /clusters:
-    $ref: ./paths/clusters/cluster-list.yaml
+    $ref: ./paths/clusters/clusters.yaml
   /clusters/{clusterId}:
     $ref: ./paths/clusters/cluster-by-id.yaml
   /clusters/{clusterId}/namespaces:
-    $ref: ./paths/clusters/namespace-list.yaml
+    $ref: ./paths/clusters/namespaces.yaml
   /clusters/{clusterId}/namespaces/{namespace}:
     $ref: ./paths/clusters/namespace-by-name.yaml
   
   ### Git repositories KuboCD releases
   /clusters/{clusterId}/namespaces/{namespace}/gitkustomizations:
-    $ref: ./paths/repositories/repo-list.yaml
+    $ref: ./paths/repositories/repos.yaml
   /clusters/{clusterId}/namespaces/{namespace}/gitkustomizations/{kustomizationName}:
     $ref: ./paths/repositories/repo-by-name.yaml
   /clusters/{clusterId}/namespaces/{namespace}/gitkustomizations/{kustomizationName}/releases:
@@ -98,8 +104,12 @@ components:
       $ref: './definition/UserProfile.yaml'
     Catalog:
       $ref: './definition/Catalog.yaml'
+    Project:
+      $ref: './definition/Project.yaml'
     Cluster:
       $ref: './definition/Cluster.yaml'
+    Namespace:
+      $ref: './definition/Namespace.yaml'
     Package:
       $ref: './definition/Package.yaml'
     Release:

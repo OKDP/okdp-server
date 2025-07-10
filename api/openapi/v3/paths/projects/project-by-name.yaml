@@ -1,10 +1,10 @@
 get:
-  summary: Get a kubernetes namespace by name
+  summary: Get a project by name
   description: |
-    Get a kubernetes namespace by name
+    Get a project by name
   tags:
-    - clusters
-  operationId: GetNamespace
+    - projects
+  operationId: GetProject
   parameters:
     - in: path
       name: clusterId
@@ -13,18 +13,18 @@ get:
       required: true
       description: Cluster ID
     - in: path
-      name: namespace
+      name: projectName
       schema:
         type: string
       required: true
-      description: Kubernetes namespace
+      description: Project name
   responses:
     '200':
-      description: Namespace information
+      description: Project information
       content:
         application/json:
           schema:
-            $ref: '../../definition/Namespace.yaml'
+            $ref: '../../definition/Project.yaml'
     default:
       description: Server error
       content:
@@ -33,12 +33,12 @@ get:
             $ref: '../../definition/ServerResponse.yaml'
 
 delete:
-  summary: Delete k8s namespace by name
+  summary: Delete an existing OKDP project
   description: |
-    Delete k8s namespace by name
+    Delete an existing OKDP project
   tags:
-    - clusters
-  operationId: DeleteNamespace
+    - projects
+  operationId: DeleteProject
   parameters:
     - in: path
       name: clusterId
@@ -47,18 +47,20 @@ delete:
       required: true
       description: Cluster ID
     - in: path
-      name: namespace
+      name: projectName
       schema:
         type: string
       required: true
-      description: Kubernetes namespace
+      description: Project name
   responses:
     '200':
-      description: k8s namespace deleted successfully
+      description: Project deleted successfully
       content:
         application/json:
           schema:
-            $ref: '../../definition/ServerResponse.yaml'
+            type: array
+            items:
+              $ref: '../../definition/ServerResponse.yaml'
     default:
       description: Server error
       content:
