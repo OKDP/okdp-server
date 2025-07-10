@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.0](https://github.com/OKDP/okdp-server/compare/v0.2.0...v0.3.0) (2025-07-10)
+
+
+### Features
+
+* add basic projects management ([5f43de7](https://github.com/OKDP/okdp-server/commit/5f43de709a3260378964eb0dbf295bf5ba514a81))
+
 ## [0.2.0](https://github.com/OKDP/okdp-server/compare/v0.1.0...v0.2.0) (2025-05-28)
 
 
