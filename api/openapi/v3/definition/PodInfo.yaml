@@ -1,0 +1,77 @@
+type: object
+xml:
+  name: PodInfo
+required:
+  - name
+  - namespace
+  - state
+  - createdAt
+  - health
+  - containers
+properties:
+  name:
+    type: string
+    description: Name of the Pod
+    example: podinfo-768b456f7c-abc12
+  namespace:
+    type: string
+    description: Namespace in which the Pod is deployed
+    example: default
+  state:
+    type: string
+    description: Pod state
+    example: Running
+  createdAt:
+    type: string
+    format: date-time
+    description: Pod creation date
+    example: "2025-04-25T11:48:48Z"
+  health:
+    type: string
+    description: Pod health status
+    example: Ready
+  containers:
+    type: array
+    description: List of containers in the Pod
+    items:
+      type: object
+      required:
+        - name
+        - image
+        - state
+      properties:
+        name:
+          type: string
+          description: Container name
+          example: container1
+        image:
+          type: string
+          description: Container image
+          example: idirze/auth
+        state:
+          type: string
+          description: Container state
+          example: Running
+        reason:
+          type: string
+          description: Reason for the current state, if applicable
+          example: CrashLoopBackOff
+        message:
+          type: string
+          description: Message with additional details, if applicable
+          example: Back-off 5m0s restarting failed container podinfo
+example:
+  name: podinfo-768b456f7c-abc12
+  namespace: default
+  state: Running
+  createdAt: "2025-04-25T11:48:48Z"
+  health: Ready
+  containers:
+    - name: podinfo
+      image: stefanprodan/podinfo:latest
+      state: Waiting
+      reason: CrashLoopBackOff
+      message: Back-off 5m0s restarting failed container podinfo
+    - name: sidecar
+      image: myorg/sidecar:latest
+      state: Running

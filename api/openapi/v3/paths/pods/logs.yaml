@@ -1,0 +1,70 @@
+get:
+  summary: Get the logs
+  description: |
+    Streams Kubernetes pod logs using Server-Sent Events (SSE), 
+    allows downloading them as a plain text file, or 
+    returns logs as JSON when requested via Accept=application/json header.
+  tags:
+    - pods
+  operationId: GetLogs
+  parameters:
+    - in: path
+      name: clusterId
+      schema:
+        type: string
+      required: true
+      description: Kubernetes cluster ID
+    - in: path
+      name: namespace
+      schema:
+        type: string
+      required: true
+      description: Kubernetes namespace
+    - in: path
+      name: pod
+      schema:
+        type: string
+      required: true
+      description: Pod name
+    - in: path
+      name: container
+      schema:
+        type: string
+      required: true
+      description: Container name
+    - in: query
+      name: download
+      schema:
+        type: boolean
+        default: false
+      description: If true, downloads logs as a plain text file instead of streaming.
+    - in: query
+      name: tailLines
+      schema:
+        type: integer
+        default: 100
+      description: Number of log lines to show from the end of the logs.
+  responses:
+    '200':
+      description: Pod logs returned in different formats
+      content:
+        text/event-stream:
+          schema:
+            type: string
+            description: SSE stream of log lines (each event contains a JSON log entry).
+        text/plain:
+          schema:
+            type: string
+            description: Complete logs as a downloadable text file.
+        application/json:
+          schema:
+            type: array
+            items:
+              type: string
+            description: List of log lines returned when SSE is not supported (e.g., Swagger UI).
+    default:
+      description: Server error
+      content:
+        application/json:
+          schema:
+            $ref: '../../definition/ServerResponse.yaml'
