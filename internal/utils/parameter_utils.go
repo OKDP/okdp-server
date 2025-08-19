@@ -37,3 +37,22 @@ func DefaultIfEmpty(value, defaultValue string) string {
 	}
 	return defaultValue
 }
+
+// EmptyToNil returns a pointer to the given string, unless the string is empty.
+// If the input string is "", it returns nil. Otherwise, it returns a pointer to the string.
+// This is useful when you want to omit empty fields in JSON serialization with the 'omitempty' tag.
+func EmptyToNil(s string) *string {
+	if s == "" {
+		return nil
+	}
+	return &s
+}
+
+// NilToEmptySlice returns the input slice if not nil, or an empty slice if input is nil.
+// Useful to ensure you never return a nil slice (for API responses, etc).
+func NilToEmptySlice[T any](s []T) []T {
+	if s == nil {
+		return []T{}
+	}
+	return s
+}

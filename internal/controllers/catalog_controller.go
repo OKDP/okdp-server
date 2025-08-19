@@ -43,7 +43,7 @@ func (r ICatalogController) GetCatalog(c *gin.Context, catalogID string) {
 	catalog, err := r.catalogService.GetCatalog(catalogID)
 	if err != nil {
 		log.Error("Unable to find the Catalog with ID '%s', details: %+v", catalogID, err)
-		c.JSON(err.Status, err)
+		c.AbortWithStatusJSON(err.Status, err)
 		return
 	}
 	c.JSON(http.StatusOK, catalog)
@@ -53,7 +53,7 @@ func (r ICatalogController) ListPackages(c *gin.Context, catalogID string) {
 	packages, err := r.catalogService.GetPackages(catalogID)
 	if err != nil {
 		log.Error("Unable to find the packages with Catalog ID '%s', details: %+v", catalogID, err)
-		c.JSON(err.Status, err)
+		c.AbortWithStatusJSON(err.Status, err)
 		return
 	}
 	c.JSON(http.StatusOK, packages)
@@ -63,7 +63,7 @@ func (r ICatalogController) GetPackage(c *gin.Context, catalogID string, name st
 	result, err := r.catalogService.GetPackage(catalogID, name)
 	if err != nil {
 		log.Error("Unable to find the package '%s' with Catalog ID '%s', details: %+v", name, catalogID, err)
-		c.JSON(err.Status, err)
+		c.AbortWithStatusJSON(err.Status, err)
 		return
 	}
 	c.JSON(http.StatusOK, result)
@@ -77,7 +77,7 @@ func (r ICatalogController) GetPackageDefinition(c *gin.Context, catalogID strin
 	definition, err := r.catalogService.GetPackageDefinition(catalogID, name, version)
 	if err != nil {
 		log.Error("Unable to find the package definition for package '%s:%s' with Catalog ID '%s', details: %+v", name, version, catalogID, err)
-		c.JSON(err.Status, err)
+		c.AbortWithStatusJSON(err.Status, err)
 		return
 	}
 	c.JSON(http.StatusOK, definition)
@@ -87,7 +87,7 @@ func (r ICatalogController) GetPackageSchema(c *gin.Context, catalogID string, n
 	definition, err := r.catalogService.GetPackageDefinition(catalogID, name, version)
 	if err != nil {
 		log.Error("Unable to find the package definition for package '%s:%s' with Catalog ID '%s', details: %+v", name, version, catalogID, err)
-		c.JSON(err.Status, err)
+		c.AbortWithStatusJSON(err.Status, err)
 		return
 	}
 	schema, ok := definition["schema"]

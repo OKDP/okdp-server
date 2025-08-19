@@ -44,7 +44,7 @@ func (r IClusterController) GetCluster(c *gin.Context, clusterID string) {
 	cluster, err := r.clusterService.GetCluster(clusterID)
 	if err != nil {
 		log.Error("%+v", clusterID, err)
-		c.JSON(err.Status, err)
+		c.AbortWithStatusJSON(err.Status, err)
 		return
 	}
 	c.JSON(http.StatusOK, cluster)
@@ -54,7 +54,7 @@ func (r IClusterController) ListNamespaces(c *gin.Context, clusterID string) {
 	namespaces, err := r.clusterService.ListNamespaces(clusterID)
 	if err != nil {
 		log.Error("%+v", clusterID, err)
-		c.JSON(err.Status, err)
+		c.AbortWithStatusJSON(err.Status, err)
 		return
 	}
 	c.JSON(http.StatusOK, namespaces)
@@ -64,7 +64,7 @@ func (r IClusterController) GetNamespace(c *gin.Context, clusterID string, names
 	ns, err := r.clusterService.GetNamespaceByName(clusterID, namespace)
 	if err != nil {
 		log.Error("%+v", clusterID, err)
-		c.JSON(err.Status, err)
+		c.AbortWithStatusJSON(err.Status, err)
 		return
 	}
 	c.JSON(http.StatusOK, ns)
@@ -75,7 +75,7 @@ func (r IClusterController) CreateNamespace(c *gin.Context, clusterID string) {
 
 	if err := c.ShouldBindJSON(&namespace); err != nil {
 		resp := model.NewServerResponse(model.OkdpServerResponse).BadRequest("%+v", err.Error())
-		c.JSON(resp.Status, resp)
+		c.AbortWithStatusJSON(resp.Status, resp)
 		return
 	}
 
@@ -90,7 +90,7 @@ func (r IClusterController) UpdateNamespace(c *gin.Context, clusterID string) {
 
 	if err := c.ShouldBindJSON(&namespace); err != nil {
 		resp := model.NewServerResponse(model.OkdpServerResponse).BadRequest("%+v", err.Error())
-		c.JSON(resp.Status, resp)
+		c.AbortWithStatusJSON(resp.Status, resp)
 		return
 	}
 

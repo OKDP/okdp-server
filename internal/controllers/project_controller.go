@@ -40,7 +40,7 @@ func (r IProjectController) ListProjects(c *gin.Context, clusterID string) {
 	namespaces, err := r.clusterService.ListNamespaces(clusterID)
 	if err != nil {
 		log.Error("%+v", clusterID, err)
-		c.JSON(err.Status, err)
+		c.AbortWithStatusJSON(err.Status, err)
 		return
 	}
 
@@ -55,7 +55,7 @@ func (r IProjectController) GetProject(c *gin.Context, clusterID string, project
 	ns, err := r.clusterService.GetNamespaceByName(clusterID, projectName)
 	if err != nil {
 		log.Error("%+v", clusterID, err)
-		c.JSON(err.Status, err)
+		c.AbortWithStatusJSON(err.Status, err)
 		return
 	}
 	c.JSON(http.StatusOK, ns.ToProject())
@@ -65,7 +65,7 @@ func (r IProjectController) CreateProject(c *gin.Context, clusterID string) {
 	var project model.Project
 	if err := c.ShouldBindJSON(&project); err != nil {
 		resp := model.NewServerResponse(model.OkdpServerResponse).BadRequest("%+v", err.Error())
-		c.JSON(resp.Status, resp)
+		c.AbortWithStatusJSON(resp.Status, resp)
 		return
 	}
 	response := r.clusterService.CreateNamespace(clusterID, project.ToNamespace())
@@ -77,7 +77,7 @@ func (r IProjectController) UpdateProject(c *gin.Context, clusterID string) {
 	var project model.Project
 	if err := c.ShouldBindJSON(&project); err != nil {
 		resp := model.NewServerResponse(model.OkdpServerResponse).BadRequest("%+v", err.Error())
-		c.JSON(resp.Status, resp)
+		c.AbortWithStatusJSON(resp.Status, resp)
 		return
 	}
 	response := r.clusterService.UpdateNamespace(clusterID, project.ToNamespace())
