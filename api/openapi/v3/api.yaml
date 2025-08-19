@@ -42,6 +42,10 @@ tags:
     description: KuboCD Git Releases
     externalDocs:
       url: https://github.com/okdp/okdp-server
+  - name: pods
+    description: Kubernetes pods
+    externalDocs:
+      url: https://github.com/okdp/okdp-server
 
 paths:
   ### Users
@@ -97,6 +101,14 @@ paths:
     $ref: ./paths/k8s/release-by-name.yaml
   /clusters/{clusterId}/namespaces/{namespace}/releases/{releaseName}/status:
     $ref: ./paths/k8s/release-status.yaml
+  /clusters/{clusterId}/namespaces/{namespace}/releases/{releaseName}/events:
+    $ref: ./paths/k8s/events.yaml
+  /clusters/{clusterId}/namespaces/{namespace}/releases/{releaseName}/pods:
+    $ref: ./paths/k8s/pods.yaml
+
+  ### pods
+  /clusters/{clusterId}/namespaces/{namespace}/pods/{pod}/containers/{container}/logs:
+    $ref: ./paths/pods/logs.yaml
 
 components:
   schemas:
@@ -122,6 +134,8 @@ components:
       $ref: './definition/GitRepository.yaml'
     GitCommit:
       $ref: './definition/GitCommit.yaml'
+    PodInfo:
+      $ref: './definition/PodInfo.yaml'
     ServerResponse:
       $ref: './definition/ServerResponse.yaml'
 

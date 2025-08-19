@@ -264,6 +264,42 @@ type Package struct {
 	Versions []string `json:"versions"`
 }
 
+// PodInfo defines model for PodInfo.
+type PodInfo struct {
+	// Containers List of containers in the Pod
+	Containers []struct {
+		// Image Container image
+		Image string `json:"image"`
+
+		// Message Message with additional details, if applicable
+		Message *string `json:"message,omitempty"`
+
+		// Name Container name
+		Name string `json:"name"`
+
+		// Reason Reason for the current state, if applicable
+		Reason *string `json:"reason,omitempty"`
+
+		// State Container state
+		State string `json:"state"`
+	} `json:"containers"`
+
+	// CreatedAt Pod creation date
+	CreatedAt time.Time `json:"createdAt"`
+
+	// Health Pod health status
+	Health string `json:"health"`
+
+	// Name Name of the Pod
+	Name string `json:"name"`
+
+	// Namespace Namespace in which the Pod is deployed
+	Namespace string `json:"namespace"`
+
+	// State Pod state
+	State string `json:"state"`
+}
+
 // Project defines model for Project.
 type Project struct {
 	CreationTimestamp *time.Time     `json:"creationTimestamp,omitempty"`
@@ -1298,6 +1334,15 @@ type UpdateGitReleaseJSONBodySpecPackageProvider string
 
 // UpdateGitReleaseJSONBodySpecPackageVerifyProvider defines parameters for UpdateGitRelease.
 type UpdateGitReleaseJSONBodySpecPackageVerifyProvider string
+
+// GetLogsParams defines parameters for GetLogs.
+type GetLogsParams struct {
+	// Download If true, downloads logs as a plain text file instead of streaming.
+	Download *bool `form:"download,omitempty" json:"download,omitempty"`
+
+	// TailLines Number of log lines to show from the end of the logs.
+	TailLines *int `form:"tailLines,omitempty" json:"tailLines,omitempty"`
+}
 
 // CreateK8sReleaseJSONBody defines parameters for CreateK8sRelease.
 type CreateK8sReleaseJSONBody struct {

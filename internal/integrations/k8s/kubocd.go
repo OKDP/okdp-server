@@ -69,3 +69,11 @@ func (r K8S) DeleteRelease(clusterID string, namespace string, releaseName strin
 	}
 	return kubeClient.DeleteRelease(context.Background(), namespace, releaseName)
 }
+
+func (r K8S) ListEventsRelease(clusterID string, namespace, releaseName string) ([]map[string]interface{}, *model.ServerResponse) {
+	kubeClient, err := r.GetClient(clusterID)
+	if err != nil {
+		return nil, err
+	}
+	return kubeClient.ListEventsRelease(context.Background(), namespace, releaseName)
+}

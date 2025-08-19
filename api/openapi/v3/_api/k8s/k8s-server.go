@@ -667,6 +667,12 @@ type ServerInterface interface {
 	// Get the deployed release by name
 	// (GET /clusters/{clusterId}/namespaces/{namespace}/releases/{releaseName})
 	GetK8sRelease(c *gin.Context, clusterId string, namespace string, releaseName string)
+	// Get Kubernetes events for a release
+	// (GET /clusters/{clusterId}/namespaces/{namespace}/releases/{releaseName}/events)
+	GetEventsRelease(c *gin.Context, clusterId string, namespace string, releaseName string)
+	// Get the list of pods and their containers attached to a release
+	// (GET /clusters/{clusterId}/namespaces/{namespace}/releases/{releaseName}/pods)
+	GetPods(c *gin.Context, clusterId string, namespace string, releaseName string)
 	// Get the release status
 	// (GET /clusters/{clusterId}/namespaces/{namespace}/releases/{releaseName}/status)
 	GetK8sReleaseStatus(c *gin.Context, clusterId string, namespace string, releaseName string)
@@ -886,6 +892,90 @@ func (siw *ServerInterfaceWrapper) GetK8sRelease(c *gin.Context) {
 	siw.Handler.GetK8sRelease(c, clusterId, namespace, releaseName)
 }
 
+// GetEventsRelease operation middleware
+func (siw *ServerInterfaceWrapper) GetEventsRelease(c *gin.Context) {
+
+	var err error
+
+	// ------------- Path parameter "clusterId" -------------
+	var clusterId string
+
+	err = runtime.BindStyledParameterWithOptions("simple", "clusterId", c.Param("clusterId"), &clusterId, runtime.BindStyledParameterOptions{Explode: false, Required: true})
+	if err != nil {
+		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter clusterId: %w", err), http.StatusBadRequest)
+		return
+	}
+
+	// ------------- Path parameter "namespace" -------------
+	var namespace string
+
+	err = runtime.BindStyledParameterWithOptions("simple", "namespace", c.Param("namespace"), &namespace, runtime.BindStyledParameterOptions{Explode: false, Required: true})
+	if err != nil {
+		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter namespace: %w", err), http.StatusBadRequest)
+		return
+	}
+
+	// ------------- Path parameter "releaseName" -------------
+	var releaseName string
+
+	err = runtime.BindStyledParameterWithOptions("simple", "releaseName", c.Param("releaseName"), &releaseName, runtime.BindStyledParameterOptions{Explode: false, Required: true})
+	if err != nil {
+		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter releaseName: %w", err), http.StatusBadRequest)
+		return
+	}
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		middleware(c)
+		if c.IsAborted() {
+			return
+		}
+	}
+
+	siw.Handler.GetEventsRelease(c, clusterId, namespace, releaseName)
+}
+
+// GetPods operation middleware
+func (siw *ServerInterfaceWrapper) GetPods(c *gin.Context) {
+
+	var err error
+
+	// ------------- Path parameter "clusterId" -------------
+	var clusterId string
+
+	err = runtime.BindStyledParameterWithOptions("simple", "clusterId", c.Param("clusterId"), &clusterId, runtime.BindStyledParameterOptions{Explode: false, Required: true})
+	if err != nil {
+		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter clusterId: %w", err), http.StatusBadRequest)
+		return
+	}
+
+	// ------------- Path parameter "namespace" -------------
+	var namespace string
+
+	err = runtime.BindStyledParameterWithOptions("simple", "namespace", c.Param("namespace"), &namespace, runtime.BindStyledParameterOptions{Explode: false, Required: true})
+	if err != nil {
+		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter namespace: %w", err), http.StatusBadRequest)
+		return
+	}
+
+	// ------------- Path parameter "releaseName" -------------
+	var releaseName string
+
+	err = runtime.BindStyledParameterWithOptions("simple", "releaseName", c.Param("releaseName"), &releaseName, runtime.BindStyledParameterOptions{Explode: false, Required: true})
+	if err != nil {
+		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter releaseName: %w", err), http.StatusBadRequest)
+		return
+	}
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		middleware(c)
+		if c.IsAborted() {
+			return
+		}
+	}
+
+	siw.Handler.GetPods(c, clusterId, namespace, releaseName)
+}
+
 // GetK8sReleaseStatus operation middleware
 func (siw *ServerInterfaceWrapper) GetK8sReleaseStatus(c *gin.Context) {
 
@@ -960,5 +1050,7 @@ func RegisterHandlersWithOptions(router gin.IRouter, si ServerInterface, options
 	router.PUT(options.BaseURL+"/clusters/:clusterId/namespaces/:namespace/releases", wrapper.UpdateK8sRelease)
 	router.DELETE(options.BaseURL+"/clusters/:clusterId/namespaces/:namespace/releases/:releaseName", wrapper.DeleteK8sRelease)
 	router.GET(options.BaseURL+"/clusters/:clusterId/namespaces/:namespace/releases/:releaseName", wrapper.GetK8sRelease)
+	router.GET(options.BaseURL+"/clusters/:clusterId/namespaces/:namespace/releases/:releaseName/events", wrapper.GetEventsRelease)
+	router.GET(options.BaseURL+"/clusters/:clusterId/namespaces/:namespace/releases/:releaseName/pods", wrapper.GetPods)
 	router.GET(options.BaseURL+"/clusters/:clusterId/namespaces/:namespace/releases/:releaseName/status", wrapper.GetK8sReleaseStatus)
 }

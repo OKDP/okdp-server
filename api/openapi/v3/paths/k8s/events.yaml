@@ -1,0 +1,46 @@
+get:
+  summary: Get Kubernetes events for a release
+  description: |
+    Returns Kubernetes events associated with a KuboCD release as a JSON array.
+    This endpoint mimics the behavior of `kubectl describe release <releaseName>` and is suitable for browser/Swagger usage.
+  tags:
+    - k8s
+  operationId: GetEventsRelease
+  parameters:
+    - in: path
+      name: clusterId
+      schema:
+        type: string
+      required: true
+      description: Kubernetes cluster ID
+    - in: path
+      name: namespace
+      schema:
+        type: string
+      required: true
+      description: Kubernetes namespace
+    - in: path
+      name: releaseName
+      schema:
+        type: string
+      required: true
+      description: KuboCD release name
+  responses:
+    '200':
+      description: |
+        Returns Kubernetes events for the specified release as a JSON array.
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              type: object
+              additionalProperties: true
+            description: |
+              JSON array of Kubernetes event objects for the specified release.
+    default:
+      description: Server error
+      content:
+        application/json:
+          schema:
+            $ref: '../../definition/ServerResponse.yaml'
