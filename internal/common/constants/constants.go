@@ -38,4 +38,15 @@ const (
 	K8SAuthCertificate = "AuthCertificate"
 	K8SAuthBeaer       = "AuthBearer"
 	K8SInCluster       = "InCluster"
+
+	StateRunning    = "Running"
+	StateWaiting    = "Waiting"
+	StateTerminated = "Terminated"
+	StateUnknown    = "Unknown"
+
+	StateHealthy   = "Healthy"
+	StateCompleted = "Completed"
+	StateNotReady  = "NotReady"
+	StatePending   = "Pending"
+	StateFailed    = "Failed"
 )

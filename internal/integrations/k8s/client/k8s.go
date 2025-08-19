@@ -23,7 +23,7 @@ import (
 	corev1 "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	k8s "sigs.k8s.io/controller-runtime/pkg/client"
+	ctrlclient "sigs.k8s.io/controller-runtime/pkg/client"
 
 	"github.com/okdp/okdp-server/internal/model"
 	"github.com/okdp/okdp-server/internal/utils"
@@ -55,7 +55,7 @@ func (c KubeClient) ListNamespaces(ctx context.Context) ([]*model.Namespace, *mo
 
 func (c KubeClient) GetNamespaceByName(ctx context.Context, clusterID string, name string) (*model.Namespace, *model.ServerResponse) {
 	var ns corev1.Namespace
-	key := k8s.ObjectKey{Name: name}
+	key := ctrlclient.ObjectKey{Name: name}
 
 	err := c.Get(ctx, key, &ns)
 	if err != nil {
@@ -80,7 +80,7 @@ func (c KubeClient) CreateNamespace(ctx context.Context, namespace *model.Namesp
 	}
 
 	var existing corev1.Namespace
-	err := c.Get(ctx, k8s.ObjectKey{Name: name}, &existing)
+	err := c.Get(ctx, ctrlclient.ObjectKey{Name: name}, &existing)
 	if err == nil {
 		return model.NewServerResponse(model.K8sClusterResponse).
 			ConflictError("Namespace '%s' already exists '%s'", name)
@@ -121,7 +121,7 @@ func (c KubeClient) UpdateNamespace(ctx context.Context, namespace *model.Namesp
 	}
 
 	var existing corev1.Namespace
-	err := c.Get(ctx, k8s.ObjectKey{Name: name}, &existing)
+	err := c.Get(ctx, ctrlclient.ObjectKey{Name: name}, &existing)
 	if err != nil {
 		if apierrors.IsNotFound(err) {
 			return model.NewServerResponse(model.K8sClusterResponse).
@@ -151,7 +151,7 @@ func (c KubeClient) DeleteNamespace(ctx context.Context, namespace string) *mode
 	}
 
 	var existing corev1.Namespace
-	err := c.Get(ctx, k8s.ObjectKey{Name: namespace}, &existing)
+	err := c.Get(ctx, ctrlclient.ObjectKey{Name: namespace}, &existing)
 	if err != nil {
 		if apierrors.IsNotFound(err) {
 			return model.NewServerResponse(model.K8sClusterResponse).

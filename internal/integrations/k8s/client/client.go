@@ -24,11 +24,12 @@ import (
 	sourcev1 "github.com/fluxcd/source-controller/api/v1"
 	corev1 "k8s.io/api/core/v1"
 	apiruntime "k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
 	restclient "k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/clientcmd"
 	clientcmdapi "k8s.io/client-go/tools/clientcmd/api"
-	k8s "sigs.k8s.io/controller-runtime/pkg/client"
+	ctrlclient "sigs.k8s.io/controller-runtime/pkg/client"
 
 	kubocdv1alpha1 "kubocd/api/v1alpha1"
 
@@ -49,8 +50,9 @@ type KubeClients struct {
 }
 
 type KubeClient struct {
-	k8s.Client
 	clusterID string
+	ctrlclient.Client
+	*kubernetes.Clientset
 }
 
 func GetClients() *KubeClients {
@@ -66,14 +68,19 @@ func GetClients() *KubeClients {
 				log.Fatal("Failed to get config for cluster ID '%s (%s)': %v", cluster.ID, cluster.Env, err)
 			}
 
-			kubeClient, err := k8s.New(config, k8s.Options{
+			ctrlClient, err := ctrlclient.New(config, ctrlclient.Options{
 				Scheme: newScheme(),
 			})
 			if err != nil {
-				log.Fatal("Error creating new k8s client for cluster ID '%s (%s)': %v", cluster.ID, cluster.Env, err)
+				log.Fatal("Failed to initialize controller-runtime client for cluster for cluster ID '%s (%s)': %v", cluster.ID, cluster.Env, err)
 			}
 
-			clients[utils.MapKey(cluster.ID)] = &KubeClient{kubeClient, cluster.ID}
+			k8sClientset, err := kubernetes.NewForConfig(config)
+			if err != nil {
+				log.Fatal("Failed to initialize client-go clientset for cluster ID '%s (%s)': %v", cluster.ID, cluster.Env, err)
+			}
+
+			clients[utils.MapKey(cluster.ID)] = &KubeClient{cluster.ID, ctrlClient, k8sClientset}
 		}
 
 		instance = &KubeClients{clients: clients}

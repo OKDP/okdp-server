@@ -21,6 +21,7 @@ import (
 	_catalog "github.com/okdp/okdp-server/api/openapi/v3/_api/catalogs"
 	_cluster "github.com/okdp/okdp-server/api/openapi/v3/_api/clusters"
 	_k8s "github.com/okdp/okdp-server/api/openapi/v3/_api/k8s"
+	_pods "github.com/okdp/okdp-server/api/openapi/v3/_api/pods"
 	_project "github.com/okdp/okdp-server/api/openapi/v3/_api/projects"
 	_repositories "github.com/okdp/okdp-server/api/openapi/v3/_api/repositories"
 	_user "github.com/okdp/okdp-server/api/openapi/v3/_api/users"
@@ -43,6 +44,7 @@ func (g *Group) RegisterControllers() {
 	_cluster.RegisterHandlers(g, ClusterController())
 	_repositories.RegisterHandlers(g, GitRepoController())
 	_k8s.RegisterHandlers(g, KuboCDController())
+	_pods.RegisterHandlers(g, PodController())
 }
 
 func (r *Router) RegisterSwaggerAPIDoc(swaggerConf config.Swagger) {

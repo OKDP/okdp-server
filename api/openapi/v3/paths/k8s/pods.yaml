@@ -1,0 +1,39 @@
+get:
+  summary: Get the list of pods and their containers attached to a release
+  description: |
+    Returns all pods in a given namespace and release, including their container names.
+  tags:
+    - k8s
+  operationId: GetPods
+  parameters:
+    - in: path
+      name: clusterId
+      schema:
+        type: string
+      required: true
+      description: Kubernetes cluster ID
+    - in: path
+      name: namespace
+      schema:
+        type: string
+      required: true
+      description: Kubernetes namespace
+    - in: path
+      name: releaseName
+      schema:
+        type: string
+      required: true
+      description: KuboCD release name
+  responses:
+    '200':
+      description: A list of pods and their containers
+      content:
+        application/json:
+          schema:
+            $ref: '../../definition/PodInfo.yaml'
+    default:
+      description: Server error
+      content:
+        application/json:
+          schema:
+            $ref: '../../definition/ServerResponse.yaml'
