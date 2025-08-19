@@ -14,11 +14,13 @@ import (
 
 type IKuboCDController struct {
 	k8sService *services.KuboCDService
+	podService *services.PodService
 }
 
 func KuboCDController() *IKuboCDController {
 	return &IKuboCDController{
 		k8sService: services.NewKuboCDService(),
+		podService: services.NewPodService(),
 	}
 }
 
@@ -26,7 +28,7 @@ func (r IKuboCDController) ListK8sReleases(c *gin.Context, clusterID string, nam
 	releasesInfo, err := r.k8sService.ListReleases(clusterID, namespace)
 	if err != nil {
 		log.Error("Unable to get releases from Kubernetes cluster '%s' on namespace '%s', details: %+v", clusterID, namespace, err)
-		c.JSON(err.Status, err)
+		c.AbortWithStatusJSON(err.Status, err)
 		return
 	}
 	c.JSON(http.StatusOK, releasesInfo)
@@ -36,7 +38,7 @@ func (r IKuboCDController) GetK8sRelease(c *gin.Context, clusterID string, names
 	release, err := r.k8sService.GetRelease(clusterID, namespace, releaseName)
 	if err != nil {
 		log.Error("Unable to get release from Kubernetes cluster  '%s' on namespace '%s', details: %+v", clusterID, namespace, err)
-		c.JSON(err.Status, err)
+		c.AbortWithStatusJSON(err.Status, err)
 		return
 	}
 	c.JSON(http.StatusOK, release)
@@ -46,7 +48,7 @@ func (r IKuboCDController) GetK8sReleaseStatus(c *gin.Context, clusterID string,
 	release, err := r.k8sService.GetReleaseStatus(clusterID, namespace, releaseName)
 	if err != nil {
 		log.Error("Unable to get release status from Kubernetes cluster  '%s' on namespace '%s', details: %+v", clusterID, namespace, err)
-		c.JSON(err.Status, err)
+		c.AbortWithStatusJSON(err.Status, err)
 		return
 	}
 	c.JSON(http.StatusOK, release)
@@ -57,7 +59,7 @@ func (r IKuboCDController) CreateK8sRelease(c *gin.Context, clusterID string, na
 
 	if err := c.ShouldBindJSON(&release); err != nil {
 		resp := model.NewServerResponse(model.OkdpServerResponse).BadRequest("%+v", err.Error())
-		c.JSON(resp.Status, resp)
+		c.AbortWithStatusJSON(resp.Status, resp)
 		return
 	}
 
@@ -72,7 +74,7 @@ func (r IKuboCDController) UpdateK8sRelease(c *gin.Context, clusterID string, na
 
 	if err := c.ShouldBindJSON(&release); err != nil {
 		resp := model.NewServerResponse(model.OkdpServerResponse).BadRequest("%+v", err.Error())
-		c.JSON(resp.Status, resp)
+		c.AbortWithStatusJSON(resp.Status, resp)
 		return
 	}
 
@@ -83,4 +85,27 @@ func (r IKuboCDController) UpdateK8sRelease(c *gin.Context, clusterID string, na
 func (r IKuboCDController) DeleteK8sRelease(c *gin.Context, clusterID string, namespace string, releaseName string) {
 	response := r.k8sService.DeleteRelease(clusterID, namespace, releaseName)
 	c.JSON(response.Status, response)
+}
+
+func (r IKuboCDController) GetPods(c *gin.Context, clusterID string, namespace string, releaseName string) {
+	podInfos, err := r.podService.GetPods(clusterID, namespace, releaseName)
+	if err != nil {
+		log.Error("Unable to get pods from Kubernetes cluster '%s' for release '%s/%s', details: %+v", clusterID, releaseName, namespace, err)
+		c.AbortWithStatusJSON(err.Status, err)
+		return
+	}
+	c.JSON(http.StatusOK, podInfos)
+}
+
+func (r IKuboCDController) GetEventsRelease(c *gin.Context, clusterID string, namespace string, releaseName string) {
+
+	events, err := r.k8sService.ListEventsRelease(clusterID, namespace, releaseName)
+	if err != nil {
+		c.AbortWithStatusJSON(err.Status, gin.H{
+			"error":   "failed to list events",
+			"details": err,
+		})
+		return
+	}
+	c.JSON(200, events)
 }

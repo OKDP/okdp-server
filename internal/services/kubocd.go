@@ -55,3 +55,7 @@ func (s KuboCDService) UpdateRelease(clusterID string, namespace string, release
 func (s KuboCDService) DeleteRelease(clusterID string, namespace string, releaseName string) *model.ServerResponse {
 	return s.kubocd.DeleteRelease(clusterID, namespace, releaseName)
 }
+
+func (s KuboCDService) ListEventsRelease(clusterID string, namespace, releaseName string) ([]map[string]interface{}, *model.ServerResponse) {
+	return s.kubocd.ListEventsRelease(clusterID, namespace, releaseName)
+}

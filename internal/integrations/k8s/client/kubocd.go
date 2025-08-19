@@ -18,9 +18,11 @@ package client
 
 import (
 	"context"
+	"encoding/json"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	k8s "sigs.k8s.io/controller-runtime/pkg/client"
+	"k8s.io/apimachinery/pkg/fields"
+	ctrlclient "sigs.k8s.io/controller-runtime/pkg/client"
 
 	kubocdv1alpha1 "kubocd/api/v1alpha1"
 
@@ -48,7 +50,7 @@ func (c KubeClient) ListReleases(ctx context.Context, namespaces ...string) ([]*
 }
 
 func (c KubeClient) GetRelease(ctx context.Context, namespace string, releaseName string) (*model.Release, *model.ServerResponse) {
-	releaseKey := k8s.ObjectKey{
+	releaseKey := ctrlclient.ObjectKey{
 		Namespace: namespace,
 		Name:      releaseName,
 	}
@@ -67,7 +69,7 @@ func (c KubeClient) GetRelease(ctx context.Context, namespace string, releaseNam
 }
 
 func (c KubeClient) GetReleaseStatus(ctx context.Context, namespace string, releaseName string) (*model.ReleaseStatus, *model.ServerResponse) {
-	releaseKey := k8s.ObjectKey{
+	releaseKey := ctrlclient.ObjectKey{
 		Namespace: namespace,
 		Name:      releaseName,
 	}
@@ -90,7 +92,7 @@ func (c KubeClient) CreateRelease(ctx context.Context, namespace string, release
 	var err error
 
 	if dryRun {
-		err = c.Create(ctx, &rel, &k8s.CreateOptions{DryRun: []string{constants.All}})
+		err = c.Create(ctx, &rel, &ctrlclient.CreateOptions{DryRun: []string{constants.All}})
 	} else {
 		err = c.Create(ctx, &rel)
 	}
@@ -109,7 +111,7 @@ func (c KubeClient) UpdateRelease(ctx context.Context, namespace string, release
 	var err error
 
 	if dryRun {
-		err = c.Update(ctx, &rel, &k8s.UpdateOptions{DryRun: []string{constants.All}})
+		err = c.Update(ctx, &rel, &ctrlclient.UpdateOptions{DryRun: []string{constants.All}})
 	} else {
 		err = c.Update(ctx, &rel)
 	}
@@ -139,4 +141,34 @@ func (c KubeClient) DeleteRelease(ctx context.Context, namespace string, release
 
 	return model.NewServerResponse(model.K8sClusterResponse).Deleted("Successfuly deleted release %s", releaseName)
 
+}
+
+func (c KubeClient) ListEventsRelease(ctx context.Context, namespace, releaseName string) ([]map[string]interface{}, *model.ServerResponse) {
+	fieldSelector := fields.AndSelectors(
+		fields.OneTermEqualSelector("involvedObject.name", releaseName),
+		fields.OneTermEqualSelector("involvedObject.kind", "Release"),
+	).String()
+
+	eventList, err := c.CoreV1().Events(namespace).List(ctx, metav1.ListOptions{
+		FieldSelector: fieldSelector,
+	})
+	if err != nil {
+		return nil, model.
+			NewServerResponse(model.K8sClusterResponse).
+			UnprocessableEntity("Failed to list events for release '%s/%s': %s", namespace, releaseName, err.Error())
+	}
+
+	events := make([]map[string]interface{}, 0, len(eventList.Items))
+	for _, event := range eventList.Items {
+		b, err := json.Marshal(event)
+		if err != nil {
+			continue
+		}
+		var m map[string]interface{}
+		if err := json.Unmarshal(b, &m); err != nil {
+			continue
+		}
+		events = append(events, m)
+	}
+	return events, nil
 }
