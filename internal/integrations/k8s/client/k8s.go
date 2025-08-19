@@ -44,9 +44,16 @@ func (c KubeClient) ListNamespaces(ctx context.Context) ([]*model.Namespace, *mo
 
 	namespaces := []*model.Namespace{}
 	for _, ns := range namespaceList.Items {
+		// exclude unwanted namespaces
 		if exclude[ns.Name] || strings.HasPrefix(ns.Name, "kube-") {
 			continue
 		}
+
+		// include only okdp projects: namespaces with label okdp.io/project=true + default
+		if ns.Name != "default" && (ns.Labels["okdp.io/project"] != "true") {
+			continue
+		}
+
 		namespaces = append(namespaces, model.ToNamespace(ns))
 	}
 
