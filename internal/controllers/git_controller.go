@@ -40,7 +40,7 @@ func (r IGitRepoController) ListGitRepos(c *gin.Context, clusterID string, names
 	gitRepos, err := r.gitRepoService.ListGitRepos(clusterID, namespace)
 	if err != nil {
 		log.Error("Unable to list Git repos on namespace '%s' with cluster ID '%s', details: %+v", namespace, clusterID, err)
-		c.JSON(err.Status, err)
+		c.AbortWithStatusJSON(err.Status, err)
 		return
 	}
 	c.JSON(http.StatusOK, gitRepos)
@@ -50,7 +50,7 @@ func (r IGitRepoController) GetGitRepo(c *gin.Context, clusterID string, namespa
 	gitRepo, err := r.gitRepoService.GetGitRepo(clusterID, namespace, kustomizationName)
 	if err != nil {
 		log.Error("Unable to find Git repo '%s' on namespace '%s' with cluster id '%s', details: %+v", kustomizationName, namespace, clusterID, err)
-		c.JSON(err.Status, err)
+		c.AbortWithStatusJSON(err.Status, err)
 		return
 	}
 	c.JSON(http.StatusOK, gitRepo)
@@ -60,7 +60,7 @@ func (r IGitRepoController) ListGitReleases(c *gin.Context, clusterID string, na
 	releasesInfo, err := r.gitRepoService.ListReleases(clusterID, namespace, kustomizationName)
 	if err != nil {
 		log.Error("Unable to get releases from Git repo '%s/%s' on cluster ID '%s', details: %+v", namespace, kustomizationName, clusterID, err)
-		c.JSON(err.Status, err)
+		c.AbortWithStatusJSON(err.Status, err)
 		return
 	}
 	c.JSON(http.StatusOK, releasesInfo)
@@ -70,7 +70,7 @@ func (r IGitRepoController) GetGitRelease(c *gin.Context, clusterID string, name
 	release, err := r.gitRepoService.GetRelease(clusterID, namespace, kustomizationName, releaseName)
 	if err != nil {
 		log.Error("Unable to get release from Git repo '%s/%s' on cluster ID '%s', details: %+v", namespace, kustomizationName, clusterID, err)
-		c.JSON(err.Status, err)
+		c.AbortWithStatusJSON(err.Status, err)
 		return
 	}
 	c.JSON(http.StatusOK, release)
@@ -80,12 +80,12 @@ func (r IGitRepoController) CreateGitRelease(c *gin.Context, clusterID string, n
 	var release model.Release
 	userInfo, err := GetUserInfo(c)
 	if err != nil {
-		c.JSON(err.Status, err)
+		c.AbortWithStatusJSON(err.Status, err)
 	}
 
 	if err := c.ShouldBindJSON(&release); err != nil {
 		resp := model.NewServerResponse(model.OkdpServerResponse).BadRequest("%+v", err.Error())
-		c.JSON(resp.Status, resp)
+		c.AbortWithStatusJSON(resp.Status, resp)
 		return
 	}
 
@@ -96,7 +96,7 @@ func (r IGitRepoController) CreateGitRelease(c *gin.Context, clusterID string, n
 	resp, err := r.gitRepoService.CreateGitRelease(clusterID, namespace, kustomizationName, &release, commitOpts)
 
 	if err != nil {
-		c.JSON(err.Status, err)
+		c.AbortWithStatusJSON(err.Status, err)
 		return
 	}
 
@@ -108,12 +108,12 @@ func (r IGitRepoController) UpdateGitRelease(c *gin.Context, clusterID string, n
 	var release model.Release
 	userInfo, err := GetUserInfo(c)
 	if err != nil {
-		c.JSON(err.Status, err)
+		c.AbortWithStatusJSON(err.Status, err)
 	}
 
 	if err := c.ShouldBindJSON(&release); err != nil {
 		resp := model.NewServerResponse(model.OkdpServerResponse).BadRequest("%+v", err.Error())
-		c.JSON(resp.Status, resp)
+		c.AbortWithStatusJSON(resp.Status, resp)
 		return
 	}
 
@@ -124,7 +124,7 @@ func (r IGitRepoController) UpdateGitRelease(c *gin.Context, clusterID string, n
 	resp, err := r.gitRepoService.UpdateGitRelease(clusterID, namespace, kustomizationName, &release, commitOpts)
 
 	if err != nil {
-		c.JSON(err.Status, err)
+		c.AbortWithStatusJSON(err.Status, err)
 		return
 	}
 
@@ -135,7 +135,8 @@ func (r IGitRepoController) DeleteGitRelease(c *gin.Context, clusterID string, n
 
 	userInfo, err := GetUserInfo(c)
 	if err != nil {
-		c.JSON(err.Status, err)
+		c.AbortWithStatusJSON(err.Status, err)
+		return
 	}
 
 	msg := fmt.Sprintf("Delete KuboCD release %s/%s on cluster id %s", namespace, releaseName, clusterID)

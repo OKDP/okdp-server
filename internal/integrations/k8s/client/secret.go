@@ -26,7 +26,7 @@ import (
 	"github.com/okdp/okdp-server/internal/model"
 	"github.com/skeema/knownhosts"
 	corev1 "k8s.io/api/core/v1"
-	k8s "sigs.k8s.io/controller-runtime/pkg/client"
+	ctrlclient "sigs.k8s.io/controller-runtime/pkg/client"
 
 	log "github.com/okdp/okdp-server/internal/common/logging"
 )
@@ -36,7 +36,7 @@ type K8SSecret struct {
 }
 
 func (c KubeClient) GetSecret(ctx context.Context, name string, namespace string) (*K8SSecret, *model.ServerResponse) {
-	secretKey := k8s.ObjectKey{
+	secretKey := ctrlclient.ObjectKey{
 		Namespace: namespace,
 		Name:      name,
 	}

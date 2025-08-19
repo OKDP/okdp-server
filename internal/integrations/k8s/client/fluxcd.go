@@ -22,7 +22,7 @@ import (
 	kustomizev1 "github.com/fluxcd/kustomize-controller/api/v1"
 	sourcev1 "github.com/fluxcd/source-controller/api/v1"
 	sourcev1b2 "github.com/fluxcd/source-controller/api/v1beta2"
-	k8s "sigs.k8s.io/controller-runtime/pkg/client"
+	ctrlclient "sigs.k8s.io/controller-runtime/pkg/client"
 
 	"github.com/okdp/okdp-server/internal/model"
 	"github.com/okdp/okdp-server/internal/utils"
@@ -61,7 +61,7 @@ func (c KubeClient) ListGitRepositories(ctx context.Context, namespaces ...strin
 }
 
 func (c KubeClient) GetGitRepository(ctx context.Context, name string, namespace string) (*sourcev1.GitRepository, *model.ServerResponse) {
-	repoKey := k8s.ObjectKey{
+	repoKey := ctrlclient.ObjectKey{
 		Namespace: namespace,
 		Name:      name,
 	}
@@ -93,7 +93,7 @@ func (c KubeClient) ListOCIRepositories(ctx context.Context, namespaces ...strin
 }
 
 func (c KubeClient) GetOCIRepository(ctx context.Context, name string, namespace string) (*sourcev1b2.OCIRepository, *model.ServerResponse) {
-	repoKey := k8s.ObjectKey{
+	repoKey := ctrlclient.ObjectKey{
 		Namespace: namespace,
 		Name:      name,
 	}

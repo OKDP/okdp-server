@@ -132,6 +132,27 @@ catalog:
     packages:
       - name: podinfo
 
+  - id: Dataviz
+    name: Dataviz catalog
+    description: My Dataviz packages
+    repoUrl: quay.io/okdp/sandbox-packages
+    packages:
+      - name: superset
+
+  - id: Notebooks
+    name: Notebooks catalog
+    description: My Notebooks packages
+    repoUrl: quay.io/okdp/sandbox-packages
+    packages:
+      - name: jupyterhub
+
+  - id: Spark
+    name: Spark catalog
+    description: My Spark packages
+    repoUrl: quay.io/okdp/sandbox-packages
+    packages:
+      - name: spark-history-server
+
 clusters:
   - id: kubo2
     name: My k8s cluster 1
@@ -158,10 +179,10 @@ clusters:
     auth:
       # inCluster: true
       kubeconfig:
-        apiServer: https://host.docker.internal:59370
+        apiServer: https://host.docker.internal:55192
         path: /tmp/.kube/config
         # When not provided, use current context
-        context: kind-kind
+        context: kind-okdp-sandbox
         insecureSkipTlsVerify: true
       # certificate:
       #   apiServer: https://k8s-api-server-url:6443
