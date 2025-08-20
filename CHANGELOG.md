@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.4.0](https://github.com/OKDP/okdp-server/compare/v0.3.0...v0.4.0) (2025-08-20)
+
+
+### Features
+
+* get via SSE and download pod logs ([4bb0b9a](https://github.com/OKDP/okdp-server/commit/4bb0b9aee2998fb8fde178aeb3a01581a9f9d879))
+* List KuboCD release pods and events ([2c4637e](https://github.com/OKDP/okdp-server/commit/2c4637ee5d9733e8f1c06f8ae2b87d85a96fe73f))
+* list okdp specific projects only ([408eab4](https://github.com/OKDP/okdp-server/commit/408eab4d93231531e49a3ff8ba368b72c5de5330))
+
+
+### Refactoring
+
+* refactoring ([00aa3c4](https://github.com/OKDP/okdp-server/commit/00aa3c4fbc639f66610d318da25ad934cd2e371d))
+* update go version and modules ([5a5681e](https://github.com/OKDP/okdp-server/commit/5a5681e27b76dc27d0dc09e22f08830c609e40ce))
+
 ## [0.3.0](https://github.com/OKDP/okdp-server/compare/v0.2.0...v0.3.0) (2025-07-10)
 
 
