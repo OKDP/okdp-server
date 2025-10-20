@@ -1,3 +1,13 @@
+[![ci](https://github.com/okdp/okdp-server/actions/workflows/ci.yml/badge.svg)](https://github.com/okdp/okdp-server/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/OKDP/okdp-server)](https://github.com/OKDP/okdp-server/releases/latest)
+[![Release](https://img.shields.io/github/v/release/OKDP/okdp-ui)](https://github.com/OKDP/okdp-ui/releases/latest)
+[![KuboCD](https://img.shields.io/badge/kubocd-v0.2.1-green.svg)](https://github.com/kubocd/kubocd)
+[![License Apache2](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0)
+<a href="https://okdp.io">
+<img src="https://okdp.io/logos/okdp-notext.svg" height="20px" style="margin: 0 2px;" />
+</a>
+
+
 # OKDP Server
 
 ## Using Makefile
