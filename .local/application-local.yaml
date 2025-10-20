@@ -154,7 +154,7 @@ catalog:
       - name: spark-history-server
 
 clusters:
-  - id: kubo2
+  - id: kubo1
     name: My k8s cluster 1
     env: dev
     auth:
@@ -163,7 +163,7 @@ clusters:
         apiServer: https://host.docker.internal:56660
         path: /tmp/.kube/config
         # When not provided, use current context
-        context: kind-kind-okdp-sandbox
+        # context: kind-kind-okdp-sandbox
         insecureSkipTlsVerify: true
       # certificate:
       #   apiServer: https://k8s-api-server-url:6443
@@ -173,23 +173,23 @@ clusters:
       # bearer:
       #   apiServer: https://k8s-api-server-url:6443
       #   bearerToken: $(BEARER_TOKEN)
-  - id: kubo3
-    name: My k8s cluster 2
-    env: dev
-    auth:
-      # inCluster: true
-      kubeconfig:
-        apiServer: https://host.docker.internal:55192
-        path: /tmp/.kube/config
-        # When not provided, use current context
-        context: kind-okdp-sandbox
-        insecureSkipTlsVerify: true
-      # certificate:
-      #   apiServer: https://k8s-api-server-url:6443
-      #   clientKey: /path/to/client-key.pem
-      #   clientCert: /path/to/client-cert.pem
-      #   caCert: /path/to/ca-cert.pem
-      # bearer:
-      #   apiServer: https://k8s-api-server-url:6443
-      #   bearerToken: $(BEARER_TOKEN)
+  # - id: kubo2
+  #   name: My k8s cluster 2
+  #   env: dev
+  #   auth:
+  #     # inCluster: true
+  #     kubeconfig:
+  #       apiServer: https://host.docker.internal:55192
+  #       path: /tmp/.kube/config
+  #       # When not provided, use current context
+  #       # context: kind-okdp-sandbox
+  #       insecureSkipTlsVerify: true
+  #     # certificate:
+  #     #   apiServer: https://k8s-api-server-url:6443
+  #     #   clientKey: /path/to/client-key.pem
+  #     #   clientCert: /path/to/client-cert.pem
+  #     #   caCert: /path/to/ca-cert.pem
+  #     # bearer:
+  #     #   apiServer: https://k8s-api-server-url:6443
+  #     #   bearerToken: $(BEARER_TOKEN)
 
