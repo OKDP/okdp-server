@@ -235,6 +235,18 @@ swagger-ui:
       - name: CORS_ENABLED
         value: true
 
+# -- Extra environment variables in RAW format that will be passed into pods
+extraEnvRaw: []
+# Load mykey1 from other secret
+# - name: MY_ENV_VAR_2
+#   valueFrom:
+#     secretKeyRef:
+#       name: my-secre2
+#       key: mykey1
+# Set env variable
+# - name: MY_ENV_VAR_1
+#   value: MY_VALUE_1
+
 serviceAccount:
   # -- Specify whether a service account should be created
   create: true
