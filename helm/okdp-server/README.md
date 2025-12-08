@@ -1,6 +1,6 @@
 # okdp-server
 
-![Version: 0.4.0](https://img.shields.io/badge/Version-0.4.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.4.0](https://img.shields.io/badge/AppVersion-0.4.0-informational?style=flat-square)
+![Version: 0.5.0](https://img.shields.io/badge/Version-0.5.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.4.0](https://img.shields.io/badge/AppVersion-0.4.0-informational?style=flat-square)
 
 A Helm chart for okdp-server
 
@@ -77,6 +77,7 @@ A Helm chart for okdp-server
 | configuration.swagger.security[0].oauth2[1] | string | `"email"` |  |
 | configuration.swagger.security[0].oauth2[2] | string | `"profile"` |  |
 | configuration.swagger.security[0].oauth2[3] | string | `"roles"` |  |
+| extraEnvRaw | list | `[]` | Extra environment variables in RAW format that will be passed into pods |
 | fullnameOverride | string | `""` | Overrides the release name. |
 | image.pullPolicy | string | `"Always"` | Image pull policy. |
 | image.repository | string | `"quay.io/okdp/okdp-server"` | Docker image registry. |
