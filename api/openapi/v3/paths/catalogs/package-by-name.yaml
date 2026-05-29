@@ -1,7 +1,7 @@
 get:
   summary: Get package by catalog id and package name
   description: |
-    Get package by catalog id and package name
+    Returns a single package, identified by its name, from the given catalog.
   tags:
     - catalogs
   operationId: GetPackage
@@ -20,7 +20,7 @@ get:
       description: Package name
   responses:
     '200':
-      description: Packages information
+      description: Package information
       content:
         application/json:
           schema:

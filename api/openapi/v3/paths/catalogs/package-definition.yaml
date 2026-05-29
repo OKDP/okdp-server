@@ -1,7 +1,8 @@
 get:
   summary: Get package definition
   description: |
-    Get package definition
+    Returns the full definition of a specific package version from the
+    given catalog.
   tags:
     - catalogs
   operationId: GetPackageDefinition

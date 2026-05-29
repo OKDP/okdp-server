@@ -1,7 +1,8 @@
 get:
   summary: Get the deployed release by name
   description: |
-    Get the deployed release by name
+    Returns a single KuboCD release deployed in the given namespace,
+    identified by its name.
   tags:
     - k8s
   operationId: GetK8sRelease
@@ -42,7 +43,8 @@ get:
 delete:
   summary: Delete the KuboCD release in kubernetes
   description: |
-    Delete the KuboCD release in kubernetes
+    Deletes the KuboCD release identified by its name from the given
+    namespace of the target cluster.
   tags:
     - k8s
   operationId: DeleteK8sRelease

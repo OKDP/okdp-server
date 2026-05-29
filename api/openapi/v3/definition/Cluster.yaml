@@ -1,4 +1,5 @@
 type: object
+description: A Kubernetes cluster registered in the OKDP server and the credentials used to connect to it.
 xml:
   name: Cluster
 required:
@@ -9,13 +10,17 @@ required:
 properties:
   id:
     type: string
+    description: Unique identifier of the cluster
     x-go-name: ID
   name:
     type: string
+    description: Human-readable name of the cluster
   env:
     type: string
+    description: Environment the cluster belongs to
   auth:
     type: object
+    description: Authentication method used to connect to the cluster (exactly one must be provided)
     oneOf:
       - required: [inCluster]
       - required: [kubeconfig]
@@ -24,8 +29,10 @@ properties:
     properties:
       inCluster:
         type: boolean
+        description: Use the in-cluster service account credentials
       kubeconfig:
         type: object
+        description: Authenticate using a kubeconfig file
         required:
           - apiServer
           - path
@@ -35,15 +42,20 @@ properties:
           apiServer:
             type: string
             format: uri
+            description: URL of the Kubernetes API server
             x-go-name: APIServer
           path:
             type: string
+            description: Path to the kubeconfig file
           context:
             type: string
+            description: Name of the kubeconfig context to use
           insecureSkipTlsVerify:
             type: boolean
+            description: Skip TLS verification of the API server certificate
       certificate:
         type: object
+        description: Authenticate using a client certificate
         required:
           - apiServer
           - clientKey
@@ -53,16 +65,21 @@ properties:
           apiServer:
             type: string
             format: uri
+            description: URL of the Kubernetes API server
             x-go-name: APIServer
           clientKey:
             type: string
+            description: PEM-encoded client private key
           clientCert:
             type: string
+            description: PEM-encoded client certificate
           caCert:
             type: string
+            description: PEM-encoded certificate authority bundle
             x-go-name: CACert
       bearer:
         type: object
+        description: Authenticate using a bearer token
         required:
           - apiServer
           - bearerToken
@@ -70,8 +87,8 @@ properties:
           apiServer:
             type: string
             format: uri
+            description: URL of the Kubernetes API server
             x-go-name: APIServer
           bearerToken:
             type: string
-
-
+            description: Bearer token used to authenticate to the API server
