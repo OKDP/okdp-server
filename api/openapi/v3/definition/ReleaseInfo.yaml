@@ -1,4 +1,5 @@
 type: object
+description: Summary information about a KuboCD release stored in a git repository.
 xml:
   name: ReleaseInfo
 required:
@@ -8,28 +9,37 @@ required:
 properties:
   name:
     type: string
+    description: Name of the release
   namespace:
     type: string
+    description: Namespace the release is deployed to
   description:
-      type: string
+    type: string
+    description: Short description of the release
   package:
     type: object
+    description: The OCI package deployed by the release
     required:
       - "repository"
       - "tag"
     properties:
       repository:
         type: string
+        description: Part of the OCI url oci://<repository>:<tag>
       tag:
         type: string
+        description: Part of the OCI url oci://<repository>:<tag>
   git:
     type: object
+    description: Location of the release manifest in the git repository
     required:
       - "path"
       - "url"
     properties:
       path:
         type: string
+        description: Path of the release manifest within the repository
       url:
         type: string
+        description: URL of the git repository
         x-go-name: URL

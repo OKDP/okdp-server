@@ -31,7 +31,7 @@ get:
 put:
   summary: Update an existing OKDP project
   description: |
-    Update an existing OKDP project
+    Updates an existing OKDP project in the given cluster.
   tags:
     - projects
   operationId: UpdateProject
@@ -43,7 +43,7 @@ put:
       required: true
       description: Cluster ID
   requestBody:
-    description: Project object to be created
+    description: Project object to be updated
     required: true
     content:
       application/json:
@@ -68,7 +68,7 @@ put:
 post:
   summary: Create OKDP project
   description: |
-    Create OKDP project
+    Creates a new OKDP project in the given cluster.
   tags:
     - projects
   operationId: CreateProject

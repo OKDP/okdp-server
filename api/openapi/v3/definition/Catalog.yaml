@@ -1,4 +1,5 @@
 type: object
+description: A package catalog backed by an OCI registry.
 xml:
   name: Catalog
 required:
@@ -10,26 +11,35 @@ required:
 properties:
   id:
     type: string
+    description: Unique identifier of the catalog
     x-go-name: ID
   name:
     type: string
+    description: Human-readable name of the catalog
   description:
     type: string
+    description: Short description of the catalog
   repoUrl:
     type: string
     format: uri
+    description: URL of the OCI registry backing the catalog
     x-go-name: repoURL
   credentials:
     type: object
+    description: Credentials used to authenticate to the OCI registry
     properties:
       robotAccountName:
         type: string
+        description: Robot account name used to authenticate
       robotAccountToken:
         type: string
+        description: Robot account token used to authenticate
       dockerconfigjson:
         type: string
+        description: Base64-encoded Docker config JSON credentials
   packages:
     type: array
+    description: Packages exposed by the catalog
     items:
       type: object
       required:
@@ -37,4 +47,4 @@ properties:
       properties:
         name:
           type: string
-
+          description: Name of the package

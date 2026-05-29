@@ -1,7 +1,8 @@
 get:
   summary: Get package schema (parameters, context, etc)
   description: |
-    Get package schema (parameters, context, etc)
+    Returns the configuration schema (parameters, context, etc.) for a
+    specific package version, suitable for rendering a configuration form.
   tags:
     - catalogs
   operationId: GetPackageSchema

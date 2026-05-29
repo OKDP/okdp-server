@@ -80,7 +80,7 @@ put:
       required: true
       description: Cluster ID
   requestBody:
-    description: Namespace object to be created
+    description: Namespace object to be updated
     required: true
     content:
       application/json:

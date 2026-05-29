@@ -1,4 +1,5 @@
 type: object
+description: A Kubernetes namespace.
 xml:
   name: Namespace
 required:
@@ -8,40 +9,49 @@ required:
 properties:
   apiVersion:
     type: string
+    description: APIVersion of the namespace resource
     example: "v1"
   kind:
     type: string
     enum: ["Namespace"]
+    description: Kind of the resource, always "Namespace"
     example: "Namespace"
   metadata:
     type: object
+    description: Standard object metadata
     required:
       - name
     properties:
       name:
         type: string
+        description: Name of the namespace
         example: "my-namespace"
       labels:
         type: object
         additionalProperties:
           type: string
+        description: Key-value labels attached to the namespace
         example:
           environment: "dev"
       annotations:
         type: object
         additionalProperties:
           type: string
+        description: Arbitrary annotations attached to the namespace
         example:
           owner: "team-a"
       creationTimestamp:
         type: string
         format: date-time
         readOnly: true
+        description: Creation timestamp of the namespace
         example: "2025-06-12T14:00:00Z"
   status:
     type: object
+    description: Observed status of the namespace
     properties:
       phase:
         type: string
         enum: ["Active", "Terminating"]
+        description: Lifecycle phase of the namespace
         example: "Active"

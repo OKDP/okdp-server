@@ -1,7 +1,8 @@
 get:
   summary: List all catalogs
   description: |
-    List all catalogs
+    Returns all package catalogs (OCI registries) configured in the OKDP
+    server.
   tags:
     - catalogs
   operationId: ListCatalogs

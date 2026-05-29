@@ -1,7 +1,8 @@
 get:
   summary: List versions for a specific package
   description: |
-    List versions for a specific package
+    Returns the list of available versions for the named package in the
+    given catalog.
   tags:
     - catalogs
   operationId: GetPackageVersions

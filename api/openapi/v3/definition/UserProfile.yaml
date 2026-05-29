@@ -1,7 +1,8 @@
 type: object
+description: Profile of the authenticated user, resolved from the OIDC token.
 xml:
   name: UserProfile
-required: 
+required:
 - sub
 - login
 - name
@@ -11,18 +12,24 @@ required:
 properties:
   sub:
     type: string
+    description: Subject (unique user identifier) from the OIDC token
     x-go-name: subject
   login:
     type: string
+    description: User login name
   name:
     type: string
+    description: User display name
   email:
     type: string
+    description: User email address
   groups:
     type: array
     items:
       type: string
+    description: Groups the user belongs to
   roles:
     type: array
     items:
       type: string
+    description: Roles granted to the user

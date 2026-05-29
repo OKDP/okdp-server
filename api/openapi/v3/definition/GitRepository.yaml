@@ -1,4 +1,5 @@
 type: object
+description: A FluxCD git repository (Kustomization) used as a source for KuboCD releases.
 xml:
   name: GitRepository
 required:
@@ -12,19 +13,26 @@ properties:
   repoUrl:
     type: string
     format: uri
+    description: URL of the git repository
     x-go-name: repoURL
   ref:
     type: string
+    description: Git reference (branch, tag or commit) to track
   name:
     type: string
+    description: Name of the FluxCD Kustomization
   namespace:
     type: string
+    description: Namespace of the FluxCD Kustomization
   path:
     type: string
+    description: Path within the repository watched by the Kustomization
   credentials:
     type: object
+    description: Credentials used to access the git repository
     required:
     - "secretRef"
     properties:
       secretRef:
         type: string
+        description: Name of the Secret holding the git credentials
